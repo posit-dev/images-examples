@@ -1,0 +1,9 @@
+# Example of extending a Posit Workbench image to install specific versions of
+# python and a specific set of python packages.
+
+# Specify version of the Posit Workbench to extend
+ARG PWB_VERSION="2025.05.1"
+
+# Extend the Posit Workbench image
+FROM  docker.io/posit/workbench:${PWB_VERSION}-min
+
