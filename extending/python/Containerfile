@@ -5,5 +5,4 @@
 ARG PWB_VERSION="2025.05.1"
 
 # Extend the Posit Workbench image
-FROM  docker.io/posit/workbench:${PWB_VERSION}-min
-
+FROM ghcr.io/posit-dev/workbench:${PWB_VERSION}-min
