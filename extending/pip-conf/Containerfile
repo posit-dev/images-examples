@@ -1,0 +1,27 @@
+# Example of extending a Posit Connect image to configure global pip settings
+
+### Specify version of the Posit Connect to extend ###
+ARG PCT_VERSION="2025.07.0"
+
+### Install Python using uv in a separate stage ###
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+ENV UV_PYTHON_PREFERENCE=only-managed
+RUN uv python install 3.13.7
+
+
+### Extend the Posit Connect Standard image ###
+FROM docker.io/posit/connect:${PCT_VERSION}-ubuntu-22.04-min
+
+### Install Python from previous stage ###
+COPY --from=python-builder /opt/python /opt/python
+
+### Add custom pip configuration ###
+# See: https://pip.pypa.io/en/stable/topics/configuration
+COPY pip.conf /etc/pip.conf
+
+### Upgrade pip, setuptools, and wheel to the latest versions ###
+RUN /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    pip setuptools wheel
