@@ -1,9 +1,34 @@
 # Example of extending a Posit Workbench image to install specific versions of
 # python and a specific set of python packages.
 
-# Specify version of the Posit Workbench to extend
-ARG PWB_VERSION="2025.05.1"
+### Specify version of the Posit Workbench to extend ###
+ARG PWB_VERSION="2025.09.0"
 
-# Extend the Posit Workbench image
-FROM  docker.io/posit/workbench:${PWB_VERSION}-min
 
+### Install Python using uv in a separate stage ###
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+ENV UV_PYTHON_PREFERENCE=only-managed
+RUN uv python install 3.13.7 3.12.11
+
+
+### Extend the Posit Workbench Minimal image ###
+FROM docker.io/posit/workbench:${PWB_VERSION}-min
+
+### Install Python from previous stage ###
+COPY --from=python-builder /opt/python /opt/python
+
+### Install updated pip, setuptools, and wheel ###
+RUN /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    pip setuptools wheel
+RUN /opt/python/cpython-3.12.11-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    pip setuptools wheel
+
+### Install additional python packages ###
+COPY requirements.txt /tmp/requirements.txt
+RUN /opt/python/cpython-3.13.7-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    -r /tmp/requirements.txt
+RUN /opt/python/cpython-3.12.11-linux-x86_64-gnu/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    -r /tmp/requirements.txt
