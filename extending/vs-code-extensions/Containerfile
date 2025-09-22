@@ -1,0 +1,14 @@
+# Example of extending a Posit Workbench image to install VS Code Extensions
+
+### Specify version of the Posit Workbench to extend ###
+ARG PWB_VERSION="2025.09.0"
+
+
+### Extend the Posit Workbench Standard image ###
+FROM docker.io/posit/workbench:${PWB_VERSION}-std
+
+
+### Install VS Code Extensions ###
+### See: https://docs.posit.co/ide/server-pro/admin/vscode_sessions/extension_configuration.html#pre-configuring-vs-code-extensions
+COPY vscode.extensions.conf /etc/rstudio/vscode.extensions.conf
+RUN rstudio-server install-vs-code-ext
