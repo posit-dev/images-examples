@@ -1,0 +1,21 @@
+# Example of extending a Posit Package Manager image to add a custom
+# CA certificate to the system trust store.
+
+### Specify version of the Posit Package Manager to extend ###
+ARG PPM_VERSION="2025.04.4"
+
+
+### Extend the Posit Package Manager Minimal image ###
+FROM docker.io/posit/package-manager:${PPM_VERSION}-ubuntu-22.04-min
+
+
+### Add custom CA certificate to the system trust store ###
+
+# Switch to Root user to add CA certificate
+USER root
+# Copy the custom CA certificate to the appropriate directory and update the CA certificates
+COPY Example-RootCA.crt /usr/local/share/ca-certificates/Example-RootCA.crt
+RUN update-ca-certificates
+
+# Switch back to the default user
+USER rstudio-pm
