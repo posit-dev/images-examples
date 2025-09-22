@@ -1,7 +1,7 @@
 on:
   pull_request:
 
-name: Build
+name: Continuous Integration
 jobs:
 
   collect-images:
