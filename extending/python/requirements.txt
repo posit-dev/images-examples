@@ -1,0 +1,6 @@
+ipykernel
+jupyter
+pandas
+polars
+shiny
+shinylive

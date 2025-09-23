@@ -1,0 +1,22 @@
+# Example of extending a Posit Connect image to install specific versions of
+# R and a specific set of R packages.
+
+### Specify version of the Posit Connect to extend ###
+ARG PCT_VERSION="2025.07.0"
+
+
+### Extend the Posit Connect Minimal image ###
+FROM docker.io/posit/connect:${PCT_VERSION}-ubuntu-22.04-min
+
+
+### Install R Versions ###
+RUN RUN_UNATTENDED=1 R_VERSION=4.5.1 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name '[rR]-4.5.1.*\.(deb|rpm)' -delete
+RUN RUN_UNATTENDED=1 R_VERSION=4.4.3 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name '[rR]-4.4.3.*\.(deb|rpm)' -delete
+
+
+### Install additional R Packages from Posit Public Package Manager ###
+COPY packages.txt /tmp/packages.txt
+RUN /opt/R/4.5.1/bin/R --vanilla -e 'install.packages(readLines("/tmp/packages.txt"), repos="https://p3m.dev/cran/__linux__/jammy/latest", clean = TRUE)'
+RUN /opt/R/4.4.3/bin/R --vanilla -e 'install.packages(readLines("/tmp/packages.txt"), repos="https://p3m.dev/cran/__linux__/jammy/latest", clean = TRUE)'

@@ -1,0 +1,31 @@
+# Example of extending a Posit Workbench image to install system dependencies
+# required for the {sf} R package.
+
+
+### Specify version of the Posit Workbench to extend ###
+ARG PWB_VERSION="2025.09.0"
+
+
+### Extend the Posit Workbench Minimal image ###
+FROM docker.io/posit/workbench:${PWB_VERSION}-ubuntu-22.04-min
+
+
+### Install system dependencies required for the {sf} R package ###
+# See: https://r-spatial.github.io/sf/#linux
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        libudunits2-dev \
+        libgdal-dev \
+        libgeos-dev \
+        libproj-dev \
+        libsqlite3-dev && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+
+### Install R ###
+RUN RUN_UNATTENDED=1 R_VERSION=4.5.1 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name '[rR]-4.5.1.*\.(deb|rpm)' -delete
+
+### Install additional R Packages from Posit Public Package Manager ###
+RUN /opt/R/4.5.1/bin/R --vanilla -e 'install.packages("sf", repos="https://p3m.dev/cran/latest", clean = TRUE)'
