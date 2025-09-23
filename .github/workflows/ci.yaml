@@ -1,7 +1,7 @@
 on:
   pull_request:
 
-name: Continuous Integration
+name: CI
 jobs:
 
   collect-images:
@@ -22,21 +22,22 @@ jobs:
           # Find directories under extending that contain Dockerfile or Containerfile
           entries=$(find extending -type f -name "Containerfile*" -o -name "Dockerfile*" | while read f; do
               dir=$(dirname "$f")
+              name=$(basename "$dir")
               containerfile=$(basename "$f")
-              echo "$dir,$containerfile"
-          done | jq -R -s -c 'split("\n")[:-1] | map(split(",")) | map({directory: .[0], file: .[1]})')
+              echo "$name,$dir,$containerfile"
+          done | jq -R -s -c 'split("\n")[:-1] | map(split(",")) | map({name: .[0], directory: .[1], file: .[2]})')
 
           # Create the matrix JSON in one step to avoid shell quoting issues
           matrix=$(echo $entries | jq -c '{include: .}')
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   docker:
-    name: Build with Docker
     needs:
       - collect-images
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.collect-images.outputs.matrix)}}
+    name: Build with Docker - ${{ matrix.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
