@@ -1,0 +1,25 @@
+name: 'Example: with-connect Action'
+
+on:
+  pull_request:
+
+jobs:
+  connect:
+    name: Test with-connect with Preview Image
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: posit-dev/with-connect@add-image-param
+        with:
+          image: ghcr.io/posit-dev/connect-preview:2026.01.0-dev-8
+          license: ${{ secrets.PCT_LICENSE_FILE }}
+          command: |
+            docker ps -a
