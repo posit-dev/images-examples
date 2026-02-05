@@ -8,7 +8,7 @@ All command examples are expected to run with this example, `bakery/01-basic-ima
 
 ```
 01-basic-image/
-├── bakery.yaml                    # Repository configuration
+├── bakery.yaml                    # Project configuration
 └── example-image/
     ├── template/                  # Jinja2 templates (source of truth)
     │   ├── Containerfile.jinja2
@@ -26,12 +26,35 @@ All command examples are expected to run with this example, `bakery/01-basic-ima
 - **Packages**: `build-essential`, `ca-certificates`, `curl`, `git`
 - **Version**: 1.0.0
 
+## Concepts
+
+This example demonstrates Bakery's usage in its most basic form. It consists of a `bakery.yaml` file that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files. 
+
+Each time a new version is added to the `bakery.yaml` file, Bakery will render the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g. a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
+
+## Creation of this Example
+
+Starting a new Bakery project can be done with a couple bootstrapping commands, editing templates, and then adding the first version. The commands below were used to create this example from scratch.
+
+```bash
+# Initialize a new Bakery project in the current directory by writing a skeleton bakery.yaml file
+bakery create project
+
+# Create a new image called "example-image": adds the image to bakery.yaml, creates the image directory, and adds a skeleton set of template files for an image
+bakery create image example-image
+
+# Edit the Containerfile template and package list template to specify the desired image configuration
+
+# Add the first version (1.0.0) to bakery.yaml: this will trigger rendering of the templates to generate files for version 1.0.0
+bakery create version example-image 1.0.0
+```
+
 ## Building with Bakery CLI
 
 Bakery manages the full lifecycle of rendering templates, building images, and running tests.
 
 ```bash
-# Render templates to generate version-specific files
+# Rerender templates to generate files for existing versions from templates
 bakery update files
 
 # Build the image
