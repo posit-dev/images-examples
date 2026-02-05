@@ -12,8 +12,4 @@ ARG IMAGE_VERSION="{{ Image.Version }}"
 
 ### Install Apt Packages ###
 COPY {{ Path.Version }}/deps/packages.txt /tmp/packages.txt
-RUN apt-get update -yqq && \
-    apt-get install -yqq --no-install-recommends $(cat /tmp/packages.txt) && \
-    rm -f /tmp/packages.txt && \
-    apt-get clean -yqq && \
-    rm -rf /var/lib/apt/lists/*
+{{ apt.run_install(files=["/tmp/packages.txt"]) }}
