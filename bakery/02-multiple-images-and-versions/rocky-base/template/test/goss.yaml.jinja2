@@ -1,0 +1,8 @@
+package:
+  {% raw -%}
+  {{ $dnf_package_list := readFile "/tmp/version/deps/packages.txt" | splitList "\n" }}
+  {{- range $dnf_package_list }}
+  {{.}}:
+    installed: true
+  {{end}}
+  {% endraw %}

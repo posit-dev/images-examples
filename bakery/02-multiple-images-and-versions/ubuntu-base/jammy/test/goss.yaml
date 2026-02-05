@@ -1,0 +1,7 @@
+package:
+  {{ $apt_package_list := readFile "/tmp/version/deps/packages.txt" | splitList "\n" }}
+  {{- range $apt_package_list }}
+  {{.}}:
+    installed: true
+  {{end}}
+  
