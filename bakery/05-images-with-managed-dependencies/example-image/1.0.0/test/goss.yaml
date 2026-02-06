@@ -1,0 +1,29 @@
+package:
+  r-4.5.2:
+    installed: true
+  
+
+file:
+  /opt/python/3.14.3/bin/python:
+      exists: true
+  /opt/python/3.13.12/bin/python:
+      exists: true
+  
+
+command:
+  "Verify R installation is version 4.5.2":
+    exec: /opt/R/4.5.2/bin/R --version
+    exit-status: 0
+    stdout:
+      - "R version 4.5.2"
+  "Verify Python installation is version 3.14.3":
+    exec: /opt/python/3.14.3/bin/python --version
+    exit-status: 0
+    stdout:
+      - "3.14.3"
+  "Verify Python installation is version 3.13.12":
+    exec: /opt/python/3.13.12/bin/python --version
+    exit-status: 0
+    stdout:
+      - "3.13.12"
+  

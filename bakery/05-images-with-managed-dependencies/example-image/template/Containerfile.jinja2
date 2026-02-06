@@ -1,0 +1,26 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "r.j2" as r -%}
+
+# Build Python using uv in a separate stage
+{{ python.build_stage(Dependencies.python) }}
+
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+ARG IMAGE_VERSION="{{ Image.Version }}"
+
+### Setup environment ###
+{{ apt.run_setup() }}
+
+### Install Python from previous stage ###
+{{ python.copy_from_build_stage() }}
+
+### Install R ###
+{{ r.run_install(Dependencies.R) }}
