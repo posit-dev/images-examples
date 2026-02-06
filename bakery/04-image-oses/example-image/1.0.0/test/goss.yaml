@@ -1,0 +1,16 @@
+package:
+  {{ $package_file := printf "/tmp/version/deps/%s_packages.txt" .Env.IMAGE_OS_NAME }}
+  {{ $package_list := readFile $package_file | splitList "\n" }}
+  {{- range $package_list }}
+  {{.}}:
+    installed: true
+  {{end}}
+  
+  {{ $optional_package_file := printf "/tmp/version/deps/%s_optional_packages.txt" .Env.IMAGE_OS_NAME }}
+  {{ $optional_package_list := readFile $optional_package_file | splitList "\n" }}
+  {{ $variant := .Env.IMAGE_VARIANT }}
+  {{- range $optional_package_list }}
+  {{.}}:
+    installed: {{ if eq $variant "Minimal" }}false{{ else }}true{{ end }}
+  {{end}}
+  

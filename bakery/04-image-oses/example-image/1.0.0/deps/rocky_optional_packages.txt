@@ -1,0 +1,2 @@
+unixODBC
+libpq-devel
