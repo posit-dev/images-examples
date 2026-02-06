@@ -1,0 +1,6 @@
+### Bakery template
+tools/*goss*
+results/
+.dev-*
+bakery-bake.json
+.bakery-bake.json
