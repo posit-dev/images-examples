@@ -27,10 +27,10 @@ All command examples are expected to run with this example, `bakery/03-image-var
 
 - **Base**: Ubuntu 22.04
 - **Variants**:
-  - **Minimal (-min)**: Core packages only (`build-essential`, `ca-certificates`, `curl`, `git`)
-  - **Standard (-std)**: Core + optional packages (`libodbc2`, `libpq-dev`)
+  - **Minimal**: Core packages only (`build-essential`, `ca-certificates`, `curl`, `git`)
+  - **Standard**: Core + optional packages (`libodbc2`, `libpq-dev`)
 - **Version**: 1.0.0
-- **Produces**: `example-image:1.0.0-min` and `example-image:1.0.0-std`
+- **Produces**: `example-image:1.0.0-minimal` and `example-image:1.0.0-standard`
 
 ## Concepts
 
@@ -54,7 +54,7 @@ images:
 
 - **name**: Human-readable variant name, accessible as `{{ Image.Variant }}` in templates
 - **extension**: Suffix appended to generated filenames (e.g., `Containerfile.std`)
-- **primary**: Marks the default variant; the primary variant's extension is also used for version tags (e.g., `example-image:1.0.0-std`)
+- **primary**: Marks the default variant; the primary variant's extension is also used for version tags (e.g., `example-image:1.0.0-standard`)
 
 ### Conditional Template Logic
 
@@ -169,7 +169,7 @@ Tests can be run without Bakery. The `IMAGE_VARIANT` environment variable tells 
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.min \
-  -t ghcr.io/posit-dev/example-image:1.0.0-min \
+  -t ghcr.io/posit-dev/example-image:1.0.0-minimal \
   .
 
 # Run dgoss with IMAGE_VARIANT=Minimal
@@ -184,7 +184,7 @@ dgoss run \
   -e IMAGE_MOUNT=/tmp/image \
   -e PROJECT_MOUNT=/tmp/project \
   --init \
-  ghcr.io/posit-dev/example-image:1.0.0-min
+  ghcr.io/posit-dev/example-image:1.0.0-minimal
 ```
 
 #### Test the Standard Variant
@@ -194,7 +194,7 @@ dgoss run \
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.std \
-  -t ghcr.io/posit-dev/example-image:1.0.0-std \
+  -t ghcr.io/posit-dev/example-image:1.0.0-standard \
   .
 
 # Run dgoss with IMAGE_VARIANT=Standard
@@ -209,7 +209,7 @@ dgoss run \
   -e IMAGE_MOUNT=/tmp/image \
   -e PROJECT_MOUNT=/tmp/project \
   --init \
-  ghcr.io/posit-dev/example-image:1.0.0-std
+  ghcr.io/posit-dev/example-image:1.0.0-standard
 ```
 
 ## Template Variables
