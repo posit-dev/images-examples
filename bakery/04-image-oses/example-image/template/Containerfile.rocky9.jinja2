@@ -7,7 +7,6 @@ FROM docker.io/library/rockylinux:9
 LABEL org.opencontainers.image.base.name="docker.io/library/rockylinux:9"
 
 ### ARG declarations ###
-ARG DEBIAN_FRONTEND=noninteractive
 ARG IMAGE_VERSION="{{ Image.Version }}"
 
 ### Install Dnf Packages ###
