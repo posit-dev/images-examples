@@ -1,5 +1,5 @@
 repository:
-  url: "github.com/posit-dev/images-shared"
+  url: "github.com/posit-dev/images-examples"
   vendor: "Posit Software, PBC"
   maintainer: "Posit Docker Team <docker@posit.co>"
   authors:
