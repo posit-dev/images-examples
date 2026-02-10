@@ -1,7 +1,7 @@
 on:
   pull_request:
 
-name: CI
+name: Examples - Extending
 jobs:
 
   collect-images:

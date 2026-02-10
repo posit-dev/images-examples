@@ -1,0 +1,30 @@
+#!/usr/bin/env just --justfile
+
+# Build a specific extending example by name
+build name:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    dir="{{ name }}"
+    if [[ ! -d "$dir" ]]; then
+        echo "Error: Directory '$dir' does not exist"
+        exit 1
+    fi
+    file=$(find "$dir" -maxdepth 1 -type f \( -name "Containerfile*" -o -name "Dockerfile*" \) | head -n1)
+    if [[ -z "$file" ]]; then
+        echo "Error: No Containerfile or Dockerfile found in '$dir'"
+        exit 1
+    fi
+    echo "Building {{ name }} from $file..."
+    docker buildx build --file "$file" "$dir"
+
+# Build all extending examples (emulates CI)
+build-all:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    find . -type f \( -name "Containerfile*" -o -name "Dockerfile*" \) | while read -r f; do
+        dir=$(dirname "$f")
+        file=$(basename "$f")
+        name=$(basename "$dir")
+        echo "Building $name from $dir/$file..."
+        docker buildx build --file "$dir/$file" "$dir"
+    done

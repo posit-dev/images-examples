@@ -1,0 +1,23 @@
+#!/usr/bin/env just --justfile
+
+# Build a bakery example by name (subdirectory)
+build name *FLAGS:
+    bakery build --context {{justfile_directory()}}/{{name}} {{FLAGS}}
+
+# Test a bakery example by name (subdirectory)
+test name *FLAGS:
+    bakery run dgoss --context {{justfile_directory()}}/{{name}} {{FLAGS}}
+
+# Build all bakery examples
+build-all:
+    #!/usr/bin/env bash
+    for dir in {{justfile_directory()}}/*/; do
+        just build "$(basename "$dir")"
+    done
+
+# Test all bakery examples
+test-all:
+    #!/usr/bin/env bash
+    for dir in {{justfile_directory()}}/*/; do
+        just test "$(basename "$dir")"
+    done
