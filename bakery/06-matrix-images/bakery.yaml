@@ -1,14 +1,10 @@
 repository:
   url: "github.com/posit-dev/images-shared"
   vendor: "Posit Software, PBC"
-  maintainer:
-    name: "Posit Docker Team"
-    email: "docker@posit.co"
+  maintainer: "Posit Docker Team <docker@posit.co>"
   authors:
-    - name: "Author 1"
-      email: "author1@posit.co"
-    - name: "Author 2"
-      email: "author2@posit.co"
+    - name: Ian H. Pittwood
+      email: ian.pittwood@posit.co
 
 registries:
   - host: "ghcr.io"
