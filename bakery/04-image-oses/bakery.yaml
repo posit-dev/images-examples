@@ -31,7 +31,7 @@ images:
       - name: 1.0.0
         latest: true
         os:
-            - name: "Ubuntu 24.04"
-              primary: true
-            - name: "Ubuntu 22.04"
-            - name: "Rocky 9"
+          - name: "Ubuntu 24.04"
+            primary: true
+          - name: "Ubuntu 22.04"
+          - name: "Rocky 9"
