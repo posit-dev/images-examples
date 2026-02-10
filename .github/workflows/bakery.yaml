@@ -34,6 +34,7 @@ jobs:
       - collect-examples
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix: ${{fromJson(needs.collect-examples.outputs.matrix)}}
     name: Build and test - ${{ matrix.name }}
     steps:
