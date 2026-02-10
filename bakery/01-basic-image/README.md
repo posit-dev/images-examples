@@ -89,7 +89,7 @@ The goss.yaml file uses Go templates to dynamically read the package list and ve
 
 Like building, tests can be run without the assistance of Bakery. The commands below would be functionally equivalent to running `bakery build` followed by `bakery run dgoss`. The image should always be built and loaded locally or pulled prior to running tests.
 
-Note that some options and environment variables passed to 
+Note that some options and environment variables passed to `dgoss` are included to mirror the calls made by `bakery`, but will go unused in practice.
 
 ```bash
 # Build the image first to make it available for testing
