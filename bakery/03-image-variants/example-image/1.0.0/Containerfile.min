@@ -5,6 +5,20 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG IMAGE_VERSION="1.0.0"
 
+### Update, Upgrade, and Setup Apt Repositories ###
+RUN apt-get update -yqq --fix-missing && \
+    apt-get upgrade -yqq && \
+    apt-get dist-upgrade -yqq && \
+    apt-get autoremove -yqq --purge && \
+    apt-get install -yqq --no-install-recommends \
+        curl \
+        ca-certificates \
+        gnupg \
+        tar && \
+    bash -c "$(curl -1fsSL 'https://dl.posit.co/public/pro/setup.deb.sh')" && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
 ### Install Apt Packages ###
 COPY example-image/1.0.0/deps/packages.txt /tmp/packages.txt
 RUN apt-get update -yqq && \

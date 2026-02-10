@@ -10,6 +10,9 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG IMAGE_VERSION="{{ Image.Version }}"
 
+### Update, Upgrade, and Setup Apt Repositories ###
+{{ apt.run_setup() }}
+
 ### Install Apt Packages ###
 COPY {{ Path.Version }}/deps/packages.txt /tmp/packages.txt
 {% if Image.Variant != "Minimal" -%}
