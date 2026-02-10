@@ -1,6 +1,6 @@
 # Basic Image Example
 
-This example demonstrates the simplest use case for Bakery: a single image with one version. It builds an Ubuntu 22.04 image with basic development tools installed.
+This example demonstrates the simplest use case for Bakery: a single image with one version. It builds an Ubuntu 24.04 image with basic development tools installed.
 
 All command examples are expected to run with this example, `bakery/01-basic-image/`, as the working directory.
 
@@ -22,7 +22,7 @@ All command examples are expected to run with this example, `bakery/01-basic-ima
 
 ## What This Example Builds
 
-- **Base**: Ubuntu 22.04
+- **Base**: Ubuntu 24.04
 - **Packages**: `build-essential`, `ca-certificates`, `curl`, `git`
 - **Version**: 1.0.0
 

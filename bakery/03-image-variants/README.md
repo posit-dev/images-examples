@@ -1,6 +1,6 @@
 # Image Variants Example
 
-This example demonstrates how to build multiple variants of the same image from a single template. It creates both minimal and standard variants of an Ubuntu 22.04 image, each with different package sets.
+This example demonstrates how to build multiple variants of the same image from a single template. It creates both minimal and standard variants of an Ubuntu 24.04 image, each with different package sets.
 
 All command examples are expected to run with this example, `bakery/03-image-variants/`, as the working directory.
 
@@ -25,7 +25,7 @@ All command examples are expected to run with this example, `bakery/03-image-var
 
 ## What This Example Builds
 
-- **Base**: Ubuntu 22.04
+- **Base**: Ubuntu 24.04
 - **Variants**:
   - **Minimal**: Core packages only (`build-essential`, `ca-certificates`, `curl`, `git`)
   - **Standard**: Core + optional packages (`libodbc2`, `libpq-dev`)
