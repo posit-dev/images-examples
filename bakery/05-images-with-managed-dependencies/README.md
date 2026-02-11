@@ -1,6 +1,6 @@
 # Images with Managed Dependencies Example
 
-This example demonstrates how to use Bakery's managed dependency system for automatic version management of R, Python, and Quarto. Instead of hardcoding dependency versions in templates, you define constraints in `bakery.yaml` and Bakery resolves them to specific versions. This allows for versions to be automatically updated when you create new versions of your image, without needing to edit templates and pins existing versions to the versions that were latest at the time of creation to avoid shifting the image's contents after release.
+This example demonstrates how to use Bakery's managed dependency system for automatic version management of R, Python, and Quarto. Instead of hardcoding dependency versions in templates, you define constraints in `bakery.yaml` and Bakery resolves them to specific versions. This allows Bakery to automatically update versions when you create new versions of your image, without needing to edit templates, and pins existing versions to what was latest at creation time to avoid shifting the image's contents after release.
 
 All command examples are expected to run with this example, `bakery/05-images-with-managed-dependencies/`, as the working directory.
 
@@ -53,7 +53,7 @@ Constraints support:
 - `min: version` - Minimum version
 - `max: version` - Maximum version
 
-Currently supported managed dependencies are R, Python, and Quarto.
+Bakery currently supports managed dependencies for R, Python, and Quarto.
 
 ### Automatic Version Resolution
 
@@ -65,7 +65,7 @@ For example, the constraint `latest: true` with `count: 2` for Python resolved t
 
 ### Dependencies Field (Generated)
 
-The [`dependencies`][DependencyVersions] field in each version is populated automatically from constraints:
+Bakery automatically populates the [`dependencies`][DependencyVersions] field in each version from constraints:
 
 ```yaml
 versions:
@@ -78,7 +78,7 @@ versions:
         versions: ["3.14.3", "3.13.12"]
 ```
 
-This field can also be manually specified if you need to pin specific versions rather than using automatic resolution.
+You can also manually specify this field to pin specific versions rather than using automatic resolution.
 
 ### Template Variables for Dependencies
 

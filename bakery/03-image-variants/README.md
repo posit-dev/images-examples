@@ -54,7 +54,7 @@ images:
 
 - **name**: Human-readable variant name, accessible as `{{ Image.Variant }}` in templates
 - **extension**: Suffix appended to generated filenames (e.g., `Containerfile.std`)
-- **primary**: Marks the default variant; the primary variant's extension is also used for version tags (e.g., `example-image:1.0.0-standard`)
+- **primary**: Marks the default variant; Bakery also uses the primary variant's extension for version tags (e.g., `example-image:1.0.0-standard`)
 
 ### Conditional Template Logic
 
@@ -71,7 +71,7 @@ COPY {{ Path.Version }}/deps/optional_packages.txt /tmp/optional_packages.txt
 {{ apt.run_install(files=package_files) }}
 ```
 
-This pattern allows a single template to generate different Containerfiles based on the variant being rendered.
+This pattern allows a single template to generate different Containerfiles based on which variant Bakery renders.
 
 ### Variant-Specific Output Files
 
@@ -80,7 +80,7 @@ Bakery generates separate Containerfiles for each variant, distinguished by thei
 - `Containerfile.min` - Standalone build file for the Minimal variant
 - `Containerfile.std` - Standalone build file for the Standard variant
 
-Each generated file is complete and can be built independently.
+Each generated file is complete, and you can build them independently.
 
 ### Package Separation Pattern
 
@@ -160,7 +160,7 @@ The goss.yaml template uses the `IMAGE_VARIANT` environment variable to conditio
 
 ### Running Tests Manually
 
-Tests can be run without Bakery. The `IMAGE_VARIANT` environment variable tells goss which packages to expect.
+You can run tests without Bakery. The `IMAGE_VARIANT` environment variable tells goss which packages to expect.
 
 #### Test the Minimal Variant
 

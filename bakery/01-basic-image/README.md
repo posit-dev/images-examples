@@ -30,7 +30,7 @@ All command examples are expected to run with this example, `bakery/01-basic-ima
 
 This example demonstrates Bakery's usage in its most basic form. It consists of a [`bakery.yaml` file][BakeryConfiguration] that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files. 
 
-Each time a new [version][ImageVersion] is added to the `bakery.yaml` file, Bakery will render the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g. a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
+Each time you add a new [version][ImageVersion] to the `bakery.yaml` file, Bakery renders the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g. a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
 
 ## Creation of this Example
 
@@ -49,7 +49,7 @@ bakery create image example-image
 bakery create version example-image 1.0.0
 ```
 
-## Building with Bakery CLI
+## Building with Bakery command-line interface (CLI)
 
 Bakery manages the full lifecycle of rendering templates, building images, and running tests.
 
@@ -87,7 +87,7 @@ The goss.yaml file uses Go templates to dynamically read the package list and ve
 
 ### Running Tests Manually
 
-Like building, tests can be run without the assistance of Bakery. The commands below would be functionally equivalent to running `bakery build` followed by `bakery run dgoss`. The image should always be built and loaded locally or pulled prior to running tests.
+Like building, you can run tests without Bakery. The commands below would be functionally equivalent to running `bakery build` followed by `bakery run dgoss`. Always build and load the image locally, or pull it, before running tests.
 
 Note that some options and environment variables passed to `dgoss` are included to mirror the calls made by `bakery`, but will go unused in practice.
 

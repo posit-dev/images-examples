@@ -50,7 +50,7 @@ This example creates a matrix of images across operating systems and variants:
 
 **Version**: 1.0.0
 
-**Produces 6 images** with tags like:
+Produces 6 images with tags like:
 - `example-image:1.0.0-ubuntu-24.04-standard`
 - `example-image:1.0.0-ubuntu-24.04-minimal`
 - `example-image:1.0.0-ubuntu-22.04-standard`
@@ -95,7 +95,7 @@ Each operating system requires its own Containerfile template named with a conde
 - `Containerfile.ubuntu2204.jinja2` - Ubuntu 22.04 template
 - `Containerfile.rocky9.jinja2` - Rocky Linux 9 template
 
-The extension searched for defaults to an all lower-case condensed version of the OS name (e.g., "Ubuntu 24.04" → "ubuntu2404"). This can be overridden with the `extension` field in the OS configuration if needed.
+The extension defaults to an all-lowercase condensed version of the OS name (e.g., "Ubuntu 24.04" → "ubuntu2404"). You can override this with the `extension` field in the OS configuration if needed.
 
 Each template uses the appropriate base image and package manager macro:
 
@@ -255,7 +255,7 @@ The goss.yaml template uses environment variables to handle different OS/variant
 
 ### Running Tests Manually
 
-Tests can be run without Bakery. Both `IMAGE_OS_NAME` and `IMAGE_VARIANT` must be set correctly.
+You can run tests without Bakery. Set both `IMAGE_OS_NAME` and `IMAGE_VARIANT` correctly.
 
 #### Test Ubuntu 24.04 Standard
 
