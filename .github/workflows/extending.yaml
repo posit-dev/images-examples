@@ -1,7 +1,7 @@
 on:
   pull_request:
 
-name: CI
+name: Examples - Extending
 jobs:
 
   collect-images:
@@ -36,6 +36,7 @@ jobs:
       - collect-images
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix: ${{fromJson(needs.collect-images.outputs.matrix)}}
     name: Build with Docker - ${{ matrix.name }}
     steps:

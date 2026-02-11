@@ -1,0 +1,33 @@
+#!/usr/bin/env just --justfile
+
+# Build a bakery example by name (subdirectory)
+build name *FLAGS:
+    #!/usr/bin/env bash
+    matrix_flag=""
+    if grep -qE '^\s+matrix:' "{{justfile_directory()}}/{{name}}/bakery.yaml" 2>/dev/null; then
+        matrix_flag="--matrix-versions include"
+    fi
+    bakery build --context "{{justfile_directory()}}/{{name}}" $matrix_flag {{FLAGS}}
+
+# Test a bakery example by name (subdirectory)
+test name *FLAGS:
+    #!/usr/bin/env bash
+    matrix_flag=""
+    if grep -qE '^\s+matrix:' "{{justfile_directory()}}/{{name}}/bakery.yaml" 2>/dev/null; then
+        matrix_flag="--matrix-versions include"
+    fi
+    bakery run dgoss --context "{{justfile_directory()}}/{{name}}" $matrix_flag {{FLAGS}}
+
+# Build all bakery examples
+build-all:
+    #!/usr/bin/env bash
+    for dir in {{justfile_directory()}}/*/; do
+        just build "$(basename "$dir")"
+    done
+
+# Test all bakery examples
+test-all:
+    #!/usr/bin/env bash
+    for dir in {{justfile_directory()}}/*/; do
+        just test "$(basename "$dir")"
+    done
