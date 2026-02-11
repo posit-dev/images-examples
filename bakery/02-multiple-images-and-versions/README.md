@@ -57,6 +57,8 @@ This example demonstrates several key Bakery features:
 
 A single Bakery project can manage multiple distinct images. The `bakery.yaml` file defines two images (`ubuntu-base` and `rocky-base`), each with their own templates and version directories. This allows related images to share project configuration while maintaining separate build definitions.
 
+While this example treats base OSes as a primary component, Bakery can also define them as a secondary dimension as demonstrated in [Example 4](../04-image-oses).
+
 ### Version Matrices
 
 Each image can have multiple versions. This example produces 4 container images total (2 images × 2 versions each):
