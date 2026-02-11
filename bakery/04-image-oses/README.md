@@ -312,10 +312,13 @@ dgoss run \
 ## Template Variables
 
 The Containerfile templates use these Bakery variables:
-- `{{ Image.Version }}` - The version being built (e.g., "1.0.0")
-- `{{ Image.Variant }}` - The variant being built (e.g., "Minimal" or "Standard")
-- `{{ Image.OS.Name }}` - The OS identifier (e.g., "ubuntu" or "rocky")
-- `{{ Path.Version }}` - Path to the version directory (e.g., "example-image/1.0.0")
+
+| Variable | Description | Example |
+|:---------|:------------|:--------|
+| `{{ Image.Version }}` | The version being built | `"1.0.0"` |
+| `{{ Image.Variant }}` | The variant being built | `"Minimal"`, `"Standard"` |
+| `{{ Image.OS.Name }}` | The OS identifier | `"ubuntu"`, `"rocky"` |
+| `{{ Path.Version }}` | Path to the version directory | `"example-image/1.0.0"` |
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
 

@@ -253,17 +253,26 @@ The `goss.j2` macro `goss.build_arg_env_var("R_VERSION")` generates `{{ .Env.BUI
 The templates use these Bakery macros for matrix builds:
 
 **Build Arg Declaration:**
-- `{{ r.declare_build_arg() }}` - Generates `ARG R_VERSION`
-- `{{ python.declare_build_arg() }}` - Generates `ARG PYTHON_VERSION`
-- `{{ quarto.declare_build_arg() }}` - Generates `ARG QUARTO_VERSION`
+
+| Macro | Output |
+|:------|:-------|
+| `{{ r.declare_build_arg() }}` | `ARG R_VERSION` |
+| `{{ python.declare_build_arg() }}` | `ARG PYTHON_VERSION` |
+| `{{ quarto.declare_build_arg() }}` | `ARG QUARTO_VERSION` |
 
 **Build Arg Usage:**
-- `{{ r.build_arg() }}` - Returns `$R_VERSION`
-- `{{ python.build_arg() }}` - Returns `$PYTHON_VERSION`
-- `{{ quarto.build_arg() }}` - Returns `$QUARTO_VERSION`
+
+| Macro | Output |
+|:------|:-------|
+| `{{ r.build_arg() }}` | `$R_VERSION` |
+| `{{ python.build_arg() }}` | `$PYTHON_VERSION` |
+| `{{ quarto.build_arg() }}` | `$QUARTO_VERSION` |
 
 **Test Templates:**
-- `{{ goss.build_arg_env_var("R_VERSION") }}` - Returns `{{ .Env.BUILD_ARG_R_VERSION }}`
+
+| Macro | Output |
+|:------|:-------|
+| `{{ goss.build_arg_env_var("R_VERSION") }}` | `{{ .Env.BUILD_ARG_R_VERSION }}` |
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
 

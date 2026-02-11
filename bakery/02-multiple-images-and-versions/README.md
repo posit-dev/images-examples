@@ -249,8 +249,11 @@ dgoss run \
 ## Template Variables
 
 The Containerfile templates use these Bakery variables:
-- `{{ Image.Version }}` - The version being built (e.g., "24.04", "9")
-- `{{ Path.Version }}` - Path to the version directory (e.g., "ubuntu-base/noble", "rocky-base/9")
+
+| Variable | Description | Example |
+|:---------|:------------|:--------|
+| `{{ Image.Version }}` | The version being built | `"24.04"`, `"9"` |
+| `{{ Path.Version }}` | Path to the version directory | `"ubuntu-base/noble"`, `"rocky-base/9"` |
 
 Note that when using `subpath`, `Image.Version` contains the version name while `Path.Version` reflects the subpath.
 
@@ -261,12 +264,18 @@ See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-b
 This example uses Bakery's package manager macros to abstract differences between distributions:
 
 **apt.j2** (for Debian/Ubuntu):
-- `apt.run_setup()` - Installs required apt packages and sources
-- `apt.run_install(files=[...])` - Installs packages from files, handles cleanup
+
+| Macro | Description |
+|:------|:------------|
+| `apt.run_setup()` | Installs required apt packages and sources |
+| `apt.run_install(files=[...])` | Installs packages from files, handles cleanup |
 
 **dnf.j2** (for RHEL/Rocky/Fedora):
-- `dnf.run_setup()` - Installs required dnf packages and sources
-- `dnf.run_install(files=[...])` - Installs packages from files, handles cleanup
+
+| Macro | Description |
+|:------|:------------|
+| `dnf.run_setup()` | Installs required dnf packages and sources |
+| `dnf.run_install(files=[...])` | Installs packages from files, handles cleanup |
 
 These macros ensure consistent, best-practice package installation across different base images while keeping templates clean and readable.
 

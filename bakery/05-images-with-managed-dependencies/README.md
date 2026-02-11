@@ -83,9 +83,12 @@ You can also manually specify this field to pin specific versions rather than us
 ### Template Variables for Dependencies
 
 Templates access resolved dependencies through these variables:
-- `Dependencies.R` - List of R versions
-- `Dependencies.python` - List of Python versions
-- `Dependencies.quarto` - List of Quarto versions
+
+| Variable | Description |
+|:---------|:------------|
+| `Dependencies.R` | List of R versions |
+| `Dependencies.python` | List of Python versions |
+| `Dependencies.quarto` | List of Quarto versions |
 
 These are lists, allowing iteration for multi-version installs:
 
@@ -100,16 +103,25 @@ These are lists, allowing iteration for multi-version installs:
 Bakery provides macros that handle dependency installation with best practices:
 
 **Python (python.j2)**:
-- `python.build_stage(versions)` - Creates a multi-stage build using uv to install Python
-- `python.copy_from_build_stage()` - Copies installed Python from the builder stage
-- `python.get_version_directory(version)` - Returns the path to a Python version
+
+| Macro | Description |
+|:------|:------------|
+| `python.build_stage(versions)` | Creates a multi-stage build using uv to install Python |
+| `python.copy_from_build_stage()` | Copies installed Python from the builder stage |
+| `python.get_version_directory(version)` | Returns the path to a Python version |
 
 **R (r.j2)**:
-- `r.run_install(versions)` - Installs R versions using the official installer
-- `r.get_version_directory(version)` - Returns the path to an R version
+
+| Macro | Description |
+|:------|:------------|
+| `r.run_install(versions)` | Installs R versions using the official installer |
+| `r.get_version_directory(version)` | Returns the path to an R version |
 
 **Quarto (quarto.j2)** (when needed):
-- `quarto.run_install(versions)` - Installs Quarto versions
+
+| Macro | Description |
+|:------|:------------|
+| `quarto.run_install(versions)` | Installs Quarto versions |
 
 The Containerfile template uses these macros:
 
@@ -225,11 +237,14 @@ dgoss run \
 ## Template Variables
 
 The templates use these Bakery variables:
-- `{{ Image.Version }}` - The version being built (e.g., "1.0.0")
-- `{{ Path.Version }}` - Path to the version directory (e.g., "example-image/1.0.0")
-- `{{ Dependencies.R }}` - List of R versions to install
-- `{{ Dependencies.python }}` - List of Python versions to install
-- `{{ Dependencies.quarto }}` - List of Quarto versions to install (when used)
+
+| Variable | Description | Example |
+|:---------|:------------|:--------|
+| `{{ Image.Version }}` | The version being built | `"1.0.0"` |
+| `{{ Path.Version }}` | Path to the version directory | `"example-image/1.0.0"` |
+| `{{ Dependencies.R }}` | List of R versions to install | `["4.5.2"]` |
+| `{{ Dependencies.python }}` | List of Python versions to install | `["3.14.3", "3.13.12"]` |
+| `{{ Dependencies.quarto }}` | List of Quarto versions to install (when used) | `["1.8.27"]` |
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
 
