@@ -36,7 +36,7 @@ All command examples are expected to run with this example, `bakery/03-image-var
 
 ### Variant Configuration in bakery.yaml
 
-Variants are defined in the image configuration with `name`, `extension`, and `primary` fields:
+[Variants][ImageVariant] are defined in the image configuration with `name`, `extension`, and `primary` fields:
 
 ```yaml
 images:
@@ -220,3 +220,5 @@ The Containerfile template uses these Bakery variables:
 - `{{ Path.Version }}` - Path to the version directory (e.g., "example-image/1.0.0")
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+
+[ImageVariant]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imagevariant

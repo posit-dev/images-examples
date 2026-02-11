@@ -1,6 +1,6 @@
 # Basic Image Example
 
-This example demonstrates the simplest use case for Bakery: a single image with one version. It builds an Ubuntu 24.04 image with basic development tools installed.
+This example demonstrates the simplest use case for Bakery: a single [image][Image] with one [version][ImageVersion]. It builds an Ubuntu 24.04 image with basic development tools installed.
 
 All command examples are expected to run with this example, `bakery/01-basic-image/`, as the working directory.
 
@@ -28,9 +28,9 @@ All command examples are expected to run with this example, `bakery/01-basic-ima
 
 ## Concepts
 
-This example demonstrates Bakery's usage in its most basic form. It consists of a `bakery.yaml` file that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files. 
+This example demonstrates Bakery's usage in its most basic form. It consists of a [`bakery.yaml` file][BakeryConfiguration] that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files. 
 
-Each time a new version is added to the `bakery.yaml` file, Bakery will render the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g. a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
+Each time a new [version][ImageVersion] is added to the `bakery.yaml` file, Bakery will render the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g. a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
 
 ## Creation of this Example
 
@@ -121,3 +121,7 @@ The Containerfile template uses these Bakery variables:
 - `{{ Path.Version }}` - Path to the version directory (e.g., "example-image/1.0.0")
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+
+[BakeryConfiguration]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration
+[Image]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#image
+[ImageVersion]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imageversion

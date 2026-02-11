@@ -32,7 +32,7 @@ This example demonstrates Bakery's matrix feature, which creates multiple image 
 
 ### Matrix Configuration in bakery.yaml
 
-The `matrix` block replaces the `versions` block when you want to build multiple image variants:
+The [`matrix`][ImageMatrix] block replaces the `versions` block when you want to build multiple image variants:
 
 ```yaml
 images:
@@ -59,7 +59,7 @@ images:
 
 #### 1. Dependency Constraints (Automatic Resolution)
 
-Use `dependencyConstraints` to automatically resolve versions at creation time:
+Use [`dependencyConstraints`][DependencyConstraint] to automatically resolve versions at creation time:
 
 ```yaml
 matrix:
@@ -74,7 +74,7 @@ matrix:
 
 #### 2. Explicit Dependencies
 
-Use `dependencies` to pin specific versions:
+Use [`dependencies`][DependencyVersions] to pin specific versions:
 
 ```yaml
 matrix:
@@ -238,3 +238,7 @@ The templates use these Bakery macros for matrix builds:
 - `{{ goss.build_arg_env_var("R_VERSION") }}` - Returns `{{ .Env.BUILD_ARG_R_VERSION }}`
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
+
+[ImageMatrix]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imagematrix
+[DependencyConstraint]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyconstraint
+[DependencyVersions]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyversions

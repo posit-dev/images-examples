@@ -55,7 +55,7 @@ This example demonstrates several key Bakery features:
 
 ### Multiple Image Families
 
-A single Bakery project can manage multiple distinct images. The `bakery.yaml` file defines two images (`ubuntu-base` and `rocky-base`), each with their own templates and version directories. This allows related images to share project configuration while maintaining separate build definitions.
+A single Bakery project can manage multiple distinct images. The [`bakery.yaml` file][BakeryConfiguration] defines two images (`ubuntu-base` and `rocky-base`), each with their own templates and version directories. This allows related images to share project configuration while maintaining separate build definitions.
 
 While this example treats base OSes as a primary component, Bakery can also define them as a secondary dimension as demonstrated in [Example 4](../04-image-oses).
 
@@ -269,3 +269,5 @@ This example uses Bakery's package manager macros to abstract differences betwee
 - `dnf.run_install(files=[...])` - Installs packages from files, handles cleanup
 
 These macros ensure consistent, best-practice package installation across different base images while keeping templates clean and readable.
+
+[BakeryConfiguration]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration

@@ -64,7 +64,7 @@ This example demonstrates several key Bakery features for multi-OS image managem
 
 ### OS Configuration in bakery.yaml
 
-Operating systems are defined within each version's configuration:
+[Operating systems][ImageVersionOS] are defined within each version's configuration:
 
 ```yaml
 images:
@@ -318,3 +318,5 @@ The Containerfile templates use these Bakery variables:
 - `{{ Path.Version }}` - Path to the version directory (e.g., "example-image/1.0.0")
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+
+[ImageVersionOS]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imageversionos

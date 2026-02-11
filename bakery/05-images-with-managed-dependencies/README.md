@@ -32,7 +32,7 @@ This example demonstrates Bakery's managed dependency system, which separates de
 
 ### Dependency Constraints in bakery.yaml
 
-Dependency constraints define rules for which versions to include, rather than specifying exact versions:
+[Dependency constraints][DependencyConstraint] define rules for which versions to include, rather than specifying exact versions:
 
 ```yaml
 images:
@@ -65,7 +65,7 @@ For example, the constraint `latest: true` with `count: 2` for Python resolved t
 
 ### Dependencies Field (Generated)
 
-The `dependencies` field in each version is populated automatically from constraints:
+The [`dependencies`][DependencyVersions] field in each version is populated automatically from constraints:
 
 ```yaml
 versions:
@@ -232,3 +232,6 @@ The templates use these Bakery variables:
 - `{{ Dependencies.quarto }}` - List of Quarto versions to install (when used)
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
+
+[DependencyConstraint]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyconstraint
+[DependencyVersions]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyversions
