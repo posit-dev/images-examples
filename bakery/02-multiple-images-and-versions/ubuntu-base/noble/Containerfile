@@ -3,7 +3,6 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG IMAGE_VERSION="24.04"
 
 ### Setup environment ###
 RUN apt-get update -yqq --fix-missing && \

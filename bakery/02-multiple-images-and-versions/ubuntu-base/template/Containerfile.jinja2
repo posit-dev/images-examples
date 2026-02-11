@@ -8,7 +8,6 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:{{ Image.Vers
 
 ### ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG IMAGE_VERSION="{{ Image.Version }}"
 
 ### Setup environment ###
 {{ apt.run_setup() }}

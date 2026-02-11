@@ -8,7 +8,6 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
 
 ### ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG IMAGE_VERSION="{{ Image.Version }}"
 
 ### Install Apt Packages ###
 COPY {{ Path.Version }}/deps/{{ Image.OS.Name }}_packages.txt /tmp/packages.txt

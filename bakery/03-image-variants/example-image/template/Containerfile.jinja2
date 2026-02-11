@@ -8,7 +8,6 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG IMAGE_VERSION="{{ Image.Version }}"
 
 ### Update, Upgrade, and Setup Apt Repositories ###
 {{ apt.run_setup() }}

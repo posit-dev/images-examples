@@ -14,7 +14,6 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-ARG IMAGE_VERSION="1.0.0"
 
 ### Setup environment ###
 RUN apt-get update -yqq --fix-missing && \
@@ -35,4 +34,4 @@ COPY --from=python-builder /opt/python /opt/python
 
 ### Install R ###
 RUN RUN_UNATTENDED=1 R_VERSION=4.5.2 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
-    find . -type f -name '[rR]-4.5.2.*\.(deb|rpm)' -delete
+    find . -type f -name "[rR]-4.5.2.*\.(deb|rpm)" -delete

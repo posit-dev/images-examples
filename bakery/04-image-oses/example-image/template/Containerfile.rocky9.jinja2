@@ -6,9 +6,6 @@ Bakery handles bootstrapping the files into template rendering.
 FROM docker.io/library/rockylinux:9
 LABEL org.opencontainers.image.base.name="docker.io/library/rockylinux:9"
 
-### ARG declarations ###
-ARG IMAGE_VERSION="{{ Image.Version }}"
-
 ### Install Dnf Packages ###
 COPY {{ Path.Version }}/deps/{{ Image.OS.Name }}_packages.txt /tmp/packages.txt
 {% if Image.Variant != "Minimal" -%}
