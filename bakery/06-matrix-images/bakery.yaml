@@ -1,0 +1,39 @@
+#######################################################################################################################
+# BAKERY REPOSITORY CONFIG
+#
+# This file is used to define global properties for builds inside a repo managed by Posit's Bakery tool.
+#######################################################################################################################
+
+# Define properties of the local repository. This information will be used when labeling image builds.
+repository:
+  url: "github.com/posit-dev/images-examples"
+  vendor: "Posit Software, PBC"
+  maintainer: "Posit Docker Team <docker@posit.co>"
+  authors:
+    - name: Ian H. Pittwood
+      email: ian.pittwood@posit.co
+
+# Define image registries used by builds in this repository. Images will be tagged appropriately for each registry.
+# Logins for private registries should be managed independently of Bakery.
+registries:
+  - host: "ghcr.io"
+    namespace: "posit-dev"
+
+images:
+  - name: "test-matrix"
+    matrix:
+      dependencyConstraints:
+        - dependency: R
+          constraint:
+            count: 2
+            latest: true
+        - dependency: python
+          constraint:
+            count: 2
+            latest: true
+        - dependency: quarto
+          constraint:
+            latest: true
+      os:
+        - name: "Ubuntu 24.04"
+          primary: true

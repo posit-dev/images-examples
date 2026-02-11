@@ -1,0 +1,21 @@
+FROM docker.io/library/rockylinux:8
+
+### ARG declarations ###
+ARG IMAGE_VERSION="8"
+
+### Setup environment ###
+RUN dnf upgrade -yq && \
+    dnf install -yq --allowerasing \
+        curl \
+        ca-certificates \
+        findutils \
+        gnupg \
+        tar && \
+    bash -c "$(curl -1fsSL 'https://dl.posit.co/public/pro/setup.rpm.sh')" && \
+    dnf clean all -yq
+
+### Install dnf Packages ###
+COPY rocky-base/8/deps/packages.txt /tmp/packages.txt
+RUN xargs -a /tmp/packages.txt dnf install -yq && \
+    dnf clean all -yq && \
+    rm /tmp/packages.txt

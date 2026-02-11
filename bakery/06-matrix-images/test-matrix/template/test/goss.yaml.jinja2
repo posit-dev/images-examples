@@ -1,0 +1,22 @@
+{%- import "goss.j2" as goss -%}
+{%- import "python.j2" as python -%}
+{%- import "quarto.j2" as quarto -%}
+{%- import "r.j2" as r -%}
+
+package:
+  ca-certificates:
+    installed: true
+  curl:
+    installed: true
+  r-{{ goss.build_arg_env_var("R_VERSION") }}:
+    installed: true
+file:
+  python-{{ goss.build_arg_env_var("PYTHON_VERSION") }}:
+    exists: true
+    path: {{ python.get_version_directory(goss.build_arg_env_var("PYTHON_VERSION")) }}
+  r-{{ goss.build_arg_env_var("R_VERSION") }}:
+    exists: true
+    path: {{ r.get_version_directory(goss.build_arg_env_var("R_VERSION")) }}
+  quarto-{{ goss.build_arg_env_var("QUARTO_VERSION") }}:
+    exists: true
+    path: {{ quarto.get_version_directory(goss.build_arg_env_var("QUARTO_VERSION")) }}

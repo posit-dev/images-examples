@@ -1,0 +1,6 @@
+binutils
+cmake
+gcc
+make
+git
+strace

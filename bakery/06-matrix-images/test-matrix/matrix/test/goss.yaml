@@ -1,0 +1,17 @@
+package:
+  ca-certificates:
+    installed: true
+  curl:
+    installed: true
+  r-{{ .Env.BUILD_ARG_R_VERSION }}:
+    installed: true
+file:
+  python-{{ .Env.BUILD_ARG_PYTHON_VERSION }}:
+    exists: true
+    path: /opt/python/{{ .Env.BUILD_ARG_PYTHON_VERSION }}
+  r-{{ .Env.BUILD_ARG_R_VERSION }}:
+    exists: true
+    path: /opt/R/{{ .Env.BUILD_ARG_R_VERSION }}
+  quarto-{{ .Env.BUILD_ARG_QUARTO_VERSION }}:
+    exists: true
+    path: /opt/quarto/{{ .Env.BUILD_ARG_QUARTO_VERSION }}

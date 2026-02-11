@@ -9,7 +9,7 @@
 
 | Path | Example |
 |:-----|:--------|
-| [bakery](./bakery/) | [*Coming soon*] Examples of managing images with [bakery](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) |
+| [bakery](./bakery/) | Examples of managing images with [bakery](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) |
 | [extending](./extending/) | Examples of extending Posit Container images |
 
 ## Share your Feedback

@@ -1,0 +1,37 @@
+# Build Python using uv in a separate stage
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+ENV UV_PYTHON_PREFERENCE=only-managed
+RUN uv python install 3.14.3 3.13.12
+RUN mv /opt/python/cpython-3.14.3-linux-*/ /opt/python/3.14.3 && \
+    mv /opt/python/cpython-3.13.12-linux-*/ /opt/python/3.13.12
+
+
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Setup environment ###
+RUN apt-get update -yqq --fix-missing && \
+    apt-get upgrade -yqq && \
+    apt-get dist-upgrade -yqq && \
+    apt-get autoremove -yqq --purge && \
+    apt-get install -yqq --no-install-recommends \
+        curl \
+        ca-certificates \
+        gnupg \
+        tar && \
+    bash -c "$(curl -1fsSL 'https://dl.posit.co/public/pro/setup.deb.sh')" && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+### Install Python from previous stage ###
+COPY --from=python-builder /opt/python /opt/python
+
+### Install R ###
+RUN RUN_UNATTENDED=1 R_VERSION=4.5.2 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name "[rR]-4.5.2.*\.(deb|rpm)" -delete

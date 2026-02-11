@@ -1,0 +1,14 @@
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Install Apt Packages ###
+COPY example-image/1.0.0/deps/ubuntu_packages.txt /tmp/packages.txt
+COPY example-image/1.0.0/deps/ubuntu_optional_packages.txt /tmp/optional_packages.txt
+RUN apt-get update -yqq && \
+    xargs -a /tmp/packages.txt apt-get install -yqq --no-install-recommends && \
+    xargs -a /tmp/optional_packages.txt apt-get install -yqq --no-install-recommends && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*

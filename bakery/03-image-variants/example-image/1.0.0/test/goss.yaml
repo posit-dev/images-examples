@@ -1,0 +1,14 @@
+package:
+  {{ $apt_package_list := readFile "/tmp/version/deps/packages.txt" | splitList "\n" }}
+  {{- range $apt_package_list }}
+  {{.}}:
+    installed: true
+  {{end}}
+  
+  {{ $apt_optional_package_list := readFile "/tmp/version/deps/optional_packages.txt" | splitList "\n" }}
+  {{ $variant := .Env.IMAGE_VARIANT }}
+  {{- range $apt_optional_package_list }}
+  {{.}}:
+    installed: {{ if eq $variant "Minimal" }}false{{ else }}true{{ end }}
+  {{end}}
+  

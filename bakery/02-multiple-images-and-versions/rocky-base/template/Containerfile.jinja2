@@ -1,0 +1,17 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "dnf.j2" as dnf -%}
+FROM docker.io/library/rockylinux:{{ Image.Version }}
+
+### ARG declarations ###
+ARG IMAGE_VERSION="{{ Image.Version }}"
+
+### Setup environment ###
+{{ dnf.run_setup() }}
+
+### Install dnf Packages ###
+COPY {{ Path.Version }}/deps/packages.txt /tmp/packages.txt
+{{ dnf.run_install(files=["/tmp/packages.txt"]) }} && \
+    rm /tmp/packages.txt

@@ -1,0 +1,9 @@
+FROM docker.io/library/rockylinux:9
+LABEL org.opencontainers.image.base.name="docker.io/library/rockylinux:9"
+
+### Install Dnf Packages ###
+COPY example-image/1.0.0/deps/rocky_packages.txt /tmp/packages.txt
+COPY example-image/1.0.0/deps/rocky_optional_packages.txt /tmp/optional_packages.txt
+RUN xargs -a /tmp/packages.txt dnf install -yq && \
+    xargs -a /tmp/optional_packages.txt dnf install -yq && \
+    dnf clean all -yq

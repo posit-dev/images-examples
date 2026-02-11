@@ -1,0 +1,20 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+FROM docker.io/library/ubuntu:22.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Install Apt Packages ###
+COPY {{ Path.Version }}/deps/{{ Image.OS.Name }}_packages.txt /tmp/packages.txt
+{% if Image.Variant != "Minimal" -%}
+COPY {{ Path.Version }}/deps/{{ Image.OS.Name }}_optional_packages.txt /tmp/optional_packages.txt
+{% set package_files = ["/tmp/packages.txt", "/tmp/optional_packages.txt"] -%}
+{% else -%}
+{% set package_files = ["/tmp/packages.txt"] -%}
+{% endif -%}
+{{ apt.run_install(files=package_files) }}

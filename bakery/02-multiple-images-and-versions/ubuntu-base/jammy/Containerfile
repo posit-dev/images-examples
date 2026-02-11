@@ -1,0 +1,27 @@
+FROM docker.io/library/ubuntu:22.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:22.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Setup environment ###
+RUN apt-get update -yqq --fix-missing && \
+    apt-get upgrade -yqq && \
+    apt-get dist-upgrade -yqq && \
+    apt-get autoremove -yqq --purge && \
+    apt-get install -yqq --no-install-recommends \
+        curl \
+        ca-certificates \
+        gnupg \
+        tar && \
+    bash -c "$(curl -1fsSL 'https://dl.posit.co/public/pro/setup.deb.sh')" && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+### Install Apt Packages ###
+COPY ubuntu-base/jammy/deps/packages.txt /tmp/packages.txt
+RUN apt-get update -yqq && \
+    xargs -a /tmp/packages.txt apt-get install -yqq --no-install-recommends && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm /tmp/packages.txt

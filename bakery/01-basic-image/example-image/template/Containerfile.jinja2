@@ -1,0 +1,14 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+FROM docker.io/library/ubuntu:24.04
+LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Install Apt Packages ###
+COPY {{ Path.Version }}/deps/packages.txt /tmp/packages.txt
+{{ apt.run_install(files=["/tmp/packages.txt"]) }}

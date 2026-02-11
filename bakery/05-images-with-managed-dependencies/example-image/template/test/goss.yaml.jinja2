@@ -1,0 +1,30 @@
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "r.j2" as r -%}
+package:
+  {% for r_version in Dependencies.R -%}
+  r-{{ r_version }}:
+    installed: true
+  {% endfor %}
+
+file:
+  {% for py_version in Dependencies.python -%}
+  /opt/python/{{ py_version }}/bin/python:
+      exists: true
+  {% endfor %}
+
+command:
+  {% for r_version in Dependencies.R -%}
+  "Verify R installation is version {{ r_version }}":
+    exec: {{ r.get_version_directory(r_version) }}/bin/R --version
+    exit-status: 0
+    stdout:
+      - "R version {{ r_version }}"
+  {%- endfor %}
+  {% for python_version in Dependencies.python -%}
+  "Verify Python installation is version {{ python_version }}":
+    exec: {{ python.get_version_directory(python_version) }}/bin/python --version
+    exit-status: 0
+    stdout:
+      - "{{ python_version }}"
+  {% endfor %}
