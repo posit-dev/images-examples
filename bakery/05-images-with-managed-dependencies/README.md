@@ -4,6 +4,8 @@ This example demonstrates how to use Bakery's managed dependency system for auto
 
 All command examples are expected to run with this example, `bakery/05-images-with-managed-dependencies/`, as the working directory.
 
+Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
+
 ## Structure
 
 ```

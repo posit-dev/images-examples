@@ -2,7 +2,9 @@
 
 This example demonstrates the simplest use case for Bakery: a single [image][Image] with one [version][ImageVersion]. It builds an Ubuntu 24.04 image with basic development tools installed.
 
-All command examples are expected to run with this example, `bakery/01-basic-image/`, as the working directory.
+All command examples are expected to run with this example, `bakery/01-basic-image/`, as the working directory. 
+
+Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
 ## Structure
 
@@ -98,14 +100,14 @@ docker buildx build \
   -f bakery/01-basic-image/example-image/1.0.0/Containerfile \
   -t ghcr.io/posit-dev/example-image:1.0.0 \
   -t ghcr.io/posit-dev/example-image:latest \
-  bakery/01-basic-image/
+  .
 
 # Run dgoss with expected environment variables and mounts
 GOSS_FILES_PATH=bakery/01-basic-image/example-image/1.0.0/test \
 dgoss run \
-  -v "$(pwd)/bakery/01-basic-image/example-image/1.0.0:/tmp/version" \
-  -v "$(pwd)/bakery/01-basic-image/example-image:/tmp/image" \
-  -v "$(pwd)/bakery/01-basic-image:/tmp/project" \
+  -v "$(pwd)/example-image/1.0.0:/tmp/version" \
+  -v "$(pwd)/example-image:/tmp/image" \
+  -v "$(pwd):/tmp/project" \
   -e IMAGE_VERSION=1.0.0 \
   -e IMAGE_VERSION_MOUNT=/tmp/version \
   -e IMAGE_MOUNT=/tmp/image \

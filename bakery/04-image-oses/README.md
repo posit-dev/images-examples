@@ -4,6 +4,8 @@ This example demonstrates how to build images for multiple operating systems com
 
 All command examples are expected to run with this example, `bakery/04-image-oses/`, as the working directory.
 
+Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
+
 ## Structure
 
 ```

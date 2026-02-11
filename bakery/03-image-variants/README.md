@@ -4,6 +4,8 @@ This example demonstrates how to build multiple variants of the same image from 
 
 All command examples are expected to run with this example, `bakery/03-image-variants/`, as the working directory.
 
+Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
+
 ## Structure
 
 ```
