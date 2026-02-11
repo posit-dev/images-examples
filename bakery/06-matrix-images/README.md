@@ -59,17 +59,45 @@ images:
 
 #### 1. Dependency Constraints (Automatic Resolution)
 
-Use [`dependencyConstraints`][DependencyConstraint] to automatically resolve versions at creation time:
+Use [`dependencyConstraints`][DependencyConstraint] to automatically resolve versions at creation time. Below are some examples of different constraint configurations:
 
+Include only the latest version:
 ```yaml
 matrix:
   dependencyConstraints:
     - dependency: R
       constraint:
         latest: true      # Include the latest version
-        count: 2          # Include N most recent versions
-        min: "4.3.0"      # Minimum version bound (optional)
-        max: "4.5.0"      # Maximum version bound (optional)
+```
+
+Include the 2 most recent minor versions:
+```yaml
+matrix:
+  dependencyConstraints:
+    - dependency: R
+      constraint:
+        latest: true     # Ensure the latest version is included
+        count: 2         # Include the 2 most recent versions
+```
+
+Include all minor versions at their most recent patch through the latest release starting from 4.1.0 onwards:
+```yaml
+matrix:
+  dependencyConstraints:
+    - dependency: R
+      constraint:
+        latest: true     # Ensure the latest version is included
+        min: "4.1.0"     # Minimum version to start at
+```
+
+Include 3 minor versions up to and including 4.4.3:
+```yaml
+matrix:
+  dependencyConstraints:
+    - dependency: R
+      constraint:
+        max: "4.4.3"     # Maximum version to end at
+        count: 3         # Include 3 versions counting backwards from the max
 ```
 
 #### 2. Explicit Dependencies
