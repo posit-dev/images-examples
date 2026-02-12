@@ -1,4 +1,4 @@
-# Basic Image Example
+# Basic image example
 
 This example demonstrates the simplest use case for Bakery: a single [image][Image] with one [version][ImageVersion]. It builds an Ubuntu 24.04 image with basic development tools installed.
 
@@ -22,7 +22,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
         └── test/goss.yaml
 ```
 
-## What This Example Builds
+## What this example builds
 
 - **Base**: Ubuntu 24.04
 - **Packages**: `build-essential`, `ca-certificates`, `curl`, `git`
@@ -34,7 +34,7 @@ This example demonstrates Bakery's usage in its most basic form. It consists of 
 
 Each time you add a new [version][ImageVersion] to the `bakery.yaml` file, Bakery renders the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g. a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
 
-## Creation of this Example
+## Creation of this example
 
 Starting a new Bakery project can be done with a couple bootstrapping commands, editing templates, and then adding the first version. The commands below were used to create this example from scratch.
 
@@ -66,7 +66,7 @@ bakery build
 bakery run dgoss
 ```
 
-## Building Directly with Docker
+## Building directly with Docker
 
 You can build the image directly using Docker without Bakery. The build context must be the example directory (not the version directory) because the Containerfile references paths relative to it.
 
@@ -87,7 +87,7 @@ docker buildx build \
 
 The goss.yaml file uses Go templates to dynamically read the package list and verify each package is installed.
 
-### Running Tests Manually
+### Running tests manually
 
 Like building, you can run tests without Bakery. The commands below would be functionally equivalent to running `bakery build` followed by `bakery run dgoss`. Always build and load the image locally, or pull it, before running tests.
 
@@ -116,7 +116,7 @@ dgoss run \
   ghcr.io/posit-dev/example-image:1.0.0
 ```
 
-## Template Variables
+## Template variables
 
 The Containerfile template uses these Bakery variables:
 

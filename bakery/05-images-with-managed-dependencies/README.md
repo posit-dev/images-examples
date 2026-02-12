@@ -1,4 +1,4 @@
-# Images with Managed Dependencies Example
+# Images with managed dependencies example
 
 This example demonstrates how to use Bakery's managed dependency system for automatic version management of R, Python, and Quarto. Instead of hardcoding dependency versions in templates, you define constraints in `bakery.yaml` and Bakery resolves them to specific versions. This allows Bakery to automatically update versions when you create new versions of your image, without needing to edit templates, and pins existing versions to what was latest at creation time to avoid shifting the image's contents after release.
 
@@ -20,7 +20,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
         └── test/goss.yaml
 ```
 
-## What This Example Builds
+## What this example builds
 
 - **Base**: Ubuntu 24.04
 - **R**: 4.5.2 (latest at time of creation)
@@ -32,7 +32,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 This example demonstrates Bakery's managed dependency system, which separates dependency rules from specific versions.
 
-### Dependency Constraints in bakery.yaml
+### Dependency constraints in bakery.yaml
 
 [Dependency constraints][DependencyConstraint] define rules for which versions to include, rather than specifying exact versions:
 
@@ -57,7 +57,7 @@ Constraints support:
 
 Bakery currently supports managed dependencies for R, Python, and Quarto.
 
-### Automatic Version Resolution
+### Automatic version resolution
 
 When you run `bakery create version`, Bakery resolves constraints to specific versions. This means the resolved versions reflect what was latest at the time the version was created, not at build time.
 
@@ -65,7 +65,7 @@ For example, the constraint `latest: true` with `count: 2` for Python resolved t
 - Python 3.14.3 (latest)
 - Python 3.13.12 (second latest)
 
-### Dependencies Field (Generated)
+### Dependencies field (generated)
 
 Bakery automatically populates the [`dependencies`][DependencyVersions] field in each version from constraints:
 
@@ -82,7 +82,7 @@ versions:
 
 You can also manually specify this field to pin specific versions rather than using automatic resolution.
 
-### Template Variables for Dependencies
+### Template variables for dependencies
 
 Templates access resolved dependencies through these variables:
 
@@ -100,7 +100,7 @@ These are lists, allowing iteration for multi-version installs:
 {% endfor %}
 ```
 
-### Bakery Macros for Installation
+### Bakery macros for installation
 
 Bakery provides macros that handle dependency installation with best practices:
 
@@ -140,7 +140,7 @@ FROM docker.io/library/ubuntu:24.04
 {{ r.run_install(Dependencies.R) }}
 ```
 
-## Creation of this Example
+## Creation of this example
 
 ```bash
 # Initialize a new Bakery project
@@ -173,7 +173,7 @@ bakery build
 bakery run dgoss
 ```
 
-## Building Directly with Docker
+## Building directly with Docker
 
 You can build directly using Docker. Note the multi-stage build for Python installation.
 
@@ -203,7 +203,7 @@ command:
   {%- endfor %}
 ```
 
-### Running Tests Manually
+### Running tests manually
 
 ```bash
 # Build the image first
@@ -227,7 +227,7 @@ dgoss run \
   ghcr.io/posit-dev/example-image:1.0.0
 ```
 
-## Key Differences from Previous Examples
+## Key differences from previous examples
 
 | Feature | Examples 01-04 | Example 05 |
 |---------|----------------|------------|
@@ -236,7 +236,7 @@ dgoss run \
 | Installation commands | Manual apt/pip/R commands | Bakery macros (python.j2, r.j2) |
 | Version management | Hardcoded in templates | Auto-resolved from constraints |
 
-## Template Variables
+## Template variables
 
 The templates use these Bakery variables:
 

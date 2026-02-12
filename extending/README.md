@@ -1,4 +1,4 @@
-# Extending Posit Container Images
+# Extending Posit container images
 
 The container images produced by Posit are built
 
