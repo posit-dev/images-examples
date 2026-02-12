@@ -2,15 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Purpose
+## Repository purpose
 
 This repository provides examples for using and extending Posit's container images. It demonstrates two approaches:
 - **bakery/**: Managing images with Posit's [Bakery tool](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) (Jinja2-based templating system)
 - **extending/**: Extending Posit's publicly available container images with customer-specific layers
 
-> **Note**: These images are under active development and not yet officially supported by Posit. See [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
+> [!NOTE]
+> These images are under active development and not yet officially supported by Posit. See [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
 
-## Build Commands
+## Build commands
 
 Build an extending example:
 ```bash
@@ -19,11 +20,11 @@ docker build -f extending/{example}/Containerfile -t {tag} extending/{example}/
 
 CI runs on pull requests and builds all examples in `extending/` using Docker Buildx.
 
-## Bakery Tool Architecture
+## Bakery tool architecture
 
 Bakery uses Jinja2 templates to generate version-specific container build files.
 
-### Directory Structure for Bakery Images
+### Directory structure for Bakery images
 ```
 bakery/{example}/
 ├── bakery.yaml                    # Repository config (registries, images, versions)
@@ -38,12 +39,12 @@ bakery/{example}/
         └── test/goss.yaml
 ```
 
-### Bakery Template Variables
+### Bakery template variables
 - `{{ Image.Version }}` - Current image version string
 - `{{ Path.Version }}` - Path to the version directory
 - Import macros: `{%- import "apt.j2" as apt -%}`
 
-### bakery.yaml Structure
+### bakery.yaml structure
 ```yaml
 repository:
   url: "github.com/posit-dev/images-examples"
@@ -59,9 +60,9 @@ images:
         latest: true
 ```
 
-## Containerfile Conventions
+## Containerfile conventions
 
-### Base Image Naming
+### Base image naming
 - Format: `docker.io/posit/{product}:{version}-{variant}`
 - Variants: `-min` (minimal), `-std` (standard), `-ubuntu-22.04-min`
 - Examples:
@@ -69,7 +70,7 @@ images:
   - `posit/connect:2025.07.0-ubuntu-22.04-min`
   - `posit/package-manager:{version}-ubuntu-22.04-min`
 
-### Version Pinning Pattern
+### Version pinning pattern
 Always declare product versions as ARGs at the top:
 ```dockerfile
 ARG PWB_VERSION="2025.09.0"
@@ -99,7 +100,7 @@ RUN RUN_UNATTENDED=1 R_VERSION=4.5.1 bash -c "$(curl -fsSL https://rstd.io/r-ins
 
 R installs to `/opt/R/{version}/`.
 
-### Package Installation Patterns
+### Package installation patterns
 
 Python packages:
 ```dockerfile
@@ -123,13 +124,13 @@ RUN apt-get update -yqq && \
     apt-get clean -yqq && rm -rf /var/lib/apt/lists/*
 ```
 
-### Cleanup Requirements
+### Cleanup requirements
 - Always clean apt caches: `apt-get clean -yqq && rm -rf /var/lib/apt/lists/*`
 - Delete R installer artifacts: `find . -type f -name '[rR]-{version}.*\.(deb|rpm)' -delete`
 - Use `--no-cache-dir` with pip
 - Use `clean = TRUE` with R `install.packages()`
 
-## Key Resources
+## Key resources
 
 - [Posit Public Package Manager](https://p3m.dev/) - Package repositories for R and Python
 - [R installer script](https://rstd.io/r-install) - Automated R installation

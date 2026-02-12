@@ -1,6 +1,6 @@
-# Image OSes Example
+# Image OSes example
 
-This example demonstrates how to build images for multiple operating systems combined with variants. It extends the variants concept from [example 03](../03-image-variants/) by adding multi-OS support, producing 6 container images from a single template set.
+This example demonstrates how to build images for multiple operating systems (OSes) combined with variants. It extends the variants concept from [example 03](../03-image-variants/) by adding multi-OS support, producing 6 container images from a single template set.
 
 All command examples are expected to run with this example, `bakery/04-image-oses/`, as the working directory.
 
@@ -37,7 +37,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
         └── test/goss.yaml
 ```
 
-## What This Example Builds
+## What this example builds
 
 This example creates a matrix of images across operating systems and variants:
 
@@ -64,7 +64,7 @@ Produces 6 images with tags like:
 
 This example demonstrates several key Bakery features for multi-OS image management:
 
-### OS Configuration in bakery.yaml
+### OS configuration in bakery.yaml
 
 [Operating systems][ImageVersionOS] are defined within each version's configuration:
 
@@ -89,7 +89,7 @@ images:
 
 The `primary: true` flag on Ubuntu 24.04 marks it as the default OS for version tags.
 
-### OS-Specific Templates
+### OS-specific templates
 
 Each operating system requires its own Containerfile template named with a condensed OS identifier suffix:
 
@@ -117,7 +117,7 @@ FROM docker.io/library/rockylinux:9
 {{ dnf.run_install(files=package_files) }}
 ```
 
-### OS-Specific Package Lists
+### OS-specific package lists
 
 Package files are named with an OS prefix and referenced dynamically using the `{{ Image.OS.Name }}` template variable:
 
@@ -141,7 +141,7 @@ This pattern handles package name differences between distributions:
 | `libodbc2` | `unixODBC` |
 | `libpq-dev` | `libpq-devel` |
 
-### Package Manager Abstraction
+### Package manager abstraction
 
 Bakery provides macros that abstract package manager differences:
 
@@ -150,7 +150,7 @@ Bakery provides macros that abstract package manager differences:
 
 Both provide a consistent `run_install(files=[...])` interface, keeping templates clean while generating OS-appropriate commands.
 
-### Combined with Variants
+### Combined with variants
 
 The same variant logic from [example 03](../03-image-variants/) applies here:
 
@@ -159,7 +159,7 @@ The same variant logic from [example 03](../03-image-variants/) applies here:
 
 The combination of 3 OSes × 2 variants × 1 version produces 6 unique Containerfiles.
 
-### OS-Agnostic Testing
+### OS-agnostic testing
 
 A single `goss.yaml.jinja2` template works for all OSes by using environment variables to locate the correct package files:
 
@@ -175,7 +175,7 @@ package:
 
 The `IMAGE_OS_NAME` environment variable ("ubuntu" or "rocky") directs the test to the appropriate package list, while `IMAGE_VARIANT` controls whether optional packages are expected to be installed.
 
-## Creation of this Example
+## Creation of this example
 
 ```bash
 # Initialize a new Bakery project
@@ -212,11 +212,11 @@ bakery build
 bakery run dgoss
 ```
 
-## Building Directly with Docker
+## Building directly with Docker
 
 You can build each OS/variant combination directly using Docker. The build context must be the example directory because the Containerfile references paths relative to it.
 
-### Build Ubuntu 24.04 Standard
+### Build Ubuntu 24.04 standard
 
 ```bash
 docker buildx build \
@@ -226,7 +226,7 @@ docker buildx build \
   .
 ```
 
-### Build Ubuntu 22.04 Minimal
+### Build Ubuntu 22.04 minimal
 
 ```bash
 docker buildx build \
@@ -236,7 +236,7 @@ docker buildx build \
   .
 ```
 
-### Build Rocky 9 Standard
+### Build Rocky 9 standard
 
 ```bash
 docker buildx build \
@@ -255,11 +255,11 @@ The goss.yaml template uses environment variables to handle different OS/variant
 - `IMAGE_OS_NAME`: OS identifier ("ubuntu" or "rocky") for locating package files
 - `IMAGE_VARIANT`: Variant name ("Minimal" or "Standard") for determining expected packages
 
-### Running Tests Manually
+### Running tests manually
 
 You can run tests without Bakery. Set both `IMAGE_OS_NAME` and `IMAGE_VARIANT` correctly.
 
-#### Test Ubuntu 24.04 Standard
+#### Test Ubuntu 24.04 standard
 
 ```bash
 # Build the image first
@@ -285,7 +285,7 @@ dgoss run \
   ghcr.io/posit-dev/example-image:1.0.0-ubuntu-24.04-standard
 ```
 
-#### Test Rocky 9 Minimal
+#### Test Rocky 9 minimal
 
 ```bash
 # Build the image first
@@ -311,7 +311,7 @@ dgoss run \
   ghcr.io/posit-dev/example-image:1.0.0-rocky-9-minimal
 ```
 
-## Template Variables
+## Template variables
 
 The Containerfile templates use these Bakery variables:
 

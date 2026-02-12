@@ -1,4 +1,4 @@
-# Multiple Images and Versions Example
+# Multiple images and versions example
 
 This example demonstrates managing multiple image families with multiple versions each using Bakery. It builds multiple versions of two base images for different OS families, Ubuntu and Rocky Linux, showcasing Bakery's ability to handle diverse container configurations in a single project.
 
@@ -39,7 +39,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
         └── test/goss.yaml
 ```
 
-## What This Example Builds
+## What this example builds
 
 **ubuntu-base**:
 - **Base**: Ubuntu 24.04 (noble) and Ubuntu 22.04 (jammy)
@@ -55,13 +55,13 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 This example demonstrates several key Bakery features:
 
-### Multiple Image Families
+### Multiple image families
 
 A single Bakery project can manage multiple distinct images. The [`bakery.yaml` file][BakeryConfiguration] defines two images (`ubuntu-base` and `rocky-base`), each with their own templates and version directories. This allows related images to share project configuration while maintaining separate build definitions.
 
 While this example treats base OSes as a primary component, Bakery can also define them as a secondary dimension as demonstrated in [Example 4](../04-image-oses).
 
-### Version Matrices
+### Version matrices
 
 Each image can have multiple versions. This example produces 4 container images total (2 images × 2 versions each):
 - `ghcr.io/posit-dev/ubuntu-base:24.04`
@@ -69,7 +69,7 @@ Each image can have multiple versions. This example produces 4 container images 
 - `ghcr.io/posit-dev/rocky-base:9`
 - `ghcr.io/posit-dev/rocky-base:8`
 
-### Subpath for Custom Directory Names
+### Subpath for custom directory names
 
 Ubuntu versions use codenames (`noble`, `jammy`) instead of version numbers for directory names. The `subpath` field in `bakery.yaml` enables this:
 
@@ -83,7 +83,7 @@ versions:
 
 The `{{ Image.Version }}` variable still resolves to the version name (e.g., "24.04"), while `{{ Path.Version }}` uses the subpath (e.g., "ubuntu-base/noble").
 
-### Package Manager Abstraction
+### Package manager abstraction
 
 Bakery provides macros for different package managers. Ubuntu uses `apt.j2` while Rocky Linux uses `dnf.j2`:
 
@@ -101,7 +101,7 @@ Bakery provides macros for different package managers. Ubuntu uses `apt.j2` whil
 
 These macros abstract away the differences between package managers, handling cache updates, installation, and cleanup automatically.
 
-### Latest Tag Management
+### Latest tag management
 
 The `latest: true` flag in `bakery.yaml` controls which version receives the `:latest` tag:
 
@@ -114,7 +114,7 @@ images:
       - name: "22.04"   # Tagged only as ubuntu-base:22.04
 ```
 
-## Creation of this Example
+## Creation of this example
 
 The commands below were used to create this example from scratch.
 
@@ -154,7 +154,7 @@ bakery build
 bakery run dgoss
 ```
 
-## Building Directly with Docker
+## Building directly with Docker
 
 You can build images directly using Docker without Bakery. The build context must be the example directory (not the version directory) because the Containerfile references paths relative to it.
 
@@ -198,7 +198,7 @@ docker buildx bake --file docker-bake.json --load
 
 The goss.yaml files use Go templates to dynamically read the package list and verify each package is installed.
 
-### Running Tests Manually
+### Running tests manually
 
 You can run tests without Bakery. The commands below would be functionally equivalent to running `bakery build` followed by `bakery run dgoss`. Always build and load the image locally, or pull it, before running tests.
 
@@ -248,7 +248,7 @@ dgoss run \
   ghcr.io/posit-dev/rocky-base:9
 ```
 
-## Template Variables
+## Template variables
 
 The Containerfile templates use these Bakery variables:
 
@@ -261,7 +261,7 @@ Note that when using `subpath`, `Image.Version` contains the version name while 
 
 See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
 
-## Bakery Macros
+## Bakery macros
 
 This example uses Bakery's package manager macros to abstract differences between distributions:
 

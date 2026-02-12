@@ -1,4 +1,4 @@
-# Matrix Images Example
+# Matrix images example
 
 This example demonstrates how to use Bakery's matrix feature to build multiple image variants from a single set of templates. Instead of creating separate version directories for each configuration, you define a matrix of dependency combinations in `bakery.yaml` and Bakery generates images for all combinations using Docker build arguments.
 
@@ -20,7 +20,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
         └── test/goss.yaml
 ```
 
-## What This Example Builds
+## What this example builds
 
 - **Base**: Ubuntu 24.04
 - **R versions**: 2 most recent (resolved at version creation time)
@@ -32,7 +32,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 This example demonstrates Bakery's matrix feature, which creates multiple image variants from dependency combinations without separate version directories.
 
-### Matrix Configuration in bakery.yaml
+### Matrix configuration in bakery.yaml
 
 The [`matrix`][ImageMatrix] block replaces the `versions` block when you want to build multiple image variants:
 
@@ -57,9 +57,9 @@ images:
           primary: true
 ```
 
-### Three Ways to Define Matrix Values
+### Three ways to define matrix values
 
-#### 1. Dependency Constraints (Automatic Resolution)
+#### 1. Dependency constraints (automatic resolution)
 
 Use [`dependencyConstraints`][DependencyConstraint] to automatically resolve versions at creation time. Below are some examples of different constraint configurations:
 
@@ -102,7 +102,7 @@ matrix:
         count: 3         # Include 3 versions counting backwards from the max
 ```
 
-#### 2. Explicit Dependencies
+#### 2. Explicit dependencies
 
 Use [`dependencies`][DependencyVersions] to pin specific versions:
 
@@ -115,7 +115,7 @@ matrix:
       versions: ["3.12.0", "3.11.0"]
 ```
 
-#### 3. Custom Values
+#### 3. Custom values
 
 Use `values` for arbitrary key-value pairs (non-dependency variables):
 
@@ -125,7 +125,7 @@ matrix:
     - CUSTOM_VAR: ["option1", "option2"]
 ```
 
-### Template Differences from Versioned Images
+### Template differences from versioned images
 
 Matrix templates use build argument macros instead of direct version references to reuse a single definition:
 
@@ -156,7 +156,7 @@ The key macros for matrix builds:
 - `python.declare_build_arg()` - Generates `ARG PYTHON_VERSION`
 - Same pattern for `r.*` and `quarto.*`
 
-### Generated Directory Structure
+### Generated directory structure
 
 Matrix images use a `matrix/` subdirectory instead of version directories:
 
@@ -166,12 +166,12 @@ Matrix images use a `matrix/` subdirectory instead of version directories:
 | Containerfiles | One per version | Single shared Containerfile |
 | Version values | Hardcoded in generated files | Passed as build args at build time |
 
-### Image Tagging
+### Image tagging
 
 Matrix images are tagged with all dependency versions. For example:
 - `test-matrix-quarto1-8-27-r4-5-2-python3-14-3-ubuntu-24-04`
 
-## Creation of this Example
+## Creation of this example
 
 ```bash
 # Initialize a new Bakery project
@@ -202,7 +202,7 @@ bakery build
 bakery run dgoss
 ```
 
-## Building Directly with Docker
+## Building directly with Docker
 
 You can build matrix images directly using Docker by passing version values as build arguments:
 
@@ -240,7 +240,7 @@ file:
 
 The `goss.j2` macro `goss.build_arg_env_var("R_VERSION")` generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
 
-## Key Differences from Previous Examples
+## Key differences from previous examples
 
 | Feature | Examples 01-05 | Example 06 (Matrix) |
 |---------|----------------|---------------------|
@@ -250,7 +250,7 @@ The `goss.j2` macro `goss.build_arg_env_var("R_VERSION")` generates `{{ .Env.BUI
 | Multiple configurations | Separate Containerfile per version | Single Containerfile with build args |
 | Use case | Sequential releases | Combinatorial variants |
 
-## Template Variables
+## Template variables
 
 The templates use these Bakery macros for matrix builds:
 

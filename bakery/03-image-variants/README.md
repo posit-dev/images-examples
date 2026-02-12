@@ -1,4 +1,4 @@
-# Image Variants Example
+# Image variants example
 
 This example demonstrates how to build multiple variants of the same image from a single template. It creates both minimal and standard variants of an Ubuntu 24.04 image, each with different package sets.
 
@@ -25,7 +25,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
         └── test/goss.yaml
 ```
 
-## What This Example Builds
+## What this example builds
 
 - **Base**: Ubuntu 24.04
 - **Variants**:
@@ -36,7 +36,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 ## Concepts
 
-### Variant Configuration in bakery.yaml
+### Variant configuration in bakery.yaml
 
 [Variants][ImageVariant] are defined in the image configuration with `name`, `extension`, and `primary` fields:
 
@@ -58,7 +58,7 @@ images:
 - **extension**: Suffix appended to generated filenames (e.g., `Containerfile.std`)
 - **primary**: Marks the default variant; Bakery also uses the primary variant's extension for version tags (e.g., `example-image:1.0.0-standard`)
 
-### Conditional Template Logic
+### Conditional template logic
 
 Templates use the `{{ Image.Variant }}` variable to include variant-specific content:
 
@@ -75,7 +75,7 @@ COPY {{ Path.Version }}/deps/optional_packages.txt /tmp/optional_packages.txt
 
 This pattern allows a single template to generate different Containerfiles based on which variant Bakery renders.
 
-### Variant-Specific Output Files
+### Variant-specific output files
 
 Bakery generates separate Containerfiles for each variant, distinguished by their extensions:
 
@@ -84,7 +84,7 @@ Bakery generates separate Containerfiles for each variant, distinguished by thei
 
 Each generated file is complete, and you can build them independently.
 
-### Package Separation Pattern
+### Package separation pattern
 
 This example separates packages into two files:
 - `packages.txt` - Core packages installed in all variants
@@ -92,7 +92,7 @@ This example separates packages into two files:
 
 This pattern keeps package lists maintainable and makes variant differences explicit.
 
-## Creation of this Example
+## Creation of this example
 
 ```bash
 # Initialize a new Bakery project
@@ -122,11 +122,11 @@ bakery build
 bakery run dgoss
 ```
 
-## Building Directly with Docker
+## Building directly with Docker
 
 You can build each variant directly using Docker. The build context must be the example directory because the Containerfile references paths relative to it.
 
-### Build the Minimal Variant
+### Build the minimal variant
 
 ```bash
 docker buildx build \
@@ -137,7 +137,7 @@ docker buildx build \
   .
 ```
 
-### Build the Standard Variant
+### Build the standard variant
 
 ```bash
 docker buildx build \
@@ -160,11 +160,11 @@ The goss.yaml template uses the `IMAGE_VARIANT` environment variable to conditio
   installed: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}false{{ else }}true{{ end }}
 ```
 
-### Running Tests Manually
+### Running tests manually
 
 You can run tests without Bakery. The `IMAGE_VARIANT` environment variable tells goss which packages to expect.
 
-#### Test the Minimal Variant
+#### Test the minimal variant
 
 ```bash
 # Build the minimal image first
@@ -189,7 +189,7 @@ dgoss run \
   ghcr.io/posit-dev/example-image:1.0.0-minimal
 ```
 
-#### Test the Standard Variant
+#### Test the standard variant
 
 ```bash
 # Build the standard image first
@@ -214,7 +214,7 @@ dgoss run \
   ghcr.io/posit-dev/example-image:1.0.0-standard
 ```
 
-## Template Variables
+## Template variables
 
 The Containerfile template uses these Bakery variables:
 
