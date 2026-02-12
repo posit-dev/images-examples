@@ -238,7 +238,7 @@ file:
     path: /opt/quarto/{{ .Env.BUILD_ARG_QUARTO_VERSION }}
 ```
 
-The `goss.j2` macro `goss.build_arg_env_var("R_VERSION")` generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
+The `goss.j2` macro [`goss.build_arg_env_var("R_VERSION")`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#build-argument-environment-variable) generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
 
 ## Key Differences from Previous Examples
 
