@@ -26,4 +26,4 @@ We expect all contributors to adhere to the project's [Code of Conduct](CODE_OF_
 
 ## License
 
-Posit Container Images and associated tooling are licensed under the [MIT License](LICENSE.md)
+Posit Container Images and associated tooling are licensed under the [MIT License](LICENSE.md).

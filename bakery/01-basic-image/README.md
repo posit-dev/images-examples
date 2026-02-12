@@ -32,7 +32,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 This example demonstrates Bakery's usage in its most basic form. It consists of a [`bakery.yaml` file][BakeryConfiguration] that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files. 
 
-Each time you add a new [version][ImageVersion] to the `bakery.yaml` file, Bakery renders the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g. a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
+Each time you add a new [version][ImageVersion] to the `bakery.yaml` file, Bakery renders the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g., a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
 
 ## Creation of this example
 
@@ -51,7 +51,7 @@ bakery create image example-image
 bakery create version example-image 1.0.0
 ```
 
-## Building with Bakery command-line interface (CLI)
+## Building with Bakery CLI
 
 Bakery manages the full lifecycle of rendering templates, building images, and running tests.
 

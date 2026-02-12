@@ -1,6 +1,6 @@
 # Image OSes example
 
-This example demonstrates how to build images for multiple operating systems combined with variants. It extends the variants concept from [example 03](../03-image-variants/) by adding multi-OS support, producing 6 container images from a single template set.
+This example demonstrates how to build images for multiple operating systems (OSes) combined with variants. It extends the variants concept from [example 03](../03-image-variants/) by adding multi-OS support, producing 6 container images from a single template set.
 
 All command examples are expected to run with this example, `bakery/04-image-oses/`, as the working directory.
 

@@ -8,7 +8,8 @@ This repository provides examples for using and extending Posit's container imag
 - **bakery/**: Managing images with Posit's [Bakery tool](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) (Jinja2-based templating system)
 - **extending/**: Extending Posit's publicly available container images with customer-specific layers
 
-> **Note**: These images are under active development and not yet officially supported by Posit. See [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
+> [!NOTE]
+> These images are under active development and not yet officially supported by Posit. See [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
 
 ## Build commands
 
