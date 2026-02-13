@@ -1,6 +1,16 @@
 # Extending Posit Container Images
 
-The container images produced by Posit are built
+Posit product images are published in two variants:
+- **Standard** (`std`) — Includes pre-installed versions of Python, R, and Quarto
+- **Minimal** (`min`) — A lightweight base image without pre-installed languages, intended to be extended
+
+These examples use Minimal images as base images. Product images are available on [Docker Hub](https://hub.docker.com/u/posit):
+- [`posit/connect`](https://hub.docker.com/r/posit/connect) — [Posit Connect](https://github.com/posit-dev/images-connect)
+- [`posit/package-manager`](https://hub.docker.com/r/posit/package-manager) — [Posit Package Manager](https://github.com/posit-dev/images-package-manager)
+- [`posit/workbench`](https://hub.docker.com/r/posit/workbench) — [Posit Workbench](https://github.com/posit-dev/images-workbench)
+
+> [!TIP]
+> For an alternative approach using the Bakery CLI to manage extended images as a project, see the [bakery examples](../bakery/).
 
 ## Examples
 

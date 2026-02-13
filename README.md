@@ -12,6 +12,10 @@
 | [bakery](./bakery/) | Examples of managing images with [bakery](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) |
 | [extending](./extending/) | Examples of extending Posit Container images |
 
+## Related Repositories
+
+These examples use Posit product images ([Connect](https://github.com/posit-dev/images-connect), [Package Manager](https://github.com/posit-dev/images-package-manager), [Workbench](https://github.com/posit-dev/images-workbench)) and shared build tooling from [images-shared](https://github.com/posit-dev/images-shared). For an overview of the full ecosystem, see [Posit Container Images](https://github.com/posit-dev/images).
+
 ## Share your Feedback
 
 We invite you to join us on [GitHub Discussions](https://github.com/posit-dev/images/discussions) to ask questions and share feedback.

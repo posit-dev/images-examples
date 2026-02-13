@@ -84,7 +84,7 @@ You can also manually specify this field to pin specific versions rather than us
 
 ### Template Variables for Dependencies
 
-Templates access resolved dependencies through these variables:
+Templates access resolved dependencies through the following [available variables](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#available-variables):
 
 | Variable | Description |
 |:---------|:------------|
@@ -104,7 +104,7 @@ These are lists, allowing iteration for multi-version installs:
 
 Bakery provides macros that handle dependency installation with best practices:
 
-**Python (python.j2)**:
+**[Python (python.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#python-installation-and-package-management)**:
 
 | Macro | Description |
 |:------|:------------|
@@ -112,14 +112,14 @@ Bakery provides macros that handle dependency installation with best practices:
 | `python.copy_from_build_stage()` | Copies installed Python from the builder stage |
 | `python.get_version_directory(version)` | Returns the path to a Python version |
 
-**R (r.j2)**:
+**[R (r.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#r-installation-and-package-management)**:
 
 | Macro | Description |
 |:------|:------------|
 | `r.run_install(versions)` | Installs R versions using the official installer |
 | `r.get_version_directory(version)` | Returns the path to an R version |
 
-**Quarto (quarto.j2)** (when needed):
+**[Quarto (quarto.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#quarto-installation-and-management)** (when needed):
 
 | Macro | Description |
 |:------|:------------|

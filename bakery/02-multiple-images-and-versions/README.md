@@ -81,11 +81,11 @@ versions:
     subpath: "jammy"    # Files generated to ubuntu-base/jammy/
 ```
 
-The `{{ Image.Version }}` variable still resolves to the version name (e.g., "24.04"), while `{{ Path.Version }}` uses the subpath (e.g., "ubuntu-base/noble").
+The `{{ Image.Version }}` variable still resolves to the version name (e.g., "24.04"), while `{{ Path.Version }}` uses the subpath (e.g., "ubuntu-base/noble"). See [Available Variables](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#available-variables) for the full list of template variables.
 
 ### Package Manager Abstraction
 
-Bakery provides macros for different package managers. Ubuntu uses `apt.j2` while Rocky Linux uses `dnf.j2`:
+Bakery provides macros for different package managers. Ubuntu uses [`apt.j2`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#apt-package-management) while Rocky Linux uses [`dnf.j2`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#dnf-package-management):
 
 ```jinja2
 {# Ubuntu template #}
@@ -265,14 +265,14 @@ See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-b
 
 This example uses Bakery's package manager macros to abstract differences between distributions:
 
-**apt.j2** (for Debian/Ubuntu):
+**[apt.j2](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#apt-package-management)** (for Debian/Ubuntu):
 
 | Macro | Description |
 |:------|:------------|
 | `apt.run_setup()` | Installs required apt packages and sources |
 | `apt.run_install(files=[...])` | Installs packages from files, handles cleanup |
 
-**dnf.j2** (for RHEL/Rocky/Fedora):
+**[dnf.j2](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#dnf-package-management)** (for RHEL/Rocky/Fedora):
 
 | Macro | Description |
 |:------|:------------|
