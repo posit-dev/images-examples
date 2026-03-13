@@ -4,3 +4,8 @@ results/
 .dev-*
 bakery-bake.json
 .bakery-bake.json
+
+# Claude
+.claude/settings.local.json
+.claude/worktrees/
+.claude/plans/
