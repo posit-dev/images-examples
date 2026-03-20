@@ -5,7 +5,7 @@
 >
 > Please see [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
 
-This repository contains examples for working with [Posit Container Images](https://github.com/posit-dev/images). If you want to run pre-built images, see the Quick Start guides in each product's repository ([Connect](https://github.com/posit-dev/images-connect/tree/main/connect), [Package Manager](https://github.com/posit-dev/images-package-manager/tree/main/package-manager), [Workbench](https://github.com/posit-dev/images-workbench/tree/main/workbench)). The examples here are for users who want to build custom images or extend the base images.
+This repository contains examples for working with [Posit Container Images](https://github.com/posit-dev/images). If you want to run pre-built images, see the Quick Start guides in each product's repository ([Connect](https://github.com/posit-dev/images-connect/blob/main/connect/README.md), [Package Manager](https://github.com/posit-dev/images-package-manager/blob/main/package-manager/README.md), [Workbench](https://github.com/posit-dev/images-workbench/blob/main/workbench/README.md)). The examples here are for users who want to build custom images or extend the base images.
 
 ## Examples
 
@@ -18,7 +18,7 @@ This repository contains examples for working with [Posit Container Images](http
 
 | Goal | Where to go |
 |------|-------------|
-| Run a pre-built Posit product image | Product repos: [Connect](https://github.com/posit-dev/images-connect/tree/main/connect), [Package Manager](https://github.com/posit-dev/images-package-manager/tree/main/package-manager), [Workbench](https://github.com/posit-dev/images-workbench/tree/main/workbench) |
+| Run a pre-built Posit product image | Product repos: [Connect](https://github.com/posit-dev/images-connect/blob/main/connect/README.md), [Package Manager](https://github.com/posit-dev/images-package-manager/blob/main/package-manager/README.md), [Workbench](https://github.com/posit-dev/images-workbench/blob/main/workbench/README.md) |
 | Add R/Python packages or system libraries to a product image | [Extending examples](./extending/) |
 | Learn the Bakery build system for managing container images | [Bakery examples](./bakery/) |
 | Deploy on Kubernetes with Helm | Product repos or [Posit Helm charts](https://docs.posit.co/helm/) |
