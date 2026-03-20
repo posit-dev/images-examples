@@ -1,9 +1,7 @@
 # Posit Container Image Examples
 
-> [!IMPORTANT]
-> These images are under active development and testing and are not yet supported by Posit.
->
-> Please see [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
+> [!NOTE]
+> These images are in preview as Posit migrates container images from [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products). The existing images remain supported.
 
 This repository contains examples for working with [Posit Container Images](https://github.com/posit-dev/images). If you want to run pre-built images, see the Quick Start guides in each product's repository ([Connect](https://github.com/posit-dev/images-connect/blob/main/connect/README.md), [Package Manager](https://github.com/posit-dev/images-package-manager/blob/main/package-manager/README.md), [Workbench](https://github.com/posit-dev/images-workbench/blob/main/workbench/README.md)). The examples here are for users who want to build custom images or extend the base images.
 
