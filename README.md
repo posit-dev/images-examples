@@ -1,9 +1,11 @@
-# Image examples
+# Posit Container Image Examples
 
 > [!IMPORTANT]
 > These images are under active development and testing and are not yet supported by Posit.
 >
 > Please see [rstudio/rstudio-docker-products](https://github.com/rstudio/rstudio-docker-products) for officially supported images.
+
+This repository contains examples for working with [Posit Container Images](https://github.com/posit-dev/images). If you want to run pre-built images, see the Quick Start guides in each product's repository ([Connect](https://github.com/posit-dev/images-connect/tree/main/connect), [Package Manager](https://github.com/posit-dev/images-package-manager/tree/main/package-manager), [Workbench](https://github.com/posit-dev/images-workbench/tree/main/workbench)). The examples here are for users who want to build custom images or extend the base images.
 
 ## Examples
 
@@ -11,6 +13,15 @@
 |:-----|:--------|
 | [bakery](./bakery/) | Examples of managing images with [bakery](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) |
 | [extending](./extending/) | Examples of extending Posit Container images |
+
+## When to Use These Examples
+
+| Goal | Where to go |
+|------|-------------|
+| Run a pre-built Posit product image | Product repos: [Connect](https://github.com/posit-dev/images-connect/tree/main/connect), [Package Manager](https://github.com/posit-dev/images-package-manager/tree/main/package-manager), [Workbench](https://github.com/posit-dev/images-workbench/tree/main/workbench) |
+| Add R/Python packages or system libraries to a product image | [Extending examples](./extending/) |
+| Learn the Bakery build system for managing container images | [Bakery examples](./bakery/) |
+| Deploy on Kubernetes with Helm | Product repos or [Posit Helm charts](https://docs.posit.co/helm/) |
 
 ## Related repositories
 
