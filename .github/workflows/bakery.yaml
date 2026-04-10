@@ -2,9 +2,12 @@ on:
   pull_request:
 
 name: Examples - Bakery
+permissions: {}
 jobs:
 
   collect-examples:
+    permissions:
+      contents: read
     name: Collect bakery examples
     runs-on: ubuntu-latest
     outputs:
@@ -30,6 +33,8 @@ jobs:
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   build-and-test:
+    permissions:
+      contents: read
     needs:
       - collect-examples
     runs-on: ubuntu-latest

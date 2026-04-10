@@ -2,9 +2,12 @@ on:
   pull_request:
 
 name: Examples - Extending
+permissions: {}
 jobs:
 
   collect-images:
+    permissions:
+      contents: read
     name: Collect image definitions
     runs-on: ubuntu-latest
     outputs:
@@ -32,6 +35,8 @@ jobs:
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   docker:
+    permissions:
+      contents: read
     needs:
       - collect-images
     runs-on: ubuntu-latest
