@@ -20,14 +20,15 @@ jobs:
           set -euo pipefail
 
           # Find numbered directories under bakery/ (e.g., 01-basic-image, 02-multiple-images)
-          entries=$(ls -d bakery/[0-9]*/ 2>/dev/null | while read dir; do
+          shopt -s nullglob
+          entries=$(for dir in bakery/[0-9]*/; do
               name=$(basename "$dir")
               echo "$name"
           done | jq -R -s -c 'split("\n")[:-1] | map({name: .})')
 
           # Create the matrix JSON
-          matrix=$(echo $entries | jq -c '{include: .}')
-          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+          matrix=$(echo "$entries" | jq -c '{include: .}')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   build-and-test:
     needs:
@@ -60,7 +61,7 @@ jobs:
         uses: extractions/setup-just@v4
 
       - name: Add tools to PATH
-        run: echo "$GITHUB_WORKSPACE/tools" >> $GITHUB_PATH
+        run: echo "$GITHUB_WORKSPACE/tools" >> "$GITHUB_PATH"
 
       - name: Build example
         env:

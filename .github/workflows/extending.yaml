@@ -20,7 +20,7 @@ jobs:
           set -euo pipefail
 
           # Find directories under extending that contain Dockerfile or Containerfile
-          entries=$(find extending -type f -name "Containerfile*" -o -name "Dockerfile*" | while read f; do
+          entries=$(find extending -type f -name "Containerfile*" -o -name "Dockerfile*" | while read -r f; do
               dir=$(dirname "$f")
               name=$(basename "$dir")
               containerfile=$(basename "$f")
@@ -28,8 +28,8 @@ jobs:
           done | jq -R -s -c 'split("\n")[:-1] | map(split(",")) | map({name: .[0], directory: .[1], file: .[2]})')
 
           # Create the matrix JSON in one step to avoid shell quoting issues
-          matrix=$(echo $entries | jq -c '{include: .}')
-          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+          matrix=$(echo "$entries" | jq -c '{include: .}')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   docker:
     needs:
