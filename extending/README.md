@@ -18,7 +18,9 @@ These examples use Minimal images as base images. Product images are available o
 |:-----|:--------|
 | [ca-certificates](./ca-certificates/) | Add a custom CA certificate to the system trust store |
 | [pip-conf](./pip-conf/) | Add a custom `pip.conf` file to specify global pip settings |
+| [pro-drivers](./pro-drivers/) | Install the Posit Pro Drivers (ODBC drivers) on a minimal product image |
 | [python](./python/) | Install specific versions of Python on a minimal product image<br/>Install a list of Python packages in each Python version |
+| [quarto](./quarto/) | Install Quarto and TinyTeX on a minimal product image |
 | [R](./R/) | Install specific versions of R on a minimal product image<br/>Install a list of R packages in each R version |
 | [system-dependencies](./system-dependencies/) | Install system dependencies required for additional libraries |
 | [vs-code-extensions](./vs-code-extensions/) | Pre-install a list of VS Code extensions |
