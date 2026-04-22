@@ -1,9 +1,11 @@
 # Example of extending a Posit Connect image to install Quarto and TinyTeX.
 # Quarto and TinyTeX are pre-installed in the Standard (-std) image variants.
 #
-# TinyTeX is installed via Quarto (`quarto install tinytex`) rather than the
-# standalone TinyTeX installer, which provides a fuller set of LaTeX packages
-# needed for PDF rendering (e.g., `fancyhdr`).
+# Quarto is installed as a deb from the Posit Open apt repository
+# (https://dl.posit.co/public/open/), which avoids the per-architecture URL
+# handling the tarball install requires. TinyTeX is installed via Quarto
+# (`quarto install tinytex`), which provides a fuller set of LaTeX packages
+# than the standalone TinyTeX installer (e.g., `fancyhdr`).
 
 
 ### Specify versions to extend ###
@@ -16,21 +18,17 @@ FROM docker.io/posit/connect:${PCT_VERSION}-ubuntu-22.04-min
 
 # Re-declare ARGs after FROM so they are available in RUN instructions.
 ARG QUARTO_VERSION
-ARG TARGETARCH
 
 
-### Install Quarto ###
-RUN mkdir -p /opt/quarto/${QUARTO_VERSION} && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-${TARGETARCH}.tar.gz" | \
-        tar xzf - -C "/opt/quarto/${QUARTO_VERSION}" --strip-components=1 && \
-    ln -s /opt/quarto/${QUARTO_VERSION}/bin/quarto /usr/local/bin/quarto
-
-
-### Install xz-utils ###
-# Required to unpack the TinyTeX `.tar.xz` archive in the next step. The -min
-# image does not include it by default.
-RUN apt-get update -yqq && \
+### Set up the Posit Open apt repository and install Quarto ###
+# The `quarto` deb installs the binary to /opt/quarto/bin/quarto and symlinks
+# it into /usr/local/bin/quarto via its postinst script.
+#
+# `xz-utils` is required to unpack the TinyTeX `.tar.xz` archive in the next
+# step; the -min image does not include it by default.
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
     apt-get install -yqq --no-install-recommends \
+        quarto=${QUARTO_VERSION} \
         xz-utils && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
@@ -39,6 +37,12 @@ RUN apt-get update -yqq && \
 ### Install TinyTeX via Quarto ###
 # The ADD line busts the Docker build cache whenever a new TinyTeX release is
 # published, so rebuilds pick up the latest TeX packages.
+#
+# `HOME="/opt"` redirects the install to /opt/.TinyTeX so it is readable by
+# non-root runtime users. `--update-path` makes tlmgr symlink the TinyTeX
+# binaries into /usr/local/bin so they are on the default PATH.
+# TODO: Remove `HOME="/opt"` once Quarto supports custom install locations
+# for TinyTeX, see https://github.com/quarto-dev/quarto-cli/issues/11800.
 ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
-RUN /opt/quarto/${QUARTO_VERSION}/bin/quarto install tinytex --no-prompt --update-path && \
+RUN HOME="/opt" /opt/quarto/bin/quarto install tinytex --no-prompt --update-path && \
     rm -f /tmp/tinytex-release.json
