@@ -20,19 +20,13 @@ FROM docker.io/posit/connect:${PCT_VERSION}-ubuntu-22.04-min
 ARG QUARTO_VERSION
 
 
-### Set up the Posit Open apt repository ###
-# Install the signing key and source list inline rather than sourcing the
-# remote `setup.deb.sh` script. This avoids `curl | bash` at build time and
-# makes the repo configuration visible directly in the Containerfile. The key
-# fingerprint is pinned in the URL (51C0B5BB19F92D60); Posit key rotations
-# will require an update here.
-RUN curl -1sLf 'https://dl.posit.co/public/open/gpg.51C0B5BB19F92D60.key' | \
-        gpg --dearmor > /usr/share/keyrings/posit-open-archive-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/posit-open-archive-keyring.gpg] https://dl.posit.co/public/open/deb/ubuntu jammy main" \
-        > /etc/apt/sources.list.d/posit-open.list
-
-
-### Install Quarto and xz-utils ###
+### Set up the Posit Open apt repository and install Quarto ###
+# `setup.deb.sh` registers the Posit Open apt repo and its signing key. This
+# is the same script the Posit product images use to configure the Pro repo;
+# running it here matches that pattern. The Posit Connect -min base image
+# already has `curl`, `ca-certificates`, and `gnupg` installed, which the
+# script requires.
+#
 # The `quarto` deb installs the binary to /opt/quarto/bin/quarto and symlinks
 # it into /usr/local/bin/quarto via its postinst script. `apt-mark hold`
 # pins the package so a later `apt upgrade` inside the container cannot
@@ -40,7 +34,7 @@ RUN curl -1sLf 'https://dl.posit.co/public/open/gpg.51C0B5BB19F92D60.key' | \
 #
 # `xz-utils` is required to unpack the TinyTeX `.tar.xz` archive in the next
 # step; the -min image does not include it by default.
-RUN apt-get update -yqq && \
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
     apt-get install -yqq --no-install-recommends \
         quarto=${QUARTO_VERSION} \
         xz-utils && \
