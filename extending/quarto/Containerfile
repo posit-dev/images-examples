@@ -2,10 +2,10 @@
 # Quarto and TinyTeX are pre-installed in the Standard (-std) image variants.
 #
 # Quarto is installed as a deb from the Posit Open apt repository
-# (https://dl.posit.co/public/open/), which avoids the per-architecture URL
-# handling the tarball install requires. TinyTeX is installed via Quarto
-# (`quarto install tinytex`), which provides a fuller set of LaTeX packages
-# than the standalone TinyTeX installer (e.g., `fancyhdr`).
+# (https://dl.posit.co/public/open/), matching the install path used in Posit
+# product images. TinyTeX is installed via Quarto (`quarto install tinytex`),
+# which provides a fuller set of LaTeX packages than the standalone TinyTeX
+# installer (e.g. `fancyhdr`).
 
 
 ### Specify versions to extend ###
@@ -20,16 +20,31 @@ FROM docker.io/posit/connect:${PCT_VERSION}-ubuntu-22.04-min
 ARG QUARTO_VERSION
 
 
-### Set up the Posit Open apt repository and install Quarto ###
+### Set up the Posit Open apt repository ###
+# Install the signing key and source list inline rather than sourcing the
+# remote `setup.deb.sh` script. This avoids `curl | bash` at build time and
+# makes the repo configuration visible directly in the Containerfile. The key
+# fingerprint is pinned in the URL (51C0B5BB19F92D60); Posit key rotations
+# will require an update here.
+RUN curl -1sLf 'https://dl.posit.co/public/open/gpg.51C0B5BB19F92D60.key' | \
+        gpg --dearmor > /usr/share/keyrings/posit-open-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/posit-open-archive-keyring.gpg] https://dl.posit.co/public/open/deb/ubuntu jammy main" \
+        > /etc/apt/sources.list.d/posit-open.list
+
+
+### Install Quarto and xz-utils ###
 # The `quarto` deb installs the binary to /opt/quarto/bin/quarto and symlinks
-# it into /usr/local/bin/quarto via its postinst script.
+# it into /usr/local/bin/quarto via its postinst script. `apt-mark hold`
+# pins the package so a later `apt upgrade` inside the container cannot
+# drift off the pinned version.
 #
 # `xz-utils` is required to unpack the TinyTeX `.tar.xz` archive in the next
 # step; the -min image does not include it by default.
-RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
+RUN apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
         quarto=${QUARTO_VERSION} \
         xz-utils && \
+    apt-mark hold quarto && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
