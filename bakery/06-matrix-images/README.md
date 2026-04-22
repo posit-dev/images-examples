@@ -226,6 +226,11 @@ Note that you must provide the version values that Bakery would normally resolve
 Matrix tests access version information through `BUILD_ARG_*` environment variables that Bakery sets automatically:
 
 ```yaml
+package:
+  quarto:
+    installed: true
+    versions:
+      - {{ .Env.BUILD_ARG_QUARTO_VERSION }}
 file:
   python-{{ .Env.BUILD_ARG_PYTHON_VERSION }}:
     exists: true
@@ -233,9 +238,6 @@ file:
   r-{{ .Env.BUILD_ARG_R_VERSION }}:
     exists: true
     path: /opt/R/{{ .Env.BUILD_ARG_R_VERSION }}
-  quarto-{{ .Env.BUILD_ARG_QUARTO_VERSION }}:
-    exists: true
-    path: /opt/quarto/{{ .Env.BUILD_ARG_QUARTO_VERSION }}
 ```
 
 The `goss.j2` macro [`goss.build_arg_env_var("R_VERSION")`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#build-argument-environment-variable) generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
