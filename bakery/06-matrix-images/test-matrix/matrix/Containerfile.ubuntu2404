@@ -1,5 +1,5 @@
 # Build Python using uv in a separate stage
-FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+FROM ghcr.io/astral-sh/uv:debian-slim AS python-builder
 
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 ENV UV_PYTHON_INSTALL_DIR=/opt/python
@@ -19,7 +19,7 @@ ARG R_VERSION
 ARG PYTHON_VERSION
 ARG QUARTO_VERSION
 
-### Install Apt Packages ###
+### Install Apt Packages and set up the Posit Pro apt repo ###
 RUN apt-get update -yqq --fix-missing && \
     apt-get upgrade -yqq && \
     apt-get dist-upgrade -yqq && \
@@ -33,6 +33,15 @@ RUN apt-get update -yqq --fix-missing && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
+### Set up the Posit Open apt repo and install tools needed for Quarto ###
+# The Open repo hosts the `quarto` deb package (see next RUN). `xz-utils` is
+# required to unpack the TinyTeX tarball in the TinyTeX install step.
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
+    apt-get install -yqq --no-install-recommends \
+        xz-utils && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install Python from previous stage
 COPY --from=python-builder /opt/python /opt/python
 
@@ -40,7 +49,16 @@ COPY --from=python-builder /opt/python /opt/python
 RUN RUN_UNATTENDED=1 R_VERSION=$R_VERSION bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
     find . -type f -name '[rR]-$R_VERSION.*\.(deb|rpm)' -delete
 
-# Install Quarto
-RUN mkdir -p /opt/quarto/$QUARTO_VERSION && \
-    curl -fsSL "https://github.com/quarto-dev/quarto-cli/releases/download/v$QUARTO_VERSION/quarto-$QUARTO_VERSION-linux-amd64.tar.gz" | tar xzf - -C "/opt/quarto/$QUARTO_VERSION" --strip-components=1 && \
-    /opt/quarto/$QUARTO_VERSION/bin/quarto install tinytex --no-prompt --quiet
+### Install Quarto from the Posit Open apt repo ###
+# The `quarto` deb installs to /opt/quarto/bin/quarto and symlinks the binary
+# into /usr/local/bin/quarto via its postinst script.
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        quarto=$QUARTO_VERSION && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+### Install TinyTeX via Quarto ###
+# Installing TinyTeX via Quarto yields a fuller set of LaTeX packages than
+# the standalone TinyTeX installer.
+RUN /opt/quarto/bin/quarto install tinytex --no-prompt --quiet

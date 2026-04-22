@@ -10,6 +10,10 @@ package:
     installed: true
   r-{{ goss.build_arg_env_var("R_VERSION") }}:
     installed: true
+  quarto:
+    installed: true
+    versions:
+      - {{ goss.build_arg_env_var("QUARTO_VERSION") }}
 file:
   python-{{ goss.build_arg_env_var("PYTHON_VERSION") }}:
     exists: true
@@ -17,6 +21,6 @@ file:
   r-{{ goss.build_arg_env_var("R_VERSION") }}:
     exists: true
     path: {{ r.get_version_directory(goss.build_arg_env_var("R_VERSION")) }}
-  quarto-{{ goss.build_arg_env_var("QUARTO_VERSION") }}:
+  quarto:
     exists: true
-    path: {{ quarto.get_version_directory(goss.build_arg_env_var("QUARTO_VERSION")) }}
+    path: /opt/quarto/bin/quarto
