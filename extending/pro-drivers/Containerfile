@@ -1,0 +1,30 @@
+# Example of extending a Posit Workbench image to install the Posit Pro Drivers.
+# The Pro Drivers are ODBC drivers for a variety of databases and are commonly
+# required by Workbench and Connect deployments. They are pre-installed in the
+# Standard (-std) image variants.
+#
+# See: https://docs.posit.co/pro-drivers/
+
+
+### Specify version of the Posit Workbench to extend ###
+ARG PWB_VERSION="2025.09.0"
+
+
+### Extend the Posit Workbench Minimal image ###
+FROM docker.io/posit/workbench:${PWB_VERSION}-ubuntu-22.04-min
+
+
+### Install the Posit Pro Drivers ###
+# The Posit apt repository is already configured in the -min image, so the
+# `rstudio-drivers` package can be installed directly.
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        rstudio-drivers && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+### Register the Pro Drivers with unixODBC ###
+# The `rstudio-drivers` package ships a sample `odbcinst.ini` that registers
+# every included driver. Copy it into place so the drivers are discoverable
+# via the system's unixODBC configuration.
+RUN cp /opt/rstudio-drivers/odbcinst.ini.sample /etc/odbcinst.ini

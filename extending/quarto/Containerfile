@@ -1,0 +1,57 @@
+# Example of extending a Posit Connect image to install Quarto and TinyTeX.
+# Quarto and TinyTeX are pre-installed in the Standard (-std) image variants.
+#
+# Quarto is installed as a deb from the Posit Open apt repository
+# (https://dl.posit.co/public/open/), matching the install path used in Posit
+# product images. TinyTeX is installed via Quarto (`quarto install tinytex`),
+# which provides a fuller set of LaTeX packages than the standalone TinyTeX
+# installer (e.g. `fancyhdr`).
+
+
+### Specify versions to extend ###
+ARG PCT_VERSION="2025.07.0"
+ARG QUARTO_VERSION="1.9.36"
+
+
+### Extend the Posit Connect Minimal image ###
+FROM docker.io/posit/connect:${PCT_VERSION}-ubuntu-22.04-min
+
+# Re-declare ARGs after FROM so they are available in RUN instructions.
+ARG QUARTO_VERSION
+
+
+### Set up the Posit Open apt repository and install Quarto ###
+# `setup.deb.sh` registers the Posit Open apt repo and its signing key. This
+# is the same script the Posit product images use to configure the Pro repo;
+# running it here matches that pattern. The Posit Connect -min base image
+# already has `curl`, `ca-certificates`, and `gnupg` installed, which the
+# script requires.
+#
+# The `quarto` deb installs the binary to /opt/quarto/bin/quarto and symlinks
+# it into /usr/local/bin/quarto via its postinst script. `apt-mark hold`
+# pins the package so a later `apt upgrade` inside the container cannot
+# drift off the pinned version.
+#
+# `xz-utils` is required to unpack the TinyTeX `.tar.xz` archive in the next
+# step; the -min image does not include it by default.
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
+    apt-get install -yqq --no-install-recommends \
+        quarto=${QUARTO_VERSION} \
+        xz-utils && \
+    apt-mark hold quarto && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+
+### Install TinyTeX via Quarto ###
+# The ADD line busts the Docker build cache whenever a new TinyTeX release is
+# published, so rebuilds pick up the latest TeX packages.
+#
+# `HOME="/opt"` redirects the install to /opt/.TinyTeX so it is readable by
+# non-root runtime users. `--update-path` makes tlmgr symlink the TinyTeX
+# binaries into /usr/local/bin so they are on the default PATH.
+# TODO: Remove `HOME="/opt"` once Quarto supports custom install locations
+# for TinyTeX, see https://github.com/quarto-dev/quarto-cli/issues/11800.
+ADD https://github.com/rstudio/tinytex-releases/releases/latest /tmp/tinytex-release.json
+RUN HOME="/opt" /opt/quarto/bin/quarto install tinytex --no-prompt --update-path && \
+    rm -f /tmp/tinytex-release.json
