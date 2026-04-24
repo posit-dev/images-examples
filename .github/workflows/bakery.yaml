@@ -57,7 +57,7 @@ jobs:
         uses: posit-dev/images-shared/setup-bakery@main
 
       - name: Set up Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@v4
 
       - name: Add tools to PATH
         run: echo "$GITHUB_WORKSPACE/tools" >> $GITHUB_PATH
