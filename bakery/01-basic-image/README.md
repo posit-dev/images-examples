@@ -2,7 +2,7 @@
 
 This example demonstrates the simplest use case for Bakery: a single [image][Image] with one [version][ImageVersion]. It builds an Ubuntu 24.04 image with basic development tools installed.
 
-All command examples are expected to run with this example, `bakery/01-basic-image/`, as the working directory. 
+All command examples are expected to run with this example, `bakery/01-basic-image/`, as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
@@ -30,7 +30,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 ## Concepts
 
-This example demonstrates Bakery's usage in its most basic form. It consists of a [`bakery.yaml` file][BakeryConfiguration] that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files. 
+This example demonstrates Bakery's usage in its most basic form. It consists of a [`bakery.yaml` file][BakeryConfiguration] that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files.
 
 Each time you add a new [version][ImageVersion] to the `bakery.yaml` file, Bakery renders the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g., a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
 

@@ -1,14 +1,14 @@
 package:
   r-4.5.2:
     installed: true
-  
+
 
 file:
   /opt/python/3.14.3/bin/python:
       exists: true
   /opt/python/3.13.12/bin/python:
       exists: true
-  
+
 
 command:
   "Verify R installation is version 4.5.2":
@@ -26,4 +26,3 @@ command:
     exit-status: 0
     stdout:
       - "3.13.12"
-  
