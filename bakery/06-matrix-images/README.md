@@ -169,7 +169,7 @@ Matrix images use a `matrix/` subdirectory instead of version directories:
 ### Image tagging
 
 Matrix images are tagged with all dependency versions. For example:
-- `test-matrix-quarto1-8-27-r4-5-2-python3-14-3-ubuntu-24-04`
+- `test-matrix:r4.5.2-python3.14.3-quarto1.8.27-ubuntu-24.04`
 
 ## Creation of this example
 
