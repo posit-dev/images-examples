@@ -224,6 +224,6 @@ The Containerfile template uses these Bakery variables:
 | `{{ Image.Variant }}` | The variant being built | `"Minimal"`, `"Standard"` |
 | `{{ Path.Version }}` | Path to the version directory | `"example-image/1.0.0"` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a list of available variables and macros.
 
-[ImageVariant]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imagevariant
+[ImageVariant]: https://posit-dev.github.io/images-shared/configuration.html#imagevariant

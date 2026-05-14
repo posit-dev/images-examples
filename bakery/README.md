@@ -17,9 +17,9 @@ Bakery is Posit's Jinja2-based templating system for managing container images. 
 
 ### Posit Bakery documentation and resources
 - [Bakery Repository](https://github.com/posit-dev/images-shared/tree/main/posit-bakery)
-- [Bakery Architecture Documentation](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/ARCHITECTURE.md)
-- [Bakery Configuration Documentation](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md)
-- [Bakery Templating Documentation](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md)
+- [Bakery Architecture Documentation](https://posit-dev.github.io/images-shared/architecture.html)
+- [Bakery Configuration Documentation](https://posit-dev.github.io/images-shared/configuration.html)
+- [Bakery Templating Documentation](https://posit-dev.github.io/images-shared/templating.html)
 - [setup-bakery GitHub Action](https://github.com/posit-dev/images-shared/tree/main/setup-bakery)
 
 ### Posit product images

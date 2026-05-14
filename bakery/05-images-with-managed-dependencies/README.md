@@ -84,7 +84,7 @@ You can also manually specify this field to pin specific versions rather than us
 
 ### Template variables for dependencies
 
-Templates access resolved dependencies through the following [available variables](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#available-variables):
+Templates access resolved dependencies through the following [available variables](https://posit-dev.github.io/images-shared/templating.html#available-variables):
 
 | Variable | Description |
 |:---------|:------------|
@@ -104,7 +104,7 @@ These are lists, allowing iteration for multi-version installs:
 
 Bakery provides macros that handle dependency installation with best practices:
 
-**[Python (python.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#python-installation-and-package-management)**:
+**[Python (python.j2)](https://posit-dev.github.io/images-shared/templating.html#python-installation-and-package-management)**:
 
 | Macro | Description |
 |:------|:------------|
@@ -112,14 +112,14 @@ Bakery provides macros that handle dependency installation with best practices:
 | `python.copy_from_build_stage()` | Copies installed Python from the builder stage |
 | `python.get_version_directory(version)` | Returns the path to a Python version |
 
-**[R (r.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#r-installation-and-package-management)**:
+**[R (r.j2)](https://posit-dev.github.io/images-shared/templating.html#r-installation-and-package-management)**:
 
 | Macro | Description |
 |:------|:------------|
 | `r.run_install(versions)` | Installs R versions using the official installer |
 | `r.get_version_directory(version)` | Returns the path to an R version |
 
-**[Quarto (quarto.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#quarto-installation-and-management)** (when needed):
+**[Quarto (quarto.j2)](https://posit-dev.github.io/images-shared/templating.html#quarto-installation-and-management)** (when needed):
 
 | Macro | Description |
 |:------|:------------|
@@ -248,7 +248,7 @@ The templates use these Bakery variables:
 | `{{ Dependencies.python }}` | List of Python versions to install | `["3.14.3", "3.13.12"]` |
 | `{{ Dependencies.quarto }}` | List of Quarto versions to install (when used) | `["1.8.27"]` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a complete list of available variables and macros.
 
-[DependencyConstraint]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyconstraint
-[DependencyVersions]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyversions
+[DependencyConstraint]: https://posit-dev.github.io/images-shared/configuration.html#dependencyconstraint
+[DependencyVersions]: https://posit-dev.github.io/images-shared/configuration.html#dependencyversions

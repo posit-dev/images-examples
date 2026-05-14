@@ -81,11 +81,11 @@ versions:
     subpath: "jammy"    # Files generated to ubuntu-base/jammy/
 ```
 
-The `{{ Image.Version }}` variable still resolves to the version name (e.g., "24.04"), while `{{ Path.Version }}` uses the subpath (e.g., "ubuntu-base/noble"). See [Available Variables](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#available-variables) for the full list of template variables.
+The `{{ Image.Version }}` variable still resolves to the version name (e.g., "24.04"), while `{{ Path.Version }}` uses the subpath (e.g., "ubuntu-base/noble"). See [Available Variables](https://posit-dev.github.io/images-shared/templating.html#available-variables) for the full list of template variables.
 
 ### Package manager abstraction
 
-Bakery provides macros for different package managers. Ubuntu uses [`apt.j2`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#apt-package-management) while Rocky Linux uses [`dnf.j2`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#dnf-package-management):
+Bakery provides macros for different package managers. Ubuntu uses [`apt.j2`](https://posit-dev.github.io/images-shared/templating.html#apt-package-management) while Rocky Linux uses [`dnf.j2`](https://posit-dev.github.io/images-shared/templating.html#dnf-package-management):
 
 ```jinja2
 {# Ubuntu template #}
@@ -259,20 +259,20 @@ The Containerfile templates use these Bakery variables:
 
 Note that when using `subpath`, `Image.Version` contains the version name while `Path.Version` reflects the subpath.
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a list of available variables and macros.
 
 ## Bakery macros
 
 This example uses Bakery's package manager macros to abstract differences between distributions:
 
-**[apt.j2](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#apt-package-management)** (for Debian/Ubuntu):
+**[apt.j2](https://posit-dev.github.io/images-shared/templating.html#apt-package-management)** (for Debian/Ubuntu):
 
 | Macro | Description |
 |:------|:------------|
 | `apt.run_setup()` | Installs required apt packages and sources |
 | `apt.run_install(files=[...])` | Installs packages from files, handles cleanup |
 
-**[dnf.j2](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#dnf-package-management)** (for RHEL/Rocky/Fedora):
+**[dnf.j2](https://posit-dev.github.io/images-shared/templating.html#dnf-package-management)** (for RHEL/Rocky/Fedora):
 
 | Macro | Description |
 |:------|:------------|
@@ -281,4 +281,4 @@ This example uses Bakery's package manager macros to abstract differences betwee
 
 These macros ensure consistent, best-practice package installation across different base images while keeping templates clean and readable.
 
-[BakeryConfiguration]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration
+[BakeryConfiguration]: https://posit-dev.github.io/images-shared/configuration.html#bakery-configuration

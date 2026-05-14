@@ -125,8 +125,8 @@ The Containerfile template uses these Bakery variables:
 | `{{ Image.Version }}` | The version being built | `"1.0.0"` |
 | `{{ Path.Version }}` | Path to the version directory | `"example-image/1.0.0"` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a list of available variables and macros.
 
-[BakeryConfiguration]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration
-[Image]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#image
-[ImageVersion]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imageversion
+[BakeryConfiguration]: https://posit-dev.github.io/images-shared/configuration.html#bakery-configuration
+[Image]: https://posit-dev.github.io/images-shared/configuration.html#image
+[ImageVersion]: https://posit-dev.github.io/images-shared/configuration.html#imageversion

@@ -322,6 +322,6 @@ The Containerfile templates use these Bakery variables:
 | `{{ Image.OS.Name }}` | The OS identifier | `"ubuntu"`, `"rocky"` |
 | `{{ Path.Version }}` | Path to the version directory | `"example-image/1.0.0"` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a list of available variables and macros.
 
-[ImageVersionOS]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imageversionos
+[ImageVersionOS]: https://posit-dev.github.io/images-shared/configuration.html#imageversionos

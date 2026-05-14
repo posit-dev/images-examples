@@ -240,7 +240,7 @@ file:
     path: /opt/R/{{ .Env.BUILD_ARG_R_VERSION }}
 ```
 
-The `goss.j2` macro [`goss.build_arg_env_var("R_VERSION")`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#build-argument-environment-variable) generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
+The `goss.j2` macro [`goss.build_arg_env_var("R_VERSION")`](https://posit-dev.github.io/images-shared/templating.html#build-argument-environment-variable) generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
 
 ## Key differences from previous examples
 
@@ -278,8 +278,8 @@ The templates use these Bakery macros for matrix builds:
 |:------|:-------|
 | `{{ goss.build_arg_env_var("R_VERSION") }}` | `{{ .Env.BUILD_ARG_R_VERSION }}` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a complete list of available variables and macros.
 
-[ImageMatrix]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imagematrix
-[DependencyConstraint]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyconstraint
-[DependencyVersions]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyversions
+[ImageMatrix]: https://posit-dev.github.io/images-shared/configuration.html#imagematrix
+[DependencyConstraint]: https://posit-dev.github.io/images-shared/configuration.html#dependencyconstraint
+[DependencyVersions]: https://posit-dev.github.io/images-shared/configuration.html#dependencyversions
