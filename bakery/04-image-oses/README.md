@@ -53,12 +53,12 @@ This example creates a matrix of images across operating systems and variants:
 **Version**: 1.0.0
 
 Produces 6 images with tags like:
-- `example-image:1.0.0-ubuntu-24.04-standard`
-- `example-image:1.0.0-ubuntu-24.04-minimal`
-- `example-image:1.0.0-ubuntu-22.04-standard`
-- `example-image:1.0.0-ubuntu-22.04-minimal`
-- `example-image:1.0.0-rocky-9-standard`
-- `example-image:1.0.0-rocky-9-minimal`
+- `example-image:1.0.0-ubuntu-24.04-std`
+- `example-image:1.0.0-ubuntu-24.04-min`
+- `example-image:1.0.0-ubuntu-22.04-std`
+- `example-image:1.0.0-ubuntu-22.04-min`
+- `example-image:1.0.0-rocky-9-std`
+- `example-image:1.0.0-rocky-9-min`
 
 ## Concepts
 
@@ -74,9 +74,11 @@ images:
     variants:
       - name: Standard
         extension: std
+        tagDisplayName: std
         primary: true
       - name: Minimal
         extension: min
+        tagDisplayName: min
     versions:
       - name: 1.0.0
         latest: true
@@ -222,7 +224,7 @@ You can build each OS/variant combination directly using Docker. The build conte
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.ubuntu2404.std \
-  -t ghcr.io/posit-dev/example-image:1.0.0-ubuntu-24.04-standard \
+  -t ghcr.io/posit-dev/example-image:1.0.0-ubuntu-24.04-std \
   .
 ```
 
@@ -232,7 +234,7 @@ docker buildx build \
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.ubuntu2204.min \
-  -t ghcr.io/posit-dev/example-image:1.0.0-ubuntu-22.04-minimal \
+  -t ghcr.io/posit-dev/example-image:1.0.0-ubuntu-22.04-min \
   .
 ```
 
@@ -242,7 +244,7 @@ docker buildx build \
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.rocky9.std \
-  -t ghcr.io/posit-dev/example-image:1.0.0-rocky-9-standard \
+  -t ghcr.io/posit-dev/example-image:1.0.0-rocky-9-std \
   -t ghcr.io/posit-dev/example-image:1.0.0-rocky-9 \
   .
 ```
@@ -266,7 +268,7 @@ You can run tests without Bakery. Set both `IMAGE_OS_NAME` and `IMAGE_VARIANT` c
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.ubuntu2404.std \
-  -t ghcr.io/posit-dev/example-image:1.0.0-ubuntu-24.04-standard \
+  -t ghcr.io/posit-dev/example-image:1.0.0-ubuntu-24.04-std \
   .
 
 # Run dgoss
@@ -282,7 +284,7 @@ dgoss run \
   -e IMAGE_MOUNT=/tmp/image \
   -e PROJECT_MOUNT=/tmp/project \
   --init \
-  ghcr.io/posit-dev/example-image:1.0.0-ubuntu-24.04-standard
+  ghcr.io/posit-dev/example-image:1.0.0-ubuntu-24.04-std
 ```
 
 #### Test Rocky 9 minimal
@@ -292,7 +294,7 @@ dgoss run \
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.rocky9.min \
-  -t ghcr.io/posit-dev/example-image:1.0.0-rocky-9-minimal \
+  -t ghcr.io/posit-dev/example-image:1.0.0-rocky-9-min \
   .
 
 # Run dgoss
@@ -308,7 +310,7 @@ dgoss run \
   -e IMAGE_MOUNT=/tmp/image \
   -e PROJECT_MOUNT=/tmp/project \
   --init \
-  ghcr.io/posit-dev/example-image:1.0.0-rocky-9-minimal
+  ghcr.io/posit-dev/example-image:1.0.0-rocky-9-min
 ```
 
 ## Template variables
