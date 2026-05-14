@@ -97,13 +97,13 @@ Note that some options and environment variables passed to `dgoss` are included 
 # Build the image first to make it available for testing
 docker buildx build \
   --load \
-  -f bakery/01-basic-image/example-image/1.0.0/Containerfile \
+  -f example-image/1.0.0/Containerfile \
   -t ghcr.io/posit-dev/example-image:1.0.0 \
   -t ghcr.io/posit-dev/example-image:latest \
   .
 
 # Run dgoss with expected environment variables and mounts
-GOSS_FILES_PATH=bakery/01-basic-image/example-image/1.0.0/test \
+GOSS_FILES_PATH=example-image/1.0.0/test \
 dgoss run \
   -v "$(pwd)/example-image/1.0.0:/tmp/version" \
   -v "$(pwd)/example-image:/tmp/image" \
