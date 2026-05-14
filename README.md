@@ -1,16 +1,16 @@
-# Posit Container Image Examples
+# Posit container image examples
 
-This repository contains examples for working with [Posit Container Images](https://github.com/posit-dev/images). If you want to run pre-built images, see the Quick Start guides in each product's repository ([Posit Connect](https://github.com/posit-dev/images-connect/blob/main/connect/README.md), [Posit Package Manager](https://github.com/posit-dev/images-package-manager/blob/main/package-manager/README.md), [Posit Workbench](https://github.com/posit-dev/images-workbench/blob/main/workbench/README.md)). The examples here are for users who want to build custom images or extend the base images.
+This repository contains examples for working with [Posit Container Images](https://github.com/posit-dev/images). To run pre-built images, see the quick start guides in each product repository: [Posit Connect](https://github.com/posit-dev/images-connect/blob/main/connect/README.md), [Posit Package Manager](https://github.com/posit-dev/images-package-manager/blob/main/package-manager/README.md), and [Posit Workbench](https://github.com/posit-dev/images-workbench/blob/main/workbench/README.md). The examples here are for users who want to build custom images or extend the base images.
 
 ## Extending vs Bakery
 
-**Are you customizing one image or managing many?**
+Are you customizing one image or managing many?
 
-- **[Extending](./extending/)** — Start from a pre-built Posit image and add what you need in a standard Dockerfile. Use this to add R/Python packages, system libraries, or custom configuration to a single product image. No special tooling required.
+- [Extending](./extending/): Start from a pre-built Posit image and add what you need in a standard Dockerfile. Use this approach to add R and Python packages, system libraries, or custom configuration to a single product image. No special tooling required.
 
-- **[Bakery](./bakery/)** — Posit's [templating system](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) for managing matrices of container images across multiple R versions, Python versions, OS variants, and product versions. Use this if you maintain a fleet of custom images and need to rebuild them consistently. This is the same tool Posit uses to build the official product images.
+- [Bakery](./bakery/): The Posit [templating system](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) for managing matrices of container images across multiple R versions, Python versions, OS variants, and product versions. Use Bakery to maintain a fleet of custom images and rebuild them consistently. Posit uses the same tool to build the official product images.
 
-**Looking for something else?**
+Looking for something else?
 
 | Goal | Where to go |
 |------|-------------|

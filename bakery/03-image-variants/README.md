@@ -2,7 +2,7 @@
 
 This example demonstrates how to build multiple variants of the same image from a single template. It creates both minimal and standard variants of an Ubuntu 24.04 image, each with different package sets.
 
-All command examples are expected to run with this example, `bakery/03-image-variants/`, as the working directory.
+Run all command examples from `bakery/03-image-variants/` as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
@@ -38,7 +38,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 ### Variant configuration in bakery.yaml
 
-[Variants][ImageVariant] are defined in the image configuration with `name`, `extension`, `tagDisplayName`, and `primary` fields:
+Define variants in the image configuration with the `name`, `extension`, `tagDisplayName`, and `primary` fields:
 
 ```yaml
 images:
@@ -156,14 +156,14 @@ docker buildx build \
 
 [Goss](https://github.com/goss-org/goss) is a serverspec-like tool for validating server configuration. [dgoss](https://github.com/goss-org/goss/tree/master/extras/dgoss) is a wrapper for testing Docker containers.
 
-The goss.yaml template uses the `IMAGE_VARIANT` environment variable to conditionally check whether optional packages should be installed:
+The goss.yaml template uses the `IMAGE_VARIANT` environment variable to check whether optional packages are present:
 
 ```yaml
 {{.}}:
   installed: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}false{{ else }}true{{ end }}
 ```
 
-### Running tests manually
+### Run tests without Bakery
 
 You can run tests without Bakery. The `IMAGE_VARIANT` environment variable tells goss which packages to expect.
 

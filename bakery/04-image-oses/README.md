@@ -1,8 +1,8 @@
 # Image OSes example
 
-This example demonstrates how to build images for multiple operating systems (OSes) combined with variants. It extends the variants concept from [example 03](../03-image-variants/) by adding multi-OS support, producing 6 container images from a single template set.
+This example demonstrates how to build images for multiple operating systems (OSes) combined with variants. It extends the variants concept from [example 03](../03-image-variants/) by adding multi-OS support with Posit Bakery, producing 6 container images from a single template set.
 
-All command examples are expected to run with this example, `bakery/04-image-oses/`, as the working directory.
+Run all command examples from `bakery/04-image-oses/` as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
@@ -66,7 +66,7 @@ This example demonstrates several key Bakery features for multi-OS image managem
 
 ### OS configuration in bakery.yaml
 
-[Operating systems][ImageVersionOS] are defined within each version's configuration:
+Define operating systems within each version's configuration:
 
 ```yaml
 images:
@@ -121,7 +121,7 @@ FROM docker.io/library/rockylinux:9
 
 ### OS-specific package lists
 
-Package files are named with an OS prefix and referenced dynamically using the `{{ Image.OS.Name }}` template variable:
+Name package files with an OS prefix; the template references them dynamically using the `{{ Image.OS.Name }}` variable:
 
 - `ubuntu_packages.txt` / `ubuntu_optional_packages.txt`
 - `rocky_packages.txt` / `rocky_optional_packages.txt`
@@ -147,8 +147,8 @@ This pattern handles package name differences between distributions:
 
 Bakery provides macros that abstract package manager differences:
 
-- **apt.j2** (Debian/Ubuntu): Uses `apt-get` with automatic cache cleanup
-- **dnf.j2** (RHEL/Rocky/Fedora): Uses `dnf` with automatic cache cleanup
+- **apt.j2** (Debian and Ubuntu): Uses `apt-get` with automatic cache cleanup
+- **dnf.j2** (RHEL, Rocky, and Fedora): Uses `dnf` with automatic cache cleanup
 
 Both provide a consistent `run_install(files=[...])` interface, keeping templates clean while generating OS-appropriate commands.
 
@@ -175,7 +175,7 @@ package:
   {{end}}
 ```
 
-The `IMAGE_OS_NAME` environment variable ("ubuntu" or "rocky") directs the test to the appropriate package list, while `IMAGE_VARIANT` controls whether optional packages are expected to be installed.
+The `IMAGE_OS_NAME` environment variable ("ubuntu" or "rocky") directs the test to the appropriate package list, while `IMAGE_VARIANT` tells the test whether to expect optional packages.
 
 ## Creation of this example
 
@@ -207,7 +207,7 @@ Bakery manages the full lifecycle of rendering templates, building images, and r
 # Rerender templates to generate files for existing versions
 bakery update files
 
-# Build all OS/variant combinations
+# Build all OS-and-variant combinations
 bakery build
 
 # Run tests for all images
@@ -216,7 +216,7 @@ bakery run dgoss
 
 ## Building directly with Docker
 
-You can build each OS/variant combination directly using Docker. The build context must be the example directory because the Containerfile references paths relative to it.
+You can build each OS-and-variant combination directly using Docker. The build context must be the example directory because the Containerfile references paths relative to it.
 
 ### Build Ubuntu 24.04 standard
 
@@ -253,11 +253,11 @@ docker buildx build \
 
 [Goss](https://github.com/goss-org/goss) is a serverspec-like tool for validating server configuration. [dgoss](https://github.com/goss-org/goss/tree/master/extras/dgoss) is a wrapper for testing Docker containers.
 
-The goss.yaml template uses environment variables to handle different OS/variant combinations:
+The goss.yaml template uses environment variables to handle different OS-and-variant combinations:
 - `IMAGE_OS_NAME`: OS identifier ("ubuntu" or "rocky") for locating package files
 - `IMAGE_VARIANT`: Variant name ("Minimal" or "Standard") for determining expected packages
 
-### Running tests manually
+### Run tests without Bakery
 
 You can run tests without Bakery. Set both `IMAGE_OS_NAME` and `IMAGE_VARIANT` correctly.
 

@@ -1,12 +1,12 @@
-# Managing container images with Bakery
+# Managing container images with Posit Bakery
 
-Bakery is Posit's Jinja2-based templating system for managing container images. These examples demonstrate how to use the Bakery command-line interface (CLI) to generate version-specific container build files from templates.
+Posit Bakery is the Jinja2-based templating system from Posit for managing container images. These examples demonstrate how to use the Bakery command-line interface (CLI) to generate version-specific container build files from templates.
 
 ## Examples
 
 | Path | Example |
 |:-----|:--------|
-| [01-basic-image](./01-basic-image/) | Single image with one version - the simplest Bakery use case |
+| [01-basic-image](./01-basic-image/) | Single image with one version: the simplest Bakery use case |
 | [02-multiple-images-and-versions](./02-multiple-images-and-versions/) | Multiple image families with multiple versions each (Ubuntu and Rocky Linux) |
 | [03-image-variants](./03-image-variants/) | Build minimal and standard variants of the same image from a single template |
 | [04-image-oses](./04-image-oses/) | Build images for multiple operating systems combined with variants |
