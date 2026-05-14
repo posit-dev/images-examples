@@ -51,7 +51,7 @@ images:
 
 Constraints support:
 - `latest: true` - Include the latest version
-- `count: N` - Include the N most recent versions (defaults to 1)
+- `count: N` - Include the N most recent minor versions
 - `min: version` - Minimum version
 - `max: version` - Maximum version
 
