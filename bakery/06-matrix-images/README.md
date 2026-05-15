@@ -1,8 +1,8 @@
 # Matrix images example
 
-This example demonstrates how to use Bakery's matrix feature to build multiple image variants from a single set of templates. Instead of creating separate version directories for each configuration, you define a matrix of dependency combinations in `bakery.yaml` and Bakery generates images for all combinations using Docker build arguments.
+This example demonstrates how to use the Posit Bakery matrix feature to build multiple image variants from a single set of templates. Instead of creating separate version directories for each configuration, you define a matrix of dependency combinations in `bakery.yaml`. Bakery then generates images for all combinations using Docker build arguments.
 
-All command examples are expected to run with this example, `bakery/06-matrix-images/`, as the working directory.
+Run all command examples from `bakery/06-matrix-images/` as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
@@ -30,7 +30,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 ## Concepts
 
-This example demonstrates Bakery's matrix feature, which creates multiple image variants from dependency combinations without separate version directories.
+This example demonstrates the Bakery matrix feature, which creates multiple image variants from dependency combinations without separate version directories.
 
 ### Matrix configuration in bakery.yaml
 
@@ -152,8 +152,8 @@ FROM docker.io/library/ubuntu:24.04
 ```
 
 The key macros for matrix builds:
-- `python.build_arg()` - Returns `$PYTHON_VERSION` for use in Containerfile commands
-- `python.declare_build_arg()` - Generates `ARG PYTHON_VERSION`
+- `python.build_arg()`: Returns `$PYTHON_VERSION` for use in Containerfile commands
+- `python.declare_build_arg()`: Generates `ARG PYTHON_VERSION`
 - Same pattern for `r.*` and `quarto.*`
 
 ### Generated directory structure
@@ -168,8 +168,8 @@ Matrix images use a `matrix/` subdirectory instead of version directories:
 
 ### Image tagging
 
-Matrix images are tagged with all dependency versions. For example:
-- `test-matrix-quarto1-8-27-r4-5-2-python3-14-3-ubuntu-24-04`
+Bakery tags matrix images with all dependency versions. For example:
+- `test-matrix:r4.5.2-python3.14.3-quarto1.8.27-ubuntu-24.04`
 
 ## Creation of this example
 
@@ -217,7 +217,7 @@ docker buildx build \
   .
 ```
 
-Note that you must provide the version values that Bakery would normally resolve. Check `bakery.yaml` or run `bakery build --dry-run` to see the resolved versions.
+Note that you must provide the version values that Bakery normally resolves. Check `bakery.yaml` or run `bakery build --dry-run` to see the resolved versions.
 
 ## Testing with dgoss
 
@@ -240,7 +240,7 @@ file:
     path: /opt/R/{{ .Env.BUILD_ARG_R_VERSION }}
 ```
 
-The `goss.j2` macro [`goss.build_arg_env_var("R_VERSION")`](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#build-argument-environment-variable) generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
+The `goss.j2` macro [`goss.build_arg_env_var("R_VERSION")`](https://posit-dev.github.io/images-shared/templating.html#build-argument-environment-variable) generates `{{ .Env.BUILD_ARG_R_VERSION }}` for use in test templates.
 
 ## Key differences from previous examples
 
@@ -278,8 +278,8 @@ The templates use these Bakery macros for matrix builds:
 |:------|:-------|
 | `{{ goss.build_arg_env_var("R_VERSION") }}` | `{{ .Env.BUILD_ARG_R_VERSION }}` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a complete list of available variables and macros.
 
-[ImageMatrix]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imagematrix
-[DependencyConstraint]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyconstraint
-[DependencyVersions]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyversions
+[ImageMatrix]: https://posit-dev.github.io/images-shared/configuration.html#imagematrix
+[DependencyConstraint]: https://posit-dev.github.io/images-shared/configuration.html#dependencyconstraint
+[DependencyVersions]: https://posit-dev.github.io/images-shared/configuration.html#dependencyversions

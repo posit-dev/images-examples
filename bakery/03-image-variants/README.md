@@ -2,7 +2,7 @@
 
 This example demonstrates how to build multiple variants of the same image from a single template. It creates both minimal and standard variants of an Ubuntu 24.04 image, each with different package sets.
 
-All command examples are expected to run with this example, `bakery/03-image-variants/`, as the working directory.
+Run all command examples from `bakery/03-image-variants/` as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
@@ -32,13 +32,13 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
   - **Minimal**: Core packages only (`build-essential`, `ca-certificates`, `curl`, `git`)
   - **Standard**: Core + optional packages (`libodbc2`, `libpq-dev`)
 - **Version**: 1.0.0
-- **Produces**: `example-image:1.0.0-minimal` and `example-image:1.0.0-standard`
+- **Produces**: `example-image:1.0.0-min` and `example-image:1.0.0-std`
 
 ## Concepts
 
 ### Variant configuration in bakery.yaml
 
-[Variants][ImageVariant] are defined in the image configuration with `name`, `extension`, and `primary` fields:
+Define variants in the image configuration with the `name`, `extension`, `tagDisplayName`, and `primary` fields:
 
 ```yaml
 images:
@@ -46,9 +46,11 @@ images:
     variants:
       - name: Standard
         extension: std
+        tagDisplayName: std
         primary: true
       - name: Minimal
         extension: min
+        tagDisplayName: min
     versions:
       - name: 1.0.0
         latest: true
@@ -56,7 +58,8 @@ images:
 
 - **name**: Human-readable variant name, accessible as `{{ Image.Variant }}` in templates
 - **extension**: Suffix appended to generated filenames (e.g., `Containerfile.std`)
-- **primary**: Marks the default variant; Bakery also uses the primary variant's extension for version tags (e.g., `example-image:1.0.0-standard`)
+- **tagDisplayName**: The variant string used in image tags (e.g., `example-image:1.0.0-std`). Defaults to the lowercased `name` if omitted.
+- **primary**: Marks the default variant; Bakery also adds shorter "primary variant" tags (e.g., `example-image:1.0.0`) that omit the variant suffix
 
 ### Conditional template logic
 
@@ -132,8 +135,8 @@ You can build each variant directly using Docker. The build context must be the 
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.min \
-  -t ghcr.io/posit-dev/example-image:1.0.0-minimal \
-  -t ghcr.io/posit-dev/example-image:minimal \
+  -t ghcr.io/posit-dev/example-image:1.0.0-min \
+  -t ghcr.io/posit-dev/example-image:min \
   .
 ```
 
@@ -143,8 +146,8 @@ docker buildx build \
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.std \
-  -t ghcr.io/posit-dev/example-image:1.0.0-standard \
-  -t ghcr.io/posit-dev/example-image:standard \
+  -t ghcr.io/posit-dev/example-image:1.0.0-std \
+  -t ghcr.io/posit-dev/example-image:std \
   -t ghcr.io/posit-dev/example-image:latest \
   .
 ```
@@ -153,14 +156,14 @@ docker buildx build \
 
 [Goss](https://github.com/goss-org/goss) is a serverspec-like tool for validating server configuration. [dgoss](https://github.com/goss-org/goss/tree/master/extras/dgoss) is a wrapper for testing Docker containers.
 
-The goss.yaml template uses the `IMAGE_VARIANT` environment variable to conditionally check whether optional packages should be installed:
+The goss.yaml template uses the `IMAGE_VARIANT` environment variable to check whether optional packages are present:
 
 ```yaml
 {{.}}:
   installed: {{ if eq .Env.IMAGE_VARIANT "Minimal" }}false{{ else }}true{{ end }}
 ```
 
-### Running tests manually
+### Run tests without Bakery
 
 You can run tests without Bakery. The `IMAGE_VARIANT` environment variable tells goss which packages to expect.
 
@@ -171,7 +174,7 @@ You can run tests without Bakery. The `IMAGE_VARIANT` environment variable tells
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.min \
-  -t ghcr.io/posit-dev/example-image:1.0.0-minimal \
+  -t ghcr.io/posit-dev/example-image:1.0.0-min \
   .
 
 # Run dgoss with IMAGE_VARIANT=Minimal
@@ -186,7 +189,7 @@ dgoss run \
   -e IMAGE_MOUNT=/tmp/image \
   -e PROJECT_MOUNT=/tmp/project \
   --init \
-  ghcr.io/posit-dev/example-image:1.0.0-minimal
+  ghcr.io/posit-dev/example-image:1.0.0-min
 ```
 
 #### Test the standard variant
@@ -196,7 +199,7 @@ dgoss run \
 docker buildx build \
   --load \
   -f example-image/1.0.0/Containerfile.std \
-  -t ghcr.io/posit-dev/example-image:1.0.0-standard \
+  -t ghcr.io/posit-dev/example-image:1.0.0-std \
   .
 
 # Run dgoss with IMAGE_VARIANT=Standard
@@ -211,7 +214,7 @@ dgoss run \
   -e IMAGE_MOUNT=/tmp/image \
   -e PROJECT_MOUNT=/tmp/project \
   --init \
-  ghcr.io/posit-dev/example-image:1.0.0-standard
+  ghcr.io/posit-dev/example-image:1.0.0-std
 ```
 
 ## Template variables
@@ -224,6 +227,6 @@ The Containerfile template uses these Bakery variables:
 | `{{ Image.Variant }}` | The variant being built | `"Minimal"`, `"Standard"` |
 | `{{ Path.Version }}` | Path to the version directory | `"example-image/1.0.0"` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a list of available variables and macros.
 
-[ImageVariant]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imagevariant
+[ImageVariant]: https://posit-dev.github.io/images-shared/configuration.html#imagevariant

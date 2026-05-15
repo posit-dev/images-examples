@@ -1,8 +1,8 @@
 # Images with managed dependencies example
 
-This example demonstrates how to use Bakery's managed dependency system for automatic version management of R, Python, and Quarto. Instead of hardcoding dependency versions in templates, you define constraints in `bakery.yaml` and Bakery resolves them to specific versions. This allows Bakery to automatically update versions when you create new versions of your image, without needing to edit templates, and pins existing versions to what was latest at creation time to avoid shifting the image's contents after release.
+This example demonstrates how to use the Posit Bakery managed dependency system for automatic version management of R, Python, and Quarto. Instead of hardcoding dependency versions in templates, you define constraints in `bakery.yaml` and Bakery resolves them to specific versions. Bakery automatically updates versions when you create new image versions, so you do not need to edit templates. Bakery also pins each version to what was current at creation time, so the image's contents do not shift after release.
 
-All command examples are expected to run with this example, `bakery/05-images-with-managed-dependencies/`, as the working directory.
+Run all command examples from `bakery/05-images-with-managed-dependencies/` as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
@@ -30,7 +30,7 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 ## Concepts
 
-This example demonstrates Bakery's managed dependency system, which separates dependency rules from specific versions.
+This example demonstrates the Bakery managed dependency system, which separates dependency rules from specific versions.
 
 ### Dependency constraints in bakery.yaml
 
@@ -49,13 +49,13 @@ images:
           count: 2
 ```
 
-Constraints support:
+Constraints support the following fields:
 - `latest: true` - Include the latest version
-- `count: N` - Include the N most recent versions (defaults to 1)
+- `count: N` - Include the N most recent minor versions
 - `min: version` - Minimum version
 - `max: version` - Maximum version
 
-Bakery currently supports managed dependencies for R, Python, and Quarto.
+Bakery supports managed dependencies for R, Python, and Quarto.
 
 ### Automatic version resolution
 
@@ -80,11 +80,11 @@ versions:
         versions: ["3.14.3", "3.13.12"]
 ```
 
-You can also manually specify this field to pin specific versions rather than using automatic resolution.
+You can also set this field explicitly to pin specific versions instead of using automatic resolution.
 
 ### Template variables for dependencies
 
-Templates access resolved dependencies through the following [available variables](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#available-variables):
+Templates access resolved dependencies through the following [available variables](https://posit-dev.github.io/images-shared/templating.html#available-variables):
 
 | Variable | Description |
 |:---------|:------------|
@@ -104,7 +104,7 @@ These are lists, allowing iteration for multi-version installs:
 
 Bakery provides macros that handle dependency installation with best practices:
 
-**[Python (python.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#python-installation-and-package-management)**:
+**[Python (python.j2)](https://posit-dev.github.io/images-shared/templating.html#python-installation-and-package-management)**:
 
 | Macro | Description |
 |:------|:------------|
@@ -112,14 +112,14 @@ Bakery provides macros that handle dependency installation with best practices:
 | `python.copy_from_build_stage()` | Copies installed Python from the builder stage |
 | `python.get_version_directory(version)` | Returns the path to a Python version |
 
-**[R (r.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#r-installation-and-package-management)**:
+**[R (r.j2)](https://posit-dev.github.io/images-shared/templating.html#r-installation-and-package-management)**:
 
 | Macro | Description |
 |:------|:------------|
 | `r.run_install(versions)` | Installs R versions using the official installer |
 | `r.get_version_directory(version)` | Returns the path to an R version |
 
-**[Quarto (quarto.j2)](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md#quarto-installation-and-management)** (when needed):
+**[Quarto (quarto.j2)](https://posit-dev.github.io/images-shared/templating.html#quarto-installation-and-management)** (when needed):
 
 | Macro | Description |
 |:------|:------------|
@@ -203,7 +203,7 @@ command:
   {%- endfor %}
 ```
 
-### Running tests manually
+### Run tests without Bakery
 
 ```bash
 # Build the image first
@@ -248,7 +248,7 @@ The templates use these Bakery variables:
 | `{{ Dependencies.python }}` | List of Python versions to install | `["3.14.3", "3.13.12"]` |
 | `{{ Dependencies.quarto }}` | List of Quarto versions to install (when used) | `["1.8.27"]` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a complete list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a complete list of available variables and macros.
 
-[DependencyConstraint]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyconstraint
-[DependencyVersions]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyversions
+[DependencyConstraint]: https://posit-dev.github.io/images-shared/configuration.html#dependencyconstraint
+[DependencyVersions]: https://posit-dev.github.io/images-shared/configuration.html#dependencyversions

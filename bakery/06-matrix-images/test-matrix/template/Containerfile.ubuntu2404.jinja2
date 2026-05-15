@@ -47,4 +47,5 @@ RUN apt-get update -yqq && \
 ### Install TinyTeX via Quarto ###
 # Installing TinyTeX via Quarto yields a fuller set of LaTeX packages than
 # the standalone TinyTeX installer.
-RUN /opt/quarto/bin/quarto install tinytex --no-prompt --quiet
+RUN {{ quarto.github_token_secret_mount() }} \
+    {{ quarto.install_tinytex_command(quarto.get_directory() ~ "/bin/quarto", update_path=True, home_path="/opt") | indent(4) }}

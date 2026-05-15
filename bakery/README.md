@@ -1,12 +1,12 @@
-# Managing container images with Bakery
+# Managing container images with Posit Bakery
 
-Bakery is Posit's Jinja2-based templating system for managing container images. These examples demonstrate how to use the Bakery command-line interface (CLI) to generate version-specific container build files from templates.
+Posit Bakery is the Jinja2-based templating system from Posit for managing container images. These examples demonstrate how to use the Bakery command-line interface (CLI) to generate version-specific container build files from templates.
 
 ## Examples
 
 | Path | Example |
 |:-----|:--------|
-| [01-basic-image](./01-basic-image/) | Single image with one version - the simplest Bakery use case |
+| [01-basic-image](./01-basic-image/) | Single image with one version: the simplest Bakery use case |
 | [02-multiple-images-and-versions](./02-multiple-images-and-versions/) | Multiple image families with multiple versions each (Ubuntu and Rocky Linux) |
 | [03-image-variants](./03-image-variants/) | Build minimal and standard variants of the same image from a single template |
 | [04-image-oses](./04-image-oses/) | Build images for multiple operating systems combined with variants |
@@ -17,9 +17,9 @@ Bakery is Posit's Jinja2-based templating system for managing container images. 
 
 ### Posit Bakery documentation and resources
 - [Bakery Repository](https://github.com/posit-dev/images-shared/tree/main/posit-bakery)
-- [Bakery Architecture Documentation](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/ARCHITECTURE.md)
-- [Bakery Configuration Documentation](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md)
-- [Bakery Templating Documentation](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md)
+- [Bakery Architecture Documentation](https://posit-dev.github.io/images-shared/architecture.html)
+- [Bakery Configuration Documentation](https://posit-dev.github.io/images-shared/configuration.html)
+- [Bakery Templating Documentation](https://posit-dev.github.io/images-shared/templating.html)
 - [setup-bakery GitHub Action](https://github.com/posit-dev/images-shared/tree/main/setup-bakery)
 
 ### Posit product images
