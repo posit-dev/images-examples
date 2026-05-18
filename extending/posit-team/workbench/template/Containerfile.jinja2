@@ -1,0 +1,45 @@
+{#-
+Below are imports for Bakery's macros. If any are unneeded, they can be removed.
+Bakery handles bootstrapping the files into template rendering.
+-#}
+{%- import "apt.j2" as apt -%}
+{%- import "python.j2" as python -%}
+{%- import "r.j2" as r -%}
+
+# Build Python using uv in a separate stage so the final image only contains the
+# managed CPython installs, not the uv toolchain.
+{{ python.build_stage(Dependencies.python) }}
+
+FROM docker.io/posit/workbench:{{ Image.Version }}-ubuntu-24.04-min
+LABEL org.opencontainers.image.base.name="docker.io/posit/workbench:{{ Image.Version }}-ubuntu-24.04-min"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Install team system dependencies ###
+# The Posit Minimal images already have apt configured with the Posit Pro repo
+# and ship curl, ca-certificates, gnupg, and tar. Only the team-specific system
+# packages need to be installed here.
+COPY {{ Path.Version }}/deps/system-packages.txt /tmp/system-packages.txt
+{{ apt.run_install(files=["/tmp/system-packages.txt"]) }}
+
+### Install Python from the build stage ###
+{{ python.copy_from_build_stage() }}
+
+### Install R ###
+{{ r.run_install(Dependencies.R) }}
+
+### Install team R packages ###
+# Bakery's `r.run_install_packages` generates one `install.packages()` call per R
+# version. The `_os` dict tells P3M to serve pre-built Ubuntu 24.04 (noble) binaries
+# instead of compiling from source, which is much faster.
+COPY {{ Path.Version }}/deps/r-packages.txt /tmp/r-packages.txt
+{{ r.run_install_packages(
+    Dependencies.R,
+    package_list_files=["/tmp/r-packages.txt"],
+    _os={"Name": "ubuntu", "Codename": "noble", "Version": "24.04", "Family": "debian"}
+) }}
+
+### Install team Python packages ###
+COPY {{ Path.Version }}/deps/python-packages.txt /tmp/python-packages.txt
+{{ python.run_install_packages(Dependencies.python, requirements_file="/tmp/python-packages.txt") }}

@@ -1,0 +1,25 @@
+file:
+  /opt/R/4.5.3/bin/R:
+    exists: true
+  /opt/python/3.14.4/bin/python:
+    exists: true
+  /opt/rstudio-connect/bin/connect:
+    exists: true
+
+command:
+  "Verify R 4.5.3 reports the correct version":
+    exec: /opt/R/4.5.3/bin/R --version
+    exit-status: 0
+    stdout:
+      - "R version 4.5.3"
+  "Verify shiny is installed for R 4.5.3":
+    exec: /opt/R/4.5.3/bin/R -e 'library(shiny); cat(as.character(packageVersion("shiny")))'
+    exit-status: 0
+  "Verify Python 3.14.4 reports the correct version":
+    exec: /opt/python/3.14.4/bin/python --version
+    exit-status: 0
+    stdout:
+      - "3.14.4"
+  "Verify pandas is installed for Python 3.14.4":
+    exec: /opt/python/3.14.4/bin/python -c "import pandas; print(pandas.__version__)"
+    exit-status: 0

@@ -1,0 +1,67 @@
+#######################################################################################################################
+# BAKERY REPOSITORY CONFIG
+#
+# This file is used to define global properties for builds inside a repo managed by Posit's Bakery tool.
+#######################################################################################################################
+
+# Define properties of the local repository. This information will be used when labeling image builds.
+repository:
+  url: "github.com/posit-dev/images-examples"
+  vendor: "Posit Software, PBC"
+  maintainer: "Posit Docker Team <docker@posit.co>"
+
+# Define image registries used by builds in this repository. Images will be tagged appropriately for each registry.
+# Logins for private registries should be managed independently of Bakery.
+#
+# `example-org` is a placeholder. Replace it with your team's namespace, for example
+# `ghcr.io/your-org` or `123456789012.dkr.ecr.us-east-1.amazonaws.com/your-team`.
+registries:
+  - host: "ghcr.io"
+    namespace: "example-org"
+
+# Each image extends a Posit product Minimal (`-min`) image. The image version matches the Posit
+# product version it extends, so `workbench:2026.04.0` is built FROM
+# `posit/workbench:2026.04.0-ubuntu-24.04-min`. When Posit releases a new product version, add a
+# new entry under `versions` and run `bakery update files` to render it.
+#
+# The Workbench and Connect images share the same R and Python dependency constraints so a team's
+# development environment (Workbench) stays in lockstep with its deployment target (Connect).
+images:
+  - name: workbench
+    dependencyConstraints:
+      - dependency: R
+        constraint:
+          latest: true
+      - dependency: python
+        constraint:
+          latest: true
+    versions:
+      - name: 2026.04.0
+        latest: true
+        dependencies:
+          - dependency: R
+            version: "4.5.3"
+          - dependency: python
+            version: "3.14.4"
+
+  - name: connect
+    dependencyConstraints:
+      - dependency: R
+        constraint:
+          latest: true
+      - dependency: python
+        constraint:
+          latest: true
+    versions:
+      - name: 2026.04.0
+        latest: true
+        dependencies:
+          - dependency: R
+            version: "4.5.3"
+          - dependency: python
+            version: "3.14.4"
+
+  - name: package-manager
+    versions:
+      - name: 2026.04.1
+        latest: true

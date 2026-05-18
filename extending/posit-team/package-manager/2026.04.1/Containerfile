@@ -1,0 +1,10 @@
+FROM docker.io/posit/package-manager:2026.04.1-ubuntu-24.04-min
+LABEL org.opencontainers.image.base.name="docker.io/posit/package-manager:2026.04.1-ubuntu-24.04-min"
+
+### Add the team's internal CA to the system trust store ###
+# The Posit Package Manager image runs as the unprivileged `rstudio-pm` user.
+# Switch to root only for the trust-store update, then back.
+USER root
+COPY package-manager/2026.04.1/ca/Example-RootCA.crt /usr/local/share/ca-certificates/Example-RootCA.crt
+RUN update-ca-certificates
+USER rstudio-pm
