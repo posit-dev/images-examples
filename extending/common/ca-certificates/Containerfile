@@ -1,0 +1,22 @@
+# Example of extending a Posit product image to add a custom CA certificate
+# to the system trust store.
+#
+# This pattern applies to any Posit product image (Connect, Workbench,
+# Package Manager). Posit product images run as root by default, so no USER
+# switch is needed for the update-ca-certificates call. If your base image
+# sets a non-root runtime user (e.g. rstudio-connect or rstudio-pm), add
+# USER root before the COPY and restore the original user afterward.
+#
+# See: https://manpages.ubuntu.com/manpages/noble/man8/update-ca-certificates.8.html
+
+### Specify the Posit product image to extend ###
+ARG PWB_VERSION="2025.09.0"
+
+
+### Extend the Posit Workbench Minimal image ###
+FROM docker.io/posit/workbench:${PWB_VERSION}-min
+
+
+### Add custom CA certificate to the system trust store ###
+COPY Example-RootCA.crt /usr/local/share/ca-certificates/Example-RootCA.crt
+RUN update-ca-certificates
