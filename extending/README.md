@@ -22,13 +22,6 @@ Examples are organized by product. Within each product folder a `README.md` expl
 
 | Path | Contents |
 |:-----|:---------|
-| [common](./common/) | Patterns that apply to any Posit product image |
 | [workbench](./workbench/) | Examples for Posit Workbench images — with a guide to choosing the right image |
 | [connect](./connect/) | Examples for Posit Connect images — with a guide to choosing the right image |
-
-### Common examples
-
-| Path | Example |
-|:-----|:--------|
-| [common/ca-certificates](./common/ca-certificates/) | Add a custom CA certificate to the system trust store |
-| [common/pip-conf](./common/pip-conf/) | Configure global pip settings (e.g. a custom package index) |
+| [package-manager](./package-manager/) | Examples for Posit Package Manager images |

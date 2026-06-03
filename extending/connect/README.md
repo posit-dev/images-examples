@@ -38,6 +38,7 @@ These examples build on the `connect` Minimal image (`-min`), adding languages t
 |:-----|:--------|
 | [server/R](./server/R/) | Install specific versions of R on a minimal Connect image |
 | [server/quarto](./server/quarto/) | Install Quarto and TinyTeX on a minimal Connect image |
+| [server/pip-conf](./server/pip-conf/) | Add a custom `pip.conf` file to specify global pip settings |
 
 ### Content examples
 
