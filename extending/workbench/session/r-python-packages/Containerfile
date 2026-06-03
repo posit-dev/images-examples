@@ -1,0 +1,28 @@
+# Example of extending a Posit Workbench session image to pre-install R and
+# Python packages.
+#
+# Workbench session images are the runtime environment for interactive user
+# sessions on Kubernetes. Baking packages into the session image means every
+# user session starts with them available, without waiting for installation.
+# See: https://docs.posit.co/ide/server-pro/integration/launcher-kubernetes.html
+
+### Specify the Workbench session image tag to extend ###
+### Tag format: R{R_VERSION}-python{PYTHON_VERSION}-{OS}             ###
+### Full tag list: https://hub.docker.com/r/posit/workbench-session  ###
+ARG SESSION_TAG="R4.5.2-python3.14.3-ubuntu-24.04"
+
+
+### Extend the Posit Workbench session image ###
+FROM ghcr.io/posit-dev/workbench-session:${SESSION_TAG}
+
+
+### Install additional R packages from Posit Public Package Manager ###
+COPY packages.txt /tmp/packages.txt
+RUN /opt/R/4.5.2/bin/R --vanilla -e \
+    'install.packages(readLines("/tmp/packages.txt"), repos="https://p3m.dev/cran/__linux__/noble/latest", clean = TRUE)'
+
+
+### Install additional Python packages ###
+COPY requirements.txt /tmp/requirements.txt
+RUN /opt/python/3.14.3/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    -r /tmp/requirements.txt

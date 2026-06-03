@@ -1,0 +1,17 @@
+# Example of extending a Posit Workbench image to apply a custom server
+# configuration file.
+#
+# Workbench reads configuration files from /etc/rstudio/ at startup.
+# Copy any config file into that directory to override defaults.
+# See: https://docs.posit.co/ide/server-pro/reference/rsession_conf.html
+
+### Specify the Posit Workbench version to extend ###
+ARG PWB_VERSION="2025.09.0"
+
+
+### Extend the Posit Workbench Minimal image ###
+FROM docker.io/posit/workbench:${PWB_VERSION}-min
+
+
+### Add custom Workbench configuration ###
+COPY rsession.conf /etc/rstudio/rsession.conf

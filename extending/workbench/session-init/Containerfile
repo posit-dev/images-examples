@@ -1,0 +1,23 @@
+# Example of building a self-contained Workbench session image by bundling
+# the session runtime components at build time.
+#
+# By default, a Kubernetes init container (workbench-session-init) copies
+# session components into a shared volume at pod start. This multi-stage
+# build bakes those components directly into the session image, so session
+# pods run without a runtime init container.
+#
+# The workbench-session-init tag must match the Workbench server version.
+# See: https://github.com/posit-dev/images-workbench/blob/main/workbench-session-init/README.md
+
+### Specify matching Workbench and session versions ###
+ARG SESSION_INIT_TAG="2026.05.0"
+ARG SESSION_TAG="R4.5.2-python3.14.3-ubuntu-24.04"
+
+
+### Pull session runtime components from the init image ###
+FROM ghcr.io/posit-dev/workbench-session-init:${SESSION_INIT_TAG} AS session-init
+
+
+### Extend a Workbench session image with the bundled session components ###
+FROM ghcr.io/posit-dev/workbench-session:${SESSION_TAG}
+COPY --from=session-init /opt/session-components /opt/session-components

@@ -1,0 +1,33 @@
+# Example of extending a Posit Workbench session image to install system
+# dependencies required for additional R or Python packages.
+#
+# Some packages require system libraries that are not installed in the base
+# session image. Install them before installing the packages that need them.
+# This example installs the system libraries required for the {sf} R package.
+# See: https://r-spatial.github.io/sf/#linux
+
+### Specify the Workbench session image tag to extend ###
+### Tag format: R{R_VERSION}-python{PYTHON_VERSION}-{OS}             ###
+### Full tag list: https://hub.docker.com/r/posit/workbench-session  ###
+ARG SESSION_TAG="R4.5.2-python3.14.3-ubuntu-24.04"
+
+
+### Extend the Posit Workbench session image ###
+FROM ghcr.io/posit-dev/workbench-session:${SESSION_TAG}
+
+
+### Install system dependencies required for the {sf} R package ###
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        libudunits2-dev \
+        libgdal-dev \
+        libgeos-dev \
+        libproj-dev \
+        libsqlite3-dev && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+
+### Install the {sf} R package from Posit Public Package Manager ###
+RUN /opt/R/4.5.2/bin/R --vanilla -e \
+    'install.packages("sf", repos="https://p3m.dev/cran/__linux__/noble/latest", clean = TRUE)'
