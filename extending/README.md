@@ -31,4 +31,5 @@ Examples are organized by product. Within each product folder a `README.md` expl
 | Path | Example |
 |:-----|:--------|
 | [common/ca-certificates](./common/ca-certificates/) | Add a custom CA certificate to the system trust store |
-| [common/pip-conf](./common/pip-conf/) | Configure global pip settings (e.g. a custom package index) |
+
+To configure a Python package index, use product admin settings rather than baking a `pip.conf` into the image: [Workbench](https://docs.posit.co/ide/server-pro/admin/python/package_installation.html#setting-a-python-package-index-for-sessions) · [Connect](https://docs.posit.co/connect/admin/python/package-management/#python-package-repositories)
