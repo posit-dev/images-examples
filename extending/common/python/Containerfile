@@ -10,7 +10,7 @@
 
 ### Specify the Posit product image to extend ###
 # ARG must be declared before the first FROM to be available in FROM instructions.
-ARG PWB_VERSION="2026.05.0"
+ARG PRODUCT_VERSION="2026.05.0"
 
 
 ### Install Python using uv in a separate builder stage ###
@@ -29,7 +29,7 @@ RUN uv python install 3.13.7 3.12.11 && \
 
 
 ### Extend the Posit Workbench Minimal image ###
-FROM docker.io/posit/workbench:${PWB_VERSION}-min
+FROM docker.io/posit/workbench:${PRODUCT_VERSION}-min
 
 
 ### Copy Python installations from builder stage ###

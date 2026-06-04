@@ -8,11 +8,11 @@
 # already has R installed.
 
 ### Specify the Posit product image to extend ###
-ARG PWB_VERSION="2026.05.0"
+ARG PRODUCT_VERSION="2026.05.0"
 
 
 ### Extend the Posit Workbench Minimal image ###
-FROM docker.io/posit/workbench:${PWB_VERSION}-min
+FROM docker.io/posit/workbench:${PRODUCT_VERSION}-min
 
 
 ### Install R versions ###
