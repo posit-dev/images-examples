@@ -15,9 +15,9 @@ ARG SESSION_TAG="R4.5.2-python3.14.3-ubuntu-24.04"
 
 
 ### Pull session runtime components from the init image ###
-FROM ghcr.io/posit-dev/workbench-session-init:${SESSION_INIT_TAG} AS session-init
+FROM docker.io/posit/workbench-session-init:${SESSION_INIT_TAG} AS session-init
 
 
 ### Extend a Workbench session image with the bundled session components ###
-FROM ghcr.io/posit-dev/workbench-session:${SESSION_TAG}
+FROM docker.io/posit/workbench-session:${SESSION_TAG}
 COPY --from=session-init /opt/session-components /opt/session-components
