@@ -1,4 +1,0 @@
-fastapi
-pandas
-polars
-shiny

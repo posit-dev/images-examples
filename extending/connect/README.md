@@ -6,7 +6,6 @@ Connect deployments on Kubernetes use several images that serve different roles.
 
 | I want to… | Customize | Example |
 |:-----------|:----------|:--------|
-| Add R or Python packages available to published content | [`connect-content`](https://hub.docker.com/r/posit/connect-content) | [content/r-python-packages](./content/r-python-packages/) |
 | Add system libraries that content packages need | [`connect-content`](https://hub.docker.com/r/posit/connect-content) | [content/system-dependencies](./content/system-dependencies/) |
 | Install R on the Connect server (for local Docker) | [`connect`](https://hub.docker.com/r/posit/connect) (Minimal) | [server/R](./server/R/) |
 | Install Quarto on the Connect server | [`connect`](https://hub.docker.com/r/posit/connect) (Minimal) | [server/quarto](./server/quarto/) |
@@ -45,5 +44,4 @@ These examples build on the `connect-content` image, adding packages or system l
 
 | Path | Example |
 |:-----|:--------|
-| [content/r-python-packages](./content/r-python-packages/) | Pre-install R and Python packages in a content image |
 | [content/system-dependencies](./content/system-dependencies/) | Install system dependencies required by content packages |
