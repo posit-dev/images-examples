@@ -8,11 +8,12 @@
 
 ### Specify the Workbench session image tag to extend ###
 ### Tag format: R{R_VERSION}-python{PYTHON_VERSION}-{OS}             ###
-### Full tag list: https://github.com/posit-dev/images-workbench/pkgs/container/workbench-session ###
+### Full tag list: https://hub.docker.com/r/posit/workbench-session  ###
 ARG SESSION_TAG="R4.5.2-python3.14.3-ubuntu-24.04"
 
 
 ### Extend the Posit Workbench session image ###
+# Also available as docker.io/posit/workbench-session
 FROM ghcr.io/posit-dev/workbench-session:${SESSION_TAG}
 
 

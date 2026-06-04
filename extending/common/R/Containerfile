@@ -12,7 +12,8 @@ ARG PRODUCT_VERSION="2026.05.0"
 
 
 ### Extend the Posit Workbench Minimal image ###
-FROM docker.io/posit/workbench:${PRODUCT_VERSION}-min
+# Also available as docker.io/posit/workbench
+FROM ghcr.io/posit-dev/workbench:${PRODUCT_VERSION}-min
 
 
 ### Install R versions ###

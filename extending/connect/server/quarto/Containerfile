@@ -14,7 +14,8 @@ ARG QUARTO_VERSION="1.9.36"
 
 
 ### Extend the Posit Connect Minimal image ###
-FROM docker.io/posit/connect:${PCT_VERSION}-ubuntu-22.04-min
+# Also available as docker.io/posit/connect
+FROM ghcr.io/posit-dev/connect:${PCT_VERSION}-ubuntu-22.04-min
 
 # Re-declare ARGs after FROM so they are available in RUN instructions.
 ARG QUARTO_VERSION
