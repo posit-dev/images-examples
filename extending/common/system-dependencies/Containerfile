@@ -6,8 +6,10 @@
 # installing the R or Python packages that depend on them.
 #
 # This pattern applies to any Posit product image (Connect, Workbench,
-# Package Manager). This example installs the system libraries required for
-# the {sf} R package.
+# Package Manager). Replace the FROM line below with the image you are
+# extending — for example, posit/connect-content for Connect off-host
+# execution, or posit/workbench for a Workbench server image.
+# This example installs the system libraries required for the {sf} R package.
 # See: https://r-spatial.github.io/sf/#linux
 
 ### Specify the Posit product image to extend ###
