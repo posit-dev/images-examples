@@ -9,7 +9,7 @@ Workbench deployments on Kubernetes use several images that serve different role
 | Add R or Python packages available in every user session | [`workbench-session`](https://hub.docker.com/r/posit/workbench-session) | [session/r-python-packages](./session/r-python-packages/) |
 | Add system libraries that session packages need | [`workbench-session`](https://hub.docker.com/r/posit/workbench-session) | [session/system-dependencies](./session/system-dependencies/) |
 | Change Workbench server configuration | [`workbench`](https://hub.docker.com/r/posit/workbench) (Minimal) | [server/config](./server/config/) |
-| Install additional languages on the Workbench server | [`workbench`](https://hub.docker.com/r/posit/workbench) (Minimal) | [server/python](./server/python/) |
+| Install additional languages on the Workbench server | [`workbench`](https://hub.docker.com/r/posit/workbench) (Minimal) | [common/R](../common/R/) · [common/python](../common/python/) |
 | Install Posit Pro Drivers on the Workbench server | [`workbench`](https://hub.docker.com/r/posit/workbench) (Minimal) | [server/pro-drivers](./server/pro-drivers/) |
 | Pre-install VS Code extensions | [`workbench`](https://hub.docker.com/r/posit/workbench) (Standard) | [server/vs-code-extensions](./server/vs-code-extensions/) |
 | Bundle session components into a self-contained session image | [`workbench-session-init`](https://hub.docker.com/r/posit/workbench-session-init) + `workbench-session` | [session-init](./session-init/) |
@@ -36,9 +36,7 @@ These examples build on the `workbench` Minimal image (`-min`), adding configura
 | Path | Example |
 |:-----|:--------|
 | [server/config](./server/config/) | Apply a custom Workbench server configuration file |
-| [server/python](./server/python/) | Install specific versions of Python on a minimal Workbench image |
 | [server/pro-drivers](./server/pro-drivers/) | Install the Posit Pro Drivers (ODBC drivers) |
-| [server/system-dependencies](./server/system-dependencies/) | Install system dependencies required for additional libraries |
 | [server/vs-code-extensions](./server/vs-code-extensions/) | Pre-install a list of VS Code extensions (Standard image) |
 
 ### Session examples

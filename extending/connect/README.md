@@ -7,7 +7,7 @@ Connect deployments on Kubernetes use several images that serve different roles.
 | I want to… | Customize | Example |
 |:-----------|:----------|:--------|
 | Add system libraries that content packages need | [`connect-content`](https://hub.docker.com/r/posit/connect-content) | [common/system-dependencies](../common/system-dependencies/) |
-| Install R on the Connect server (for local Docker) | [`connect`](https://hub.docker.com/r/posit/connect) (Minimal) | [server/R](./server/R/) |
+| Install R on the Connect server (for local Docker) | [`connect`](https://hub.docker.com/r/posit/connect) (Minimal) | [common/R](../common/R/) |
 | Install Quarto on the Connect server | [`connect`](https://hub.docker.com/r/posit/connect) (Minimal) | [server/quarto](./server/quarto/) |
 | Upgrade the Connect server version | `connect` + `connect-content-init` (keep in sync) | — |
 | Add custom runtime components for off-host execution | [`connect-content-init`](https://hub.docker.com/r/posit/connect-content-init) | [Custom container images](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) |
@@ -35,7 +35,7 @@ These examples build on the `connect` Minimal image (`-min`), adding languages t
 
 | Path | Example |
 |:-----|:--------|
-| [server/R](./server/R/) | Install specific versions of R on a minimal Connect image |
+| [common/R](../common/R/) | Install specific versions of R on a minimal Connect image |
 | [server/quarto](./server/quarto/) | Install Quarto and TinyTeX on a minimal Connect image |
 
 ### Content examples
