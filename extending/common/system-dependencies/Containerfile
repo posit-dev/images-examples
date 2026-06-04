@@ -1,0 +1,30 @@
+# Example of extending a Posit product image to install system dependencies
+# required for R or Python packages.
+#
+# Some packages (e.g. {sf}, {rJava}, opencv-python) require system libraries
+# that are not present in the base image. Install system libraries before
+# installing the R or Python packages that depend on them.
+#
+# This pattern applies to any Posit product image (Connect, Workbench,
+# Package Manager). This example installs the system libraries required for
+# the {sf} R package.
+# See: https://r-spatial.github.io/sf/#linux
+
+### Specify the Posit product image to extend ###
+ARG PWB_VERSION="2025.09.0"
+
+
+### Extend the Posit Workbench Minimal image ###
+FROM docker.io/posit/workbench:${PWB_VERSION}-min
+
+
+### Install system dependencies ###
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends \
+        libudunits2-dev \
+        libgdal-dev \
+        libgeos-dev \
+        libproj-dev \
+        libsqlite3-dev && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
