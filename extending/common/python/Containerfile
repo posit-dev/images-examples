@@ -2,8 +2,16 @@
 # Python and a set of Python packages.
 #
 # This pattern applies to any Posit product image (Connect, Workbench,
-# Package Manager). Python is installed via uv in a separate builder stage
-# and copied into the final image.
+# Package Manager). Replace the FROM line in the final stage with the image
+# you are extending — for example, posit/connect for a Connect server image,
+# or posit/connect-content for Connect off-host execution.
+# Python is installed via uv in a separate builder stage and copied into the
+# final image.
+
+### Specify the Posit product image to extend ###
+# ARG must be declared before the first FROM to be available in FROM instructions.
+ARG PWB_VERSION="2026.05.0"
+
 
 ### Install Python using uv in a separate builder stage ###
 FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
@@ -18,10 +26,6 @@ RUN uv python install 3.13.7 3.12.11 && \
     # images and to keep references arch-agnostic.
     mv /opt/python/cpython-3.13.7-linux-*/ /opt/python/3.13.7 && \
     mv /opt/python/cpython-3.12.11-linux-*/ /opt/python/3.12.11
-
-
-### Specify the Posit product image to extend ###
-ARG PWB_VERSION="2026.05.0"
 
 
 ### Extend the Posit Workbench Minimal image ###

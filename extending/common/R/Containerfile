@@ -2,8 +2,10 @@
 # R and a set of R packages.
 #
 # This pattern applies to any Posit product image (Connect, Workbench,
-# Package Manager). Use it to add R to a Minimal image, or to add packages
-# to an image that already has R installed.
+# Package Manager). Replace the FROM line below with the image you are
+# extending — for example, posit/connect for a Connect server image.
+# Use it to add R to a Minimal image, or to add packages to an image that
+# already has R installed.
 
 ### Specify the Posit product image to extend ###
 ARG PWB_VERSION="2026.05.0"
