@@ -1,0 +1,47 @@
+# Build Python using uv in a separate stage so the final image only contains the
+# managed CPython installs, not the uv toolchain.
+FROM ghcr.io/astral-sh/uv:debian-slim AS python-builder
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+ENV UV_PYTHON_PREFERENCE=only-managed
+RUN uv python install 3.14.4
+RUN mv /opt/python/cpython-3.14.4-linux-*/ /opt/python/3.14.4
+
+
+FROM docker.io/posit/workbench:2026.04.0-ubuntu-24.04-min
+LABEL org.opencontainers.image.base.name="docker.io/posit/workbench:2026.04.0-ubuntu-24.04-min"
+
+### ARG declarations ###
+ARG DEBIAN_FRONTEND=noninteractive
+
+### Install team system dependencies ###
+# The Posit Minimal images already have apt configured with the Posit Pro repo
+# and ship curl, ca-certificates, gnupg, and tar. Only the team-specific system
+# packages need to be installed here.
+COPY workbench/2026.04.0/deps/system-packages.txt /tmp/system-packages.txt
+RUN apt-get update -yqq && \
+    xargs -a /tmp/system-packages.txt apt-get install -yqq --no-install-recommends && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+
+### Install Python from the build stage ###
+COPY --from=python-builder /opt/python /opt/python
+
+### Install R ###
+RUN RUN_UNATTENDED=1 R_VERSION=4.5.3 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
+    find . -type f -name '[rR]-4.5.3.*\.(deb|rpm)' -delete
+
+### Install team R packages ###
+# Bakery's `r.run_install_packages` generates one `install.packages()` call per R
+# version. The `_os` dict tells P3M to serve pre-built Ubuntu 24.04 (noble) binaries
+# instead of compiling from source, which is much faster.
+COPY workbench/2026.04.0/deps/r-packages.txt /tmp/r-packages.txt
+RUN /opt/R/4.5.3/bin/R --vanilla -e 'install.packages(readLines("/tmp/r-packages.txt"), repos="https://p3m.dev/cran/__linux__/noble/latest", clean = TRUE)' && \
+    rm -f /tmp/r-packages.txt
+
+### Install team Python packages ###
+COPY workbench/2026.04.0/deps/python-packages.txt /tmp/python-packages.txt
+RUN /opt/python/3.14.4/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+        -r /tmp/python-packages.txt && \
+    rm -f /tmp/python-packages.txt

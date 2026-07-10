@@ -1,0 +1,17 @@
+file:
+  /usr/local/share/ca-certificates/Example-RootCA.crt:
+    exists: true
+    owner: root
+    group: root
+    mode: "0644"
+  /etc/ssl/certs/Example-RootCA.pem:
+    exists: true
+  /opt/rstudio-pm/bin/rstudio-pm:
+    exists: true
+
+command:
+  "Verify the team CA is in the system trust store":
+    exec: openssl x509 -in /etc/ssl/certs/Example-RootCA.pem -noout -subject
+    exit-status: 0
+    stdout:
+      - "Example-RootCA"

@@ -22,13 +22,20 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Find directories under extending that contain Dockerfile or Containerfile
-          entries=$(find extending -type f -name "Containerfile*" -o -name "Dockerfile*" | while read -r f; do
-              dir=$(dirname "$f")
-              name=$(basename "$dir")
-              containerfile=$(basename "$f")
-              echo "$name,$dir,$containerfile"
-          done | jq -R -s -c 'split("\n")[:-1] | map(split(",")) | map({name: .[0], directory: .[1], file: .[2]})')
+          # Plain extending examples: one entry per Containerfile or Dockerfile.
+          # Skip directories with a bakery.yaml — those are handled by the
+          # `bakery` job below via the shared bakery-build-pr workflow.
+          entries=$(
+              for dir in extending/*/; do
+                  example_root=${dir%/}
+                  [ -f "${example_root}/bakery.yaml" ] && continue
+                  base=$(basename "$dir")
+                  while IFS= read -r f; do
+                      containerfile_dir=$(dirname "$f")
+                      echo "${base},${containerfile_dir},$(basename "$f")"
+                  done < <(find "$example_root" -type f \( -name "Containerfile*" -o -name "Dockerfile*" \))
+              done | jq -R -s -c 'split("\n")[:-1] | map(split(",")) | map({name: .[0], directory: .[1], file: .[2]})'
+          )
 
           # Create the matrix JSON in one step to avoid shell quoting issues
           matrix=$(echo "$entries" | jq -c '{include: .}')
@@ -70,3 +77,12 @@ jobs:
           push: false
           context: ${{ matrix.directory }}
           file: ${{ matrix.directory }}/${{ matrix.file }}
+
+  bakery:
+    name: Build with Bakery
+    permissions:
+      contents: read
+      packages: write
+    uses: posit-dev/images-shared/.github/workflows/bakery-build-pr.yml@main
+    with:
+      context: extending/posit-team
