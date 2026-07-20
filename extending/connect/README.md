@@ -8,14 +8,14 @@ For local Docker, all content runs inside the `connect` container, so content-le
 
 | I want to… | Customize | Example |
 |:-----------|:----------|:--------|
-| Install specific versions of R, Python, or Quarto | [`connect-content`](https://hub.docker.com/r/posit/connect-content) | [common/R](../common/R/) · [common/python](../common/python/) · [server/quarto](./server/quarto/) |
+| Install specific versions of R or Python | [`connect-content`](https://hub.docker.com/r/posit/connect-content) | [common/R](../common/R/) · [common/python](../common/python/) |
 | Add system libraries that content packages need | [`connect-content`](https://hub.docker.com/r/posit/connect-content) | [common/system-dependencies](../common/system-dependencies/) |
 | Upgrade the Connect server version | `connect` + `connect-content-init` (keep in sync) | — |
 | Add custom runtime components for off-host execution | [`connect-content-init`](https://hub.docker.com/r/posit/connect-content-init) | [Custom container images](https://docs.posit.co/helm/examples/connect/container-images/custom-images.html) |
 
 ## How the images fit together
 
-**For local Docker deployments,** you only need the `connect` image. Content runs as processes inside the Connect server container using the bundled R, Python, and Quarto.
+**For local Docker deployments,** you only need the `connect` image. Content runs as processes inside the Connect server container using the bundled R, Python, and Quarto. To install a specific Quarto version on the server, see [server/quarto](./server/quarto/).
 
 **For Kubernetes deployments with off-host execution (OHE),** three images work together:
 
