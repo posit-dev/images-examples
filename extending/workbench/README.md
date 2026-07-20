@@ -8,8 +8,8 @@ For local Docker, all sessions run inside the `workbench` container, so session-
 
 | I want to… | Customize | Example |
 |:-----------|:----------|:--------|
-| Install specific versions of R or Python in sessions | [`workbench-session`](https://hub.docker.com/r/posit/workbench-session) | [common/R](../common/R/) · [common/python](../common/python/) |
-| Add system libraries that session packages need | [`workbench-session`](https://hub.docker.com/r/posit/workbench-session) | [common/system-dependencies](../common/system-dependencies/) |
+| Add R or Python packages to sessions | [`workbench-session`](https://hub.docker.com/r/posit/workbench-session) | [session/r-python-packages](./session/r-python-packages/) |
+| Add system libraries that session packages need | [`workbench-session`](https://hub.docker.com/r/posit/workbench-session) | [session/system-dependencies](./session/system-dependencies/) |
 | Bundle session components into a self-contained session image | [`workbench-session-init`](https://hub.docker.com/r/posit/workbench-session-init) + `workbench-session` | [session-init](./session-init/) |
 | Run a newer Positron version than the Workbench server ships | [`workbench-positron-init`](https://hub.docker.com/r/posit/workbench-positron-init) | [Helm config](#upgrading-positron-independently) |
 | Upgrade the Workbench server version | `workbench` + `workbench-session-init` (keep in sync) | — |
