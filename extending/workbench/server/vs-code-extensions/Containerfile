@@ -5,7 +5,8 @@ ARG PWB_VERSION="2025.09.0"
 
 
 ### Extend the Posit Workbench Standard image ###
-FROM docker.io/posit/workbench:${PWB_VERSION}-std
+# Also available as docker.io/posit/workbench
+FROM ghcr.io/posit-dev/workbench:${PWB_VERSION}-std
 
 
 ### Install VS Code Extensions ###

@@ -11,7 +11,8 @@ ARG PWB_VERSION="2025.09.0"
 
 
 ### Extend the Posit Workbench Minimal image ###
-FROM docker.io/posit/workbench:${PWB_VERSION}-ubuntu-22.04-min
+# Also available as docker.io/posit/workbench
+FROM ghcr.io/posit-dev/workbench:${PWB_VERSION}-ubuntu-22.04-min
 
 
 ### Install the Posit Pro Drivers ###

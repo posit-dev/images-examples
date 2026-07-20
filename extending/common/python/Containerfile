@@ -1,0 +1,45 @@
+# Example of extending a Posit product image to install specific versions of
+# Python and a set of Python packages.
+#
+# This pattern applies to any Posit product image (Connect, Workbench,
+# Package Manager). Replace the FROM line in the final stage with the image
+# you are extending — for example, posit/connect for a Connect server image,
+# or posit/connect-content for Connect off-host execution.
+# Python is installed via uv in a separate builder stage and copied into the
+# final image.
+
+### Specify the Posit product image to extend ###
+# ARG must be declared before the first FROM to be available in FROM instructions.
+ARG PRODUCT_VERSION="2026.05.0"
+
+
+### Install Python using uv in a separate builder stage ###
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+ENV UV_PYTHON_PREFERENCE=only-managed
+
+RUN uv python install 3.13.7 3.12.11 && \
+    # uv installs to arch-specific paths (e.g. cpython-3.13.7-linux-x86_64-gnu/).
+    # Rename to version-only paths to match the convention used in Posit product
+    # images and to keep references arch-agnostic.
+    mv /opt/python/cpython-3.13.7-linux-*/ /opt/python/3.13.7 && \
+    mv /opt/python/cpython-3.12.11-linux-*/ /opt/python/3.12.11
+
+
+### Extend the Posit Workbench Minimal image ###
+# Also available as docker.io/posit/workbench
+FROM ghcr.io/posit-dev/workbench:${PRODUCT_VERSION}-min
+
+
+### Copy Python installations from builder stage ###
+COPY --from=python-builder /opt/python /opt/python
+
+
+### Install Python packages ###
+COPY requirements.txt /tmp/requirements.txt
+RUN /opt/python/3.13.7/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    -r /tmp/requirements.txt
+RUN /opt/python/3.12.11/bin/pip install --no-cache-dir --upgrade --break-system-packages \
+    -r /tmp/requirements.txt

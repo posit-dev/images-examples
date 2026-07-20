@@ -25,7 +25,7 @@ jobs:
           # Find directories under extending that contain Dockerfile or Containerfile
           entries=$(find extending -type f -name "Containerfile*" -o -name "Dockerfile*" | while read -r f; do
               dir=$(dirname "$f")
-              name=$(basename "$dir")
+              name="${dir#extending/}"
               containerfile=$(basename "$f")
               echo "$name,$dir,$containerfile"
           done | jq -R -s -c 'split("\n")[:-1] | map(split(",")) | map({name: .[0], directory: .[1], file: .[2]})')
