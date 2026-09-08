@@ -129,12 +129,20 @@ COPY --from=python-builder /opt/python /opt/python
 Python installs to `/opt/python/cpython-{version}-linux-x86_64-gnu/`.
 
 ### Installing R
+Register the Posit Open apt repository once, then install from it — the
+same repository Quarto uses:
 ```dockerfile
-RUN RUN_UNATTENDED=1 R_VERSION=4.5.1 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
-    find . -type f -name '[rR]-4.5.1.*\.(deb|rpm)' -delete
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')"
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends r-4.5.3 && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 ```
 
-R installs to `/opt/R/{version}/`.
+R installs to `/opt/R/{version}/`. The Open repo only keeps the latest
+patch per minor line (unlike the retired `rstd.io/r-install` script's CDN,
+which never pruned) — check the repo has the version you want before
+pinning it, e.g. `apt-cache policy r-{version}` after registering the repo.
 
 ### Package installation patterns
 
@@ -162,13 +170,12 @@ RUN apt-get update -yqq && \
 
 ### Cleanup requirements
 - Always clean apt caches: `apt-get clean -yqq && rm -rf /var/lib/apt/lists/*`
-- Delete R installer artifacts: `find . -type f -name '[rR]-{version}.*\.(deb|rpm)' -delete`
 - Use `--no-cache-dir` with pip
 - Use `clean = TRUE` with R `install.packages()`
 
 ## Key resources
 
 - [Posit Public Package Manager](https://p3m.dev/) - Package repositories for R and Python
-- [R installer script](https://rstd.io/r-install) - Automated R installation
+- [Posit Open apt/dnf repository setup](https://cloudsmith.io/~posit/repos/open/setup/) - R and Quarto package repository
 - [Goss](https://github.com/goss-org/goss) - Container testing framework used by Bakery
 - [GitHub Discussions](https://github.com/posit-dev/images/discussions) - Feedback and questions

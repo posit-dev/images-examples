@@ -16,7 +16,7 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 ARG DEBIAN_FRONTEND=noninteractive
 
 ### Setup environment ###
-{{ apt.run_setup() }}
+{{ apt.run_setup(open_repo=True) }}
 
 ### Install Python from previous stage ###
 {{ python.copy_from_build_stage() }}
