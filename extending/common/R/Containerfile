@@ -16,16 +16,29 @@ ARG PRODUCT_VERSION="2026.05.0"
 FROM ghcr.io/posit-dev/workbench:${PRODUCT_VERSION}-min
 
 
+### Register the Posit Open apt repository ###
+# R installs from here, the same repository Quarto uses. Register it once,
+# before installing any R version, so this setup script does not run once
+# per version below.
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')"
+
+
 ### Install R versions ###
-RUN RUN_UNATTENDED=1 R_VERSION=4.5.1 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
-    find . -type f -name '[rR]-4.5.1.*\.(deb|rpm)' -delete
-RUN RUN_UNATTENDED=1 R_VERSION=4.4.3 bash -c "$(curl -fsSL https://rstd.io/r-install)" && \
-    find . -type f -name '[rR]-4.4.3.*\.(deb|rpm)' -delete
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends r-4.5.3 && \
+    apt-mark hold r-4.5.3 && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends r-4.4.3 && \
+    apt-mark hold r-4.4.3 && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
 
 
 ### Install R packages from Posit Public Package Manager ###
 COPY packages.txt /tmp/packages.txt
-RUN /opt/R/4.5.1/bin/R --vanilla -e \
+RUN /opt/R/4.5.3/bin/R --vanilla -e \
     'install.packages(readLines("/tmp/packages.txt"), repos="https://p3m.dev/cran/__linux__/noble/latest", clean = TRUE)'
 RUN /opt/R/4.4.3/bin/R --vanilla -e \
     'install.packages(readLines("/tmp/packages.txt"), repos="https://p3m.dev/cran/__linux__/noble/latest", clean = TRUE)'
