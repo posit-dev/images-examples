@@ -1,5 +1,5 @@
 package:
-  r-4.5.2:
+  r-4.6.1:
     installed: true
 
 
@@ -11,11 +11,11 @@ file:
 
 
 command:
-  "Verify R installation is version 4.5.2":
-    exec: /opt/R/4.5.2/bin/R --version
+  "Verify R installation is version 4.6.1":
+    exec: /opt/R/4.6.1/bin/R --version
     exit-status: 0
     stdout:
-      - "R version 4.5.2"
+      - "R version 4.6.1"
   "Verify Python installation is version 3.14.3":
     exec: /opt/python/3.14.3/bin/python --version
     exit-status: 0

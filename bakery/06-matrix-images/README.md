@@ -140,14 +140,13 @@ Matrix templates use build argument macros instead of direct version references 
 FROM docker.io/library/ubuntu:24.04
 
 ### ARG declarations ###
-{{ r.declare_build_arg() }}
-{{ python.declare_build_arg() }}
-{{ quarto.declare_build_arg() }}
 
 # Install R using build arg
+{{ r.declare_build_arg() }}
 {{ r.run_install(r.build_arg()) }}
 
 # Install Quarto using build arg
+{{ quarto.declare_build_arg() }}
 {{ quarto.run_install(quarto.build_arg(), True) }}
 ```
 
