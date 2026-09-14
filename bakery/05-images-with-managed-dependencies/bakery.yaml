@@ -34,6 +34,6 @@ images:
         latest: true
         dependencies:
           - dependency: R
-            version: "4.5.2"
+            version: "4.6.1"
           - dependency: python
             versions: ["3.14.3", "3.13.12"]

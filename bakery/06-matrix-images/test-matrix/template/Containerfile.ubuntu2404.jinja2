@@ -15,12 +15,8 @@ LABEL org.opencontainers.image.base.name="docker.io/library/ubuntu:24.04"
 
 ### ARG declarations ###
 ARG DEBIAN_FRONTEND=noninteractive
-{{ r.declare_build_arg() }}
-{{ python.declare_build_arg() }}
-{{ quarto.declare_build_arg() }}
-
 ### Install Apt Packages and set up the Posit Pro apt repo ###
-{{ apt.run_setup() }}
+{{ apt.run_setup(pro_repo=False) }}
 
 ### Set up the Posit Open apt repo and install tools needed for Quarto ###
 # The Open repo hosts the `quarto` deb package (see next RUN). `xz-utils` is
@@ -34,9 +30,11 @@ RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')" && \
 {{ python.copy_from_build_stage() }}
 
 # Install R
+{{ r.declare_build_arg() }}
 {{ r.run_install(r.build_arg()) }}
 
 ### Install Quarto from the Posit Open apt repo ###
+{{ quarto.declare_build_arg() }}
 # The `quarto` deb installs to /opt/quarto/bin/quarto and symlinks the binary
 # into /usr/local/bin/quarto via its postinst script.
 RUN apt-get update -yqq && \
