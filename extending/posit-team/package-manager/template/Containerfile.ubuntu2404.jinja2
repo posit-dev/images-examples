@@ -1,0 +1,17 @@
+{#-
+The Package Manager image typically needs a different set of customizations than
+Workbench or Connect. It does not host user R/Python code, so installing extra
+language runtimes adds weight without benefit. The most common change is adding
+internal CA certificates so Package Manager can pull upstream sources and reach
+internal registries over TLS.
+-#}
+FROM docker.io/posit/package-manager:{{ Image.Version }}-ubuntu-24.04-min
+LABEL org.opencontainers.image.base.name="docker.io/posit/package-manager:{{ Image.Version }}-ubuntu-24.04-min"
+
+### Add the team's internal CA to the system trust store ###
+# The Posit Package Manager image runs as the unprivileged `rstudio-pm` user.
+# Switch to root only for the trust-store update, then back.
+USER root
+COPY {{ Path.Version }}/ca/Example-RootCA.crt /usr/local/share/ca-certificates/Example-RootCA.crt
+RUN update-ca-certificates
+USER rstudio-pm
