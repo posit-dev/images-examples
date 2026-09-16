@@ -1,0 +1,35 @@
+{%- import "python.j2" as python -%}
+{%- import "r.j2" as r -%}
+file:
+{%- for r_version in Dependencies.R %}
+  /opt/R/{{ r_version }}/bin/R:
+    exists: true
+{%- endfor %}
+{%- for py_version in Dependencies.python %}
+  /opt/python/{{ py_version }}/bin/python:
+    exists: true
+{%- endfor %}
+  /opt/rstudio-connect/bin/connect:
+    exists: true
+
+command:
+{%- for r_version in Dependencies.R %}
+  "Verify R {{ r_version }} reports the correct version":
+    exec: {{ r.get_version_directory(r_version) }}/bin/R --version
+    exit-status: 0
+    stdout:
+      - "R version {{ r_version }}"
+  "Verify shiny is installed for R {{ r_version }}":
+    exec: {{ r.get_version_directory(r_version) }}/bin/R -e 'library(shiny); cat(as.character(packageVersion("shiny")))'
+    exit-status: 0
+{%- endfor %}
+{%- for py_version in Dependencies.python %}
+  "Verify Python {{ py_version }} reports the correct version":
+    exec: {{ python.get_version_directory(py_version) }}/bin/python --version
+    exit-status: 0
+    stdout:
+      - "{{ py_version }}"
+  "Verify pandas is installed for Python {{ py_version }}":
+    exec: {{ python.get_version_directory(py_version) }}/bin/python -c "import pandas; print(pandas.__version__)"
+    exit-status: 0
+{%- endfor %}
