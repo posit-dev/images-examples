@@ -2,11 +2,17 @@
 
 This example shows how a team can manage a small fleet of Posit product images on top of the official [Minimal](https://github.com/posit-dev/images/blob/main/docs/products/standard-vs-minimal.md) (`-min`) bases. Three images (Posit Workbench, Posit Connect, and Posit Package Manager) are versioned, customized, and rebuilt as a single project so the team's development environment, deployment runtime, and package server stay in lockstep.
 
-The sibling [`extending/`](..) examples each show one customization of a single Posit image in a standalone Containerfile. This example covers the same kind of customization at fleet scale (multiple Posit products in one project), using the [Bakery](../../bakery/) tool from Posit to manage rendering, versioning, and tagging across the fleet. The Bakery [tutorial examples](../../bakery/) cover its features in isolation. This one applies them to a realistic team setup.
+The sibling [`extending/`](..) examples each show one customization of a single Posit image in a standalone Containerfile. This example covers the same kind of customization at fleet scale (multiple Posit products in one project), using [Posit Bakery](https://posit-dev.github.io/images-shared/) to manage rendering, versioning, and tagging across the fleet. The Bakery [tutorial examples](../../bakery/) cover its features in isolation. This one applies them to a realistic team setup.
 
 Run all command examples with `extending/posit-team/` as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
+
+### Bakery documentation
+
+- [Bakery guide](https://posit-dev.github.io/images-shared/) — project workflow and CLI concepts
+- [Configuration reference](https://posit-dev.github.io/images-shared/configuration.html) — `bakery.yaml`, images, versions, OSes, and dependency constraints
+- [Templating and macros](https://posit-dev.github.io/images-shared/templating.html) — template variables and package-installation macros
 
 ## Structure
 
@@ -51,7 +57,7 @@ Package Manager does not host user code, so it gets a much lighter customization
 
 ### Fleet versioning maps to Posit product versions
 
-Each image's `Image.Version` is the Posit product version it extends:
+Each image's [`Image.Version`](https://posit-dev.github.io/images-shared/templating.html) is the Posit product version it extends. The `versions` and `subpath` fields are defined by Bakery's [image-version configuration](https://posit-dev.github.io/images-shared/configuration.html#imageversion):
 
 ```jinja2
 FROM docker.io/posit/workbench:{{ Image.Version | tagSafe }}-ubuntu-24.04-min
@@ -101,7 +107,7 @@ images:
             version: "3.14.7"
 ```
 
-`bakery create version` resolves an image's constraints once, then writes the resolved values into that version's `dependencies:` block. From that point on, the version is pinned, and re-running the command on a different day will not change the existing entry.
+`bakery create version` resolves an image's [dependency constraints](https://posit-dev.github.io/images-shared/configuration.html#dependencyconstraint) once, then writes the resolved values into that version's [`dependencies`](https://posit-dev.github.io/images-shared/configuration.html#dependencyversions) block. From that point on, the version is pinned, and re-running the command on a different day will not change the existing entry.
 
 Bakery does not enforce sync across images. `dependencyConstraints` is per-image, and two images with identical `latest: true` constraints will diverge if their versions are created on different days. Keeping `workbench` and `connect` aligned is part of the team's workflow, not something Bakery guarantees:
 
@@ -179,6 +185,8 @@ bakery create version package-manager 2026.09.0
 ```
 
 ## Building with the Bakery CLI
+
+See the [Bakery build workflow](https://posit-dev.github.io/images-shared/#step-4-build-the-images) for the corresponding CLI lifecycle.
 
 ```bash
 # Rerender templates after changes
@@ -258,13 +266,10 @@ This example tags each image with the Posit product version it extends (`workben
 | `{{ Dependencies.R }}` | Resolved R versions | `["4.6.1"]` |
 | `{{ Dependencies.python }}` | Resolved Python versions | `["3.14.7"]` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for the full reference.
+See the [Bakery templating and macros reference](https://posit-dev.github.io/images-shared/templating.html) for the full reference.
 
 ## Related examples
 
 - [extending/](..): the standalone Containerfile siblings of this example. Start there if you only need to customize one image.
 - [bakery/01-basic-image](../../bakery/01-basic-image/): the simplest possible Bakery project, on a stock OS base. Useful for understanding the templating mechanics this example builds on.
 - [bakery/05-images-with-managed-dependencies](../../bakery/05-images-with-managed-dependencies/): the `dependencyConstraints` mechanism used here to resolve R and Python.
-
-[DependencyConstraint]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#dependencyconstraint
-[ImageVersion]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imageversion
