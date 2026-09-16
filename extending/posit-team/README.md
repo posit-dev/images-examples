@@ -1,6 +1,6 @@
 # Extending a fleet of Posit product images
 
-This example shows how a team can manage a small fleet of Posit product images on top of the official [Minimal](https://github.com/posit-dev/images/blob/main/docs/products/standard-vs-minimal.md) (`-min`) bases. Three images (Posit Workbench, Posit Connect, and Posit Package Manager) are versioned, customized, and rebuilt as a single project so the team's development environment, deployment runtime, and package server stay in lockstep.
+This example shows how a team can manage a small fleet of Posit product images on top of the official [Minimal](https://github.com/posit-dev/images/blob/main/docs/products/standard-vs-minimal.md) (`-min`) bases. You can version, customize, and rebuild three images (Posit Workbench, Posit Connect, and Posit Package Manager) as a single project. This keeps your development environment, deployment runtime, and package server in lockstep.
 
 The sibling [`extending/`](..) examples each show one customization of a single Posit image in a standalone Containerfile. This example covers the same kind of customization at fleet scale (multiple Posit products in one project), using [Posit Bakery](https://posit-dev.github.io/images-shared/) to manage rendering, versioning, and tagging across the fleet. The Bakery [tutorial examples](../../bakery/) cover its features in isolation. This one applies them to a realistic team setup.
 
@@ -10,13 +10,13 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 ### Bakery documentation
 
-- [Bakery guide](https://posit-dev.github.io/images-shared/) — project workflow and CLI concepts
-- [Configuration reference](https://posit-dev.github.io/images-shared/configuration.html) — `bakery.yaml`, images, versions, OSes, and dependency constraints
-- [Templating and macros](https://posit-dev.github.io/images-shared/templating.html) — template variables and package-installation macros
+- [Bakery guide](https://posit-dev.github.io/images-shared/): project workflow and CLI concepts
+- [Configuration reference](https://posit-dev.github.io/images-shared/configuration.html): `bakery.yaml`, images, versions, OSes, and dependency constraints
+- [Templating and macros](https://posit-dev.github.io/images-shared/templating.html): template variables and package-installation macros
 
 ## Structure
 
-```
+```text
 posit-team/
 ├── bakery.yaml                                  # Project config: 3 images, shared R and Python constraints
 ├── workbench/
@@ -47,17 +47,17 @@ posit-team/
 |:------|:-----|:-----|
 | `workbench:2026.09.0-174.pro3` | `posit/workbench:2026.09.0-174.pro3-ubuntu-24.04-min` | R 4.6.1, Python 3.14.7, team R + Python packages, spatial system deps |
 | `connect:2026.09.0` | `posit/connect:2026.09.0-ubuntu-24.04-min` | Same R, Python, and packages as Workbench |
-| `package-manager:2026.09.0` | `posit/package-manager:2026.09.0-ubuntu-24.04-min` | Internal CA certificate in the system trust store |
+| `package-manager:2026.09.0` | `posit/package-manager:2026.09.0-ubuntu-24.04-min` | Internal certificate authority (CA) certificate in the system trust store |
 
 Package Manager does not host user code, so it gets a much lighter customization than Workbench and Connect.
 
-> **Why install R 4.6.1 and Python 3.14.7 when the 2026.09 Standard images already contain them?** This example deliberately uses Minimal bases to show how a team can own the language layer. The team can keep the versions aligned with the current Posit release, as here, or roll R and Python forward or hold them back independently of Posit.
+> Why install R 4.6.1 and Python 3.14.7 when the 2026.09 Standard images already contain them? This example deliberately uses Minimal bases to show how a team can own the language layer. The team can keep the versions aligned with the current Posit release, as here, or roll R and Python forward or hold them back independently of Posit.
 
 ## Concepts
 
 ### Fleet versioning maps to Posit product versions
 
-Each image's [`Image.Version`](https://posit-dev.github.io/images-shared/templating.html) is the Posit product version it extends. The `versions` and `subpath` fields are defined by Bakery's [image-version configuration](https://posit-dev.github.io/images-shared/configuration.html#imageversion):
+Each image's [`Image.Version`](https://posit-dev.github.io/images-shared/templating.html) is the Posit product version it extends. The `versions` and `subpath` fields are defined by the [image-version configuration](https://posit-dev.github.io/images-shared/configuration.html#imageversion) in Bakery:
 
 ```jinja2
 FROM docker.io/posit/workbench:{{ Image.Version | tagSafe }}-ubuntu-24.04-min
@@ -109,7 +109,7 @@ images:
 
 `bakery create version` resolves an image's [dependency constraints](https://posit-dev.github.io/images-shared/configuration.html#dependencyconstraint) once, then writes the resolved values into that version's [`dependencies`](https://posit-dev.github.io/images-shared/configuration.html#dependencyversions) block. From that point on, the version is pinned, and re-running the command on a different day will not change the existing entry.
 
-Bakery does not enforce sync across images. `dependencyConstraints` is per-image, and two images with identical `latest: true` constraints will diverge if their versions are created on different days. Keeping `workbench` and `connect` aligned is part of the team's workflow, not something Bakery guarantees:
+Bakery does not enforce sync across images. `dependencyConstraints` is per-image, and two images with identical `latest: true` constraints will diverge if you create your versions on different days. Keeping `workbench` and `connect` aligned is part of the team's workflow, not something Bakery guarantees:
 
 - Create both versions in the same command sequence so the resolved R and Python land on the same values, or
 - Resolve once for `workbench`, then copy the resolved `dependencies:` block into the new version of `connect` by hand.
@@ -120,7 +120,7 @@ If the team adds more images later (e.g., a content runtime), the same constrain
 
 Each image's template carries the customizations specific to that product:
 
-- `workbench`: installs the team system-package delta, R 4.6.1, Python 3.14.7, and team R/Python packages.
+- `workbench`: installs the team system-package delta, R 4.6.1, Python 3.14.7, and team R and Python packages.
 - `connect`: installs the same system packages and language packages as Workbench so apps developed in Workbench deploy cleanly.
 - `package-manager`: adds a single CA certificate to the trust store. It does not install R or Python because Package Manager does not run user code.
 
@@ -132,9 +132,9 @@ The fleet system-package file is a small addition to the Minimal base, not a cop
 | Database and XML | `libsqlite3-dev`, `libxml2-dev`, `libcurl4-openssl-dev`, `libssl-dev` |
 | Fonts and graphics | `libfontconfig1-dev`, `libfreetype-dev`, `libharfbuzz-dev`, `libfribidi-dev`, `libpng-dev`, `libtiff-dev`, `libjpeg-dev` |
 
-The current Workbench Minimal base already supplies its compiler toolchain. Connect Minimal does not, so a real fleet should add a build toolchain to the shared list if it expects packages to compile from source rather than use the P3M binaries and Python wheels used by this example.
+The current Workbench Minimal base already supplies its compiler toolchain. Connect Minimal does not include one. Add a build toolchain to the shared list if the fleet expects packages to compile from source rather than use the Posit Public Package Manager (P3M) binaries and Python wheels used by this example.
 
-Workbench and Connect templates are nearly identical because the team enforces that their dev and deploy environments match. The differences are in:
+Workbench and Connect templates are nearly identical because the team enforces that their dev and deploy environments match. The templates differ in the following ways:
 
 1. The base image (`posit/workbench:...` vs `posit/connect:...`)
 2. The goss tests (one checks for `/usr/lib/rstudio-server/bin/rserver`, the other checks for `/opt/rstudio-connect/bin/connect`)
@@ -145,7 +145,7 @@ If a team needs them to diverge (say, larger R libraries on Workbench for intera
 
 The `ubuntu-24.04_packages.txt`, `r-packages.txt`, and `python-packages.txt` files under `workbench/template/deps/` and `connect/template/deps/` contain identical content. The system package filename makes the supported base OS explicit, matching the organization used by the product image repositories. Package Manager has no dependency list because its customization is only a certificate. Bakery has no built-in mechanism to share a deps file across images, so the team maintains the Workbench and Connect lists by hand.
 
-In practice the diff in `git review` catches drift: if someone edits one file and not the other, the PR shows two diffs in different image trees, or just one. Both are immediately visible. For a two-image fleet that is tolerable. For a larger fleet, consider:
+In practice, the diff in `git review` catches drift: if someone edits one file and not the other, the PR shows two diffs in different image trees, or just one. Both are immediately visible. For a two-image fleet that is tolerable. For a larger fleet, consider:
 
 - A pre-commit hook that fails if the deps files diverge.
 - A `_shared/` directory with the canonical lists, then per-image template files that just `{% include %}` them (verify your Bakery version supports template paths outside the image's own `template/`).
@@ -233,7 +233,7 @@ If the team wants to add, say, a content-runtime image:
 3. Decide on a base, likely `posit/connect-content:<version>-min`, or extend from `connect` directly.
 4. Add a version and customize the template.
 
-The pattern scales because each image is independently described but participates in the same `bakery update files` / `bakery build` lifecycle.
+The pattern scales because each image is independently described but participates in the same `bakery update files` and `bakery build` lifecycle.
 
 ## Production considerations
 
@@ -243,7 +243,7 @@ This example is the starting point, not the destination. Before running this in 
 
 The rendered Containerfiles install R packages from `https://p3m.dev/cran/__linux__/noble/latest`. `latest` floats: every rebuild pulls whatever P3M serves that day. For reproducible images, swap to a [P3M snapshot URL](https://docs.posit.co/rspm/admin/serving-binaries/#package-binary-urls) with a fixed date (e.g., `https://p3m.dev/cran/__linux__/noble/2026-09-15`). The team chooses when to bump the snapshot, the same way they choose when to bump the Posit product version.
 
-Bakery's `r.run_install_packages` macro takes the repo URL through its `_os` argument indirectly (it computes the URL from the OS codename). To pin to a snapshot, either bypass the macro and write the `install.packages` RUN command directly with the snapshot URL, or pass a custom `_os` dict whose `Codename` includes the date suffix.
+The `r.run_install_packages` macro in Bakery takes the repo URL through its `_os` argument indirectly (it computes the URL from the OS codename). To pin to a snapshot, either bypass the macro and write the `install.packages` RUN command directly with the snapshot URL, or pass a custom `_os` dict whose `Codename` includes the date suffix.
 
 The Python install path has the same issue: pip resolves from PyPI's current state at build time. Pin via a constraints file or a private mirror.
 
