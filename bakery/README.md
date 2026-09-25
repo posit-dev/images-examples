@@ -13,6 +13,8 @@ Posit Bakery is the Jinja2-based templating system from Posit for managing conta
 | [05-images-with-managed-dependencies](./05-images-with-managed-dependencies/) | Automatic version management of R, Python, and Quarto using dependency constraints |
 | [06-matrix-images](./06-matrix-images/) | Build multiple image variants from dependency combinations using Docker build arguments |
 
+For a recipe that uses Bakery to manage a fleet of customized Posit product images, see [`extending/posit-team`](../extending/posit-team/).
+
 ## Additional resources
 
 ### Posit Bakery documentation and resources

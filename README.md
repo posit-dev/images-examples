@@ -10,6 +10,8 @@ Are you customizing one image or managing many?
 
 - [Bakery](./bakery/): The Posit [templating system](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) for managing matrices of container images across multiple R versions, Python versions, OS variants, and product versions. Use Bakery to maintain a fleet of custom images and rebuild them consistently. Posit uses the same tool to build the official product images.
 
+- [Fleet extension example](./extending/posit-team/): Manage customized Workbench, Connect, and Package Manager images together in one Bakery project.
+
 Looking for something else?
 
 | Goal | Where to go |
