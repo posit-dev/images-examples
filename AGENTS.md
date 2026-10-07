@@ -6,6 +6,8 @@ This repository provides examples for using and extending Posit's container imag
 - **bakery/**: Managing images with Posit's [Bakery tool](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) (Jinja2-based templating system)
 - **extending/**: Extending Posit's publicly available container images with customer-specific layers
 
+For changes under `bakery/`, follow the [Bakery skill](https://github.com/posit-dev/images-shared/blob/main/plugins/bakery/skills/bakery/SKILL.md).
+
 ## Sibling repositories
 
 This project is part of a multi-repo ecosystem for Posit container images. **Read the
