@@ -68,6 +68,8 @@ jobs:
 
       - name: Set up Bakery
         uses: posit-dev/images-shared/setup-bakery@main
+        with:
+          restore-cache: "false"
 
       - name: Set up Just
         uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3  # v4.0.0
