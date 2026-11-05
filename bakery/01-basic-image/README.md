@@ -1,8 +1,8 @@
 # Basic image example
 
-This example demonstrates the simplest use case for Bakery: a single [image][Image] with one [version][ImageVersion]. It builds an Ubuntu 24.04 image with basic development tools installed.
+This example demonstrates the simplest use case for Posit Bakery: a single [image][Image] with one [version][ImageVersion]. It builds an Ubuntu 24.04 image with basic development tools installed.
 
-All command examples are expected to run with this example, `bakery/01-basic-image/`, as the working directory.
+Run all command examples from `bakery/01-basic-image/` as the working directory.
 
 Bakery commands can also use the `--context PATH` option to specify the path to the example directory when running from a different location.
 
@@ -30,13 +30,13 @@ Bakery commands can also use the `--context PATH` option to specify the path to 
 
 ## Concepts
 
-This example demonstrates Bakery's usage in its most basic form. It consists of a [`bakery.yaml` file][BakeryConfiguration] that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files.
+This example demonstrates Bakery in its most basic form. It consists of a [`bakery.yaml` file][BakeryConfiguration] that defines the Bakery project configuration and a single image directory. The image directory, `example-image/`, contains a `template/` directory with Jinja2 templates and a version directory, `1.0.0/`, with generated files.
 
-Each time you add a new [version][ImageVersion] to the `bakery.yaml` file, Bakery renders the templates to generate the necessary files for that version. In many cases, the image's version will correlate to the primary software it packages (e.g., a product version, an R version, etc.), but in this example, the version is arbitrary and does not correspond to any software version.
+Each time you add a new [version][ImageVersion] to the `bakery.yaml` file, Bakery renders the templates to generate the necessary files for that version. Typically the image version corresponds to the primary software it packages, such as a product version or an R version. In this example, the version is arbitrary and does not correspond to any software version.
 
 ## Creation of this example
 
-Starting a new Bakery project can be done with a couple bootstrapping commands, editing templates, and then adding the first version. The commands below were used to create this example from scratch.
+Start a new Bakery project with a few bootstrapping commands, edit the templates, and then add the first version. These commands created this example from scratch.
 
 ```bash
 # Initialize a new Bakery project in the current directory by writing a skeleton bakery.yaml file
@@ -70,7 +70,7 @@ bakery run dgoss
 
 You can build the image directly using Docker without Bakery. The build context must be the example directory (not the version directory) because the Containerfile references paths relative to it.
 
-Running one of the below commands will be functionally equivalent to running `bakery build`.
+The following command is functionally equivalent to running `bakery build`.
 
 ```bash
 docker buildx build \
@@ -87,23 +87,23 @@ docker buildx build \
 
 The goss.yaml file uses Go templates to dynamically read the package list and verify each package is installed.
 
-### Running tests manually
+### Run tests without Bakery
 
-Like building, you can run tests without Bakery. The commands below would be functionally equivalent to running `bakery build` followed by `bakery run dgoss`. Always build and load the image locally, or pull it, before running tests.
+Like building, you can run tests without Bakery. These commands are functionally equivalent to `bakery build` followed by `bakery run dgoss`. Always build and load the image locally, or pull it, before running tests.
 
-Note that some options and environment variables passed to `dgoss` are included to mirror the calls made by `bakery`, but will go unused in practice.
+Bakery passes some `dgoss` options and environment variables that mirror its own invocation, even though they go unused in this manual call.
 
 ```bash
 # Build the image first to make it available for testing
 docker buildx build \
   --load \
-  -f bakery/01-basic-image/example-image/1.0.0/Containerfile \
+  -f example-image/1.0.0/Containerfile \
   -t ghcr.io/posit-dev/example-image:1.0.0 \
   -t ghcr.io/posit-dev/example-image:latest \
   .
 
 # Run dgoss with expected environment variables and mounts
-GOSS_FILES_PATH=bakery/01-basic-image/example-image/1.0.0/test \
+GOSS_FILES_PATH=example-image/1.0.0/test \
 dgoss run \
   -v "$(pwd)/example-image/1.0.0:/tmp/version" \
   -v "$(pwd)/example-image:/tmp/image" \
@@ -125,8 +125,8 @@ The Containerfile template uses these Bakery variables:
 | `{{ Image.Version }}` | The version being built | `"1.0.0"` |
 | `{{ Path.Version }}` | Path to the version directory | `"example-image/1.0.0"` |
 
-See [TEMPLATING.md](https://github.com/posit-dev/images-shared/blob/main/posit-bakery/TEMPLATING.md) for a list of available variables and macros.
+See the [Bakery templating documentation](https://posit-dev.github.io/images-shared/templating.html) for a list of available variables and macros.
 
-[BakeryConfiguration]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#bakery-configuration
-[Image]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#image
-[ImageVersion]: https://github.com/posit-dev/images-shared/blob/main/posit-bakery/CONFIGURATION.md#imageversion
+[BakeryConfiguration]: https://posit-dev.github.io/images-shared/configuration.html#bakery-configuration
+[Image]: https://posit-dev.github.io/images-shared/configuration.html#image
+[ImageVersion]: https://posit-dev.github.io/images-shared/configuration.html#imageversion

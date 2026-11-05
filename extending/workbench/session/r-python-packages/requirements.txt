@@ -1,0 +1,4 @@
+pandas
+polars
+scikit-learn
+shiny

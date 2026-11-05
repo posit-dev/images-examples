@@ -1,0 +1,9 @@
+fastapi
+ipykernel
+jupyter
+pandas
+plotly
+polars
+scikit-learn
+shiny
+uvicorn

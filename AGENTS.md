@@ -1,0 +1,156 @@
+# Repository Guide
+
+## Repository purpose
+
+This repository provides examples for using and extending Posit's container images. It demonstrates two approaches:
+- **bakery/**: Managing images with Posit's [Bakery tool](https://github.com/posit-dev/images-shared/tree/main/posit-bakery) (Jinja2-based templating system)
+- **extending/**: Extending Posit's publicly available container images with customer-specific layers
+
+For changes under `bakery/`, follow the [Bakery skill](https://github.com/posit-dev/images-shared/blob/main/plugins/bakery/skills/bakery/SKILL.md).
+
+## Sibling repositories
+
+This project is part of a multi-repo ecosystem for Posit container images. **Read the
+AGENTS.md in each affected sibling repo before making changes there.**
+
+Do not make changes directly on `main`; use a topic branch.
+
+- `../images-shared/` - Posit Bakery CLI tool for building, testing, and managing container images. Jinja2 templates, macros, and shared build tooling.
+- `../images/` - Meta repository with documentation, design principles, and links across all image repos.
+- `../images-connect/` - Posit Connect images: `connect` (Standard/Minimal variants), `connect-content` (matrix of R x Python), `connect-content-init`.
+- `../images-package-manager/` - Posit Package Manager image: `package-manager` (Standard/Minimal variants). Supports multi-platform builds (amd64/arm64).
+- `../images-workbench/` - Posit Workbench images: `workbench` (Standard/Minimal variants), `workbench-session` (R x Python matrix), `workbench-session-init`.
+- `../helm/` - Helm charts for Posit products: Connect, Workbench, Package Manager, and Chronicle.
+
+## Build commands
+
+Build an extending example:
+```bash
+docker build -f extending/{example}/Containerfile -t {tag} extending/{example}/
+```
+
+CI runs on pull requests and builds all examples in `extending/` using Docker Buildx.
+
+## Bakery tool architecture
+
+Bakery uses Jinja2 templates to generate version-specific container build files.
+
+### Directory structure for Bakery images
+```
+bakery/{example}/
+├── bakery.yaml                    # Repository config (registries, images, versions)
+└── {image-name}/
+    ├── template/                  # Jinja2 source templates
+    │   ├── Containerfile.jinja2
+    │   ├── deps/packages.txt.jinja2
+    │   └── test/goss.yaml.jinja2
+    └── {version}/                 # Generated files (rendered from templates)
+        ├── Containerfile
+        ├── deps/packages.txt
+        └── test/goss.yaml
+```
+
+### Bakery template variables
+- `{{ Image.Version }}` - Current image version string
+- `{{ Path.Version }}` - Path to the version directory
+- Import macros: `{%- import "apt.j2" as apt -%}`
+
+### bakery.yaml structure
+```yaml
+repository:
+  url: "github.com/posit-dev/images-examples"
+  vendor: "Posit Software, PBC"
+  maintainer: "Posit Docker Team <docker@posit.co>"
+registries:
+  - host: "ghcr.io"
+    namespace: "posit-dev"
+images:
+  - name: example-image
+    versions:
+      - name: 1.0.0
+        latest: true
+```
+
+## Containerfile conventions
+
+### Base image naming
+- Format: `docker.io/posit/{product}:{version}-{variant}`
+- Variants: `-min` (minimal), `-std` (standard), `-ubuntu-22.04-min`
+- Examples:
+  - `posit/workbench:2025.09.0-min`
+  - `posit/connect:2025.07.0-ubuntu-22.04-min`
+  - `posit/package-manager:{version}-ubuntu-22.04-min`
+
+### Version pinning pattern
+Always declare product versions as ARGs at the top:
+```dockerfile
+ARG PWB_VERSION="2025.09.0"
+FROM docker.io/posit/workbench:${PWB_VERSION}-min
+```
+
+### Installing Python (via uv)
+Multi-stage build using [uv](https://github.com/astral-sh/uv):
+```dockerfile
+FROM ghcr.io/astral-sh/uv:bookworm-slim AS python-builder
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+ENV UV_PYTHON_PREFERENCE=only-managed
+RUN uv python install 3.13.7 3.12.11
+
+FROM docker.io/posit/workbench:${PWB_VERSION}-min
+COPY --from=python-builder /opt/python /opt/python
+```
+
+Python installs to `/opt/python/cpython-{version}-linux-x86_64-gnu/`.
+
+### Installing R
+Register the Posit Open apt repository once, then install from it — the
+same repository Quarto uses:
+```dockerfile
+RUN bash -c "$(curl -1fsSL 'https://dl.posit.co/public/open/setup.deb.sh')"
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends r-4.5.3 && \
+    apt-get clean -yqq && \
+    rm -rf /var/lib/apt/lists/*
+```
+
+R installs to `/opt/R/{version}/`. The Open repo only keeps the latest
+patch per minor line (unlike the retired `rstd.io/r-install` script's CDN,
+which never pruned) — check the repo has the version you want before
+pinning it, e.g. `apt-cache policy r-{version}` after registering the repo.
+
+### Package installation patterns
+
+Python packages:
+```dockerfile
+COPY requirements.txt /tmp/requirements.txt
+RUN /opt/python/cpython-{version}-linux-x86_64-gnu/bin/pip install \
+    --no-cache-dir --upgrade --break-system-packages -r /tmp/requirements.txt
+```
+
+R packages:
+```dockerfile
+COPY packages.txt /tmp/packages.txt
+RUN /opt/R/{version}/bin/R --vanilla -e \
+    'install.packages(readLines("/tmp/packages.txt"), repos="https://p3m.dev/cran/__linux__/jammy/latest", clean = TRUE)'
+```
+
+System packages:
+```dockerfile
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -yqq && \
+    apt-get install -yqq --no-install-recommends {packages} && \
+    apt-get clean -yqq && rm -rf /var/lib/apt/lists/*
+```
+
+### Cleanup requirements
+- Always clean apt caches: `apt-get clean -yqq && rm -rf /var/lib/apt/lists/*`
+- Use `--no-cache-dir` with pip
+- Use `clean = TRUE` with R `install.packages()`
+
+## Key resources
+
+- [Posit Public Package Manager](https://p3m.dev/) - Package repositories for R and Python
+- [Posit Open apt/dnf repository setup](https://cloudsmith.io/~posit/repos/open/setup/) - R and Quarto package repository
+- [Goss](https://github.com/goss-org/goss) - Container testing framework used by Bakery
+- [GitHub Discussions](https://github.com/posit-dev/images/discussions) - Feedback and questions

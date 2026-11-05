@@ -24,9 +24,11 @@ images:
     variants:
       - name: Standard
         extension: std
+        tagDisplayName: std
         primary: true
       - name: Minimal
         extension: min
+        tagDisplayName: min
     versions:
       - name: 1.0.0
         latest: true
