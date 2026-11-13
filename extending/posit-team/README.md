@@ -150,9 +150,9 @@ Bakery installs R under `/opt/R/<version>` and Python under `/opt/python/<versio
 {{ r.run_install(Dependencies.R, link_to_path=True) }}
 ```
 
-This links `R` and `Rscript`, and `python`, `python3`, `pip` and `pip3` (but see the `python3` note below). Each link is created only if that command is not already on `PATH`, and only those names are linked (not helpers such as `idle3` or `*-config`). `/usr/local/bin` comes before `/usr/bin` on the default `PATH`, so the links work for login shells, non-login shells and `docker exec`.
+This links `R` and `Rscript`, and `python`, `python3`, `pip` and `pip3`. Each link is created only if no valid file or symlink already exists at `/usr/local/bin/<name>` (a dangling symlink there is removed first), and only those names are linked (not helpers such as `idle3` or `*-config`). `/usr/local/bin` comes before `/usr/bin` on the default `PATH`, so the links work for login shells, non-login shells and `docker exec`.
 
-> `python3` is the exception on these bases: the Minimal images ship a system `/usr/bin/python3` (Python 3.12 on Ubuntu 24.04), so the `command -v` guard leaves it alone and `python3` keeps resolving to the system interpreter. Use `python`, or call `/opt/python/<version>/bin/python3` explicitly. The goss checks therefore cover `python`, `pip` and `pip3`, not `python3`.
+> The links shadow system binaries: the Minimal images ship `/usr/bin/python3` (Python 3.12 on Ubuntu 24.04), and `python3` on `PATH` now resolves to the `uv` Python instead. That Python has no distro dist-packages such as `python3-apt`, so tools that call `python3` through `PATH` and import those modules will fail. Scripts with an absolute `/usr/bin/python3` shebang still use the system interpreter and are unaffected.
 >
 > The Python builds come from `uv`, which marks them as externally managed ([PEP 668](https://peps.python.org/pep-0668/)). `pip` on `PATH` refuses to install into the interpreter itself. Create a virtual environment (`python -m venv`) and install into that.
 
@@ -166,10 +166,10 @@ Following the Python version through the project shows how a pin becomes a link,
 4. **Generated `RUN`**: `bakery update files` writes the result into `connect/2026.09/Containerfile.ubuntu2404`:
 
    ```dockerfile
-   RUN command -v python >/dev/null || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python && \
-       command -v python3 >/dev/null || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
-       command -v pip >/dev/null || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
-       command -v pip3 >/dev/null || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
+   RUN { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm /usr/local/bin/python; fi; [ -e /usr/local/bin/python ] || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python; } && \
+       { if [ -L /usr/local/bin/python3 ] && [ ! -e /usr/local/bin/python3 ]; then rm /usr/local/bin/python3; fi; [ -e /usr/local/bin/python3 ] || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3; } && \
+       { if [ -L /usr/local/bin/pip ] && [ ! -e /usr/local/bin/pip ]; then rm /usr/local/bin/pip; fi; [ -e /usr/local/bin/pip ] || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip; } && \
+       { if [ -L /usr/local/bin/pip3 ] && [ ! -e /usr/local/bin/pip3 ]; then rm /usr/local/bin/pip3; fi; [ -e /usr/local/bin/pip3 ] || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3; }
    ```
 
 5. **goss check**: `test/goss.yaml.jinja2` computes the same `Dependencies.python | maxVersion` and calls `goss.path_link_checks`, which renders one check per command in `connect/2026.09/test/goss.yaml`:
@@ -188,12 +188,12 @@ If you write the Containerfile by hand, pick the newest version yourself and lin
 
 ```dockerfile
 # Replace the versions with the ones you installed
-RUN command -v R >/dev/null || ln -s /opt/R/4.6.1/bin/R /usr/local/bin/R && \
-    command -v Rscript >/dev/null || ln -s /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript && \
-    command -v python >/dev/null || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python && \
-    command -v python3 >/dev/null || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
-    command -v pip >/dev/null || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
-    command -v pip3 >/dev/null || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
+RUN { if [ -L /usr/local/bin/R ] && [ ! -e /usr/local/bin/R ]; then rm /usr/local/bin/R; fi; [ -e /usr/local/bin/R ] || ln -s /opt/R/4.6.1/bin/R /usr/local/bin/R; } && \
+    { if [ -L /usr/local/bin/Rscript ] && [ ! -e /usr/local/bin/Rscript ]; then rm /usr/local/bin/Rscript; fi; [ -e /usr/local/bin/Rscript ] || ln -s /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript; } && \
+    { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm /usr/local/bin/python; fi; [ -e /usr/local/bin/python ] || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python; } && \
+    { if [ -L /usr/local/bin/python3 ] && [ ! -e /usr/local/bin/python3 ]; then rm /usr/local/bin/python3; fi; [ -e /usr/local/bin/python3 ] || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3; } && \
+    { if [ -L /usr/local/bin/pip ] && [ ! -e /usr/local/bin/pip ]; then rm /usr/local/bin/pip; fi; [ -e /usr/local/bin/pip ] || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip; } && \
+    { if [ -L /usr/local/bin/pip3 ] && [ ! -e /usr/local/bin/pip3 ]; then rm /usr/local/bin/pip3; fi; [ -e /usr/local/bin/pip3 ] || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3; }
 ```
 
 Link the specific binaries rather than `bin/*`, which would also expose helpers such as `idle3` and `pydoc3`.

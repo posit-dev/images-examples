@@ -35,5 +35,9 @@ command:
     exit-status: 0
 {%- endfor %}
 {{ goss.path_link_checks(["R", "Rscript"], r.get_version_directory(Dependencies.R | maxVersion)) }}
-{# python3 is omitted: the -min base ships /usr/bin/python3, so the link guard leaves it alone. #}
-{{ goss.path_link_checks(["python", "pip", "pip3"], python.get_version_directory(Dependencies.python | maxVersion)) }}
+{{ goss.path_link_checks(["python", "python3", "pip", "pip3"], python.get_version_directory(Dependencies.python | maxVersion)) }}
+{%- for bin in ["R", "Rscript", "python", "python3", "pip", "pip3"] %}
+  {{ bin }}-link-is-not-dangling:
+    exec: test -e /usr/local/bin/{{ bin }}
+    exit-status: 0
+{%- endfor %}

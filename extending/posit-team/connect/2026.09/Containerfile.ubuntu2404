@@ -29,10 +29,10 @@ RUN apt-get update -yqq && \
 # link_to_path links python, python3, pip and pip3 from the newest version into /usr/local/bin.
 COPY --from=python-builder /opt/python /opt/python
 
-RUN command -v python >/dev/null || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python && \
-    command -v python3 >/dev/null || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
-    command -v pip >/dev/null || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
-    command -v pip3 >/dev/null || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
+RUN { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm /usr/local/bin/python; fi; [ -e /usr/local/bin/python ] || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python; } && \
+    { if [ -L /usr/local/bin/python3 ] && [ ! -e /usr/local/bin/python3 ]; then rm /usr/local/bin/python3; fi; [ -e /usr/local/bin/python3 ] || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3; } && \
+    { if [ -L /usr/local/bin/pip ] && [ ! -e /usr/local/bin/pip ]; then rm /usr/local/bin/pip; fi; [ -e /usr/local/bin/pip ] || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip; } && \
+    { if [ -L /usr/local/bin/pip3 ] && [ ! -e /usr/local/bin/pip3 ]; then rm /usr/local/bin/pip3; fi; [ -e /usr/local/bin/pip3 ] || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3; }
 
 ### Install R ###
 # link_to_path links R and Rscript from the newest version into /usr/local/bin.
@@ -42,8 +42,8 @@ RUN apt-get update -yqq && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
-RUN command -v R >/dev/null || ln -s /opt/R/4.6.1/bin/R /usr/local/bin/R && \
-    command -v Rscript >/dev/null || ln -s /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript
+RUN { if [ -L /usr/local/bin/R ] && [ ! -e /usr/local/bin/R ]; then rm /usr/local/bin/R; fi; [ -e /usr/local/bin/R ] || ln -s /opt/R/4.6.1/bin/R /usr/local/bin/R; } && \
+    { if [ -L /usr/local/bin/Rscript ] && [ ! -e /usr/local/bin/Rscript ]; then rm /usr/local/bin/Rscript; fi; [ -e /usr/local/bin/Rscript ] || ln -s /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript; }
 
 ### Install team R packages ###
 # These versions and packages match workbench so apps developed in

@@ -31,13 +31,33 @@ command:
     exec: test "$(readlink -f "$(command -v Rscript)")" = "$(readlink -f /opt/R/4.6.1/bin/Rscript)"
     exit-status: 0
 
-
   python-on-path-is-newest:
     exec: test "$(readlink -f "$(command -v python)")" = "$(readlink -f /opt/python/3.14.7/bin/python)"
+    exit-status: 0
+  python3-on-path-is-newest:
+    exec: test "$(readlink -f "$(command -v python3)")" = "$(readlink -f /opt/python/3.14.7/bin/python3)"
     exit-status: 0
   pip-on-path-is-newest:
     exec: test "$(readlink -f "$(command -v pip)")" = "$(readlink -f /opt/python/3.14.7/bin/pip)"
     exit-status: 0
   pip3-on-path-is-newest:
     exec: test "$(readlink -f "$(command -v pip3)")" = "$(readlink -f /opt/python/3.14.7/bin/pip3)"
+    exit-status: 0
+  R-link-is-not-dangling:
+    exec: test -e /usr/local/bin/R
+    exit-status: 0
+  Rscript-link-is-not-dangling:
+    exec: test -e /usr/local/bin/Rscript
+    exit-status: 0
+  python-link-is-not-dangling:
+    exec: test -e /usr/local/bin/python
+    exit-status: 0
+  python3-link-is-not-dangling:
+    exec: test -e /usr/local/bin/python3
+    exit-status: 0
+  pip-link-is-not-dangling:
+    exec: test -e /usr/local/bin/pip
+    exit-status: 0
+  pip3-link-is-not-dangling:
+    exec: test -e /usr/local/bin/pip3
     exit-status: 0
