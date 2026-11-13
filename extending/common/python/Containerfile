@@ -37,6 +37,15 @@ FROM ghcr.io/posit-dev/workbench:${PRODUCT_VERSION}-min
 COPY --from=python-builder /opt/python /opt/python
 
 
+### Put the newest Python on PATH ###
+# Link only the newest version. Existing files in /usr/local/bin are left alone;
+# a system python3 elsewhere on PATH (e.g. /usr/bin/python3) is shadowed.
+RUN [ -e /usr/local/bin/python ] || ln -sf /opt/python/3.13.7/bin/python /usr/local/bin/python && \
+    [ -e /usr/local/bin/python3 ] || ln -sf /opt/python/3.13.7/bin/python3 /usr/local/bin/python3 && \
+    [ -e /usr/local/bin/pip ] || ln -sf /opt/python/3.13.7/bin/pip /usr/local/bin/pip && \
+    [ -e /usr/local/bin/pip3 ] || ln -sf /opt/python/3.13.7/bin/pip3 /usr/local/bin/pip3
+
+
 ### Install Python packages ###
 COPY requirements.txt /tmp/requirements.txt
 RUN /opt/python/3.13.7/bin/pip install --no-cache-dir --upgrade --break-system-packages \

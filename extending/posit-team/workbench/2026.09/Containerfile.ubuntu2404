@@ -21,12 +21,17 @@ ARG DEBIAN_FRONTEND=noninteractive
 # packages need to be installed here.
 COPY workbench/2026.09/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_packages.txt
 RUN apt-get update -yqq && \
-    xargs -a /tmp/ubuntu-24.04_packages.txt apt-get install -yqq --no-install-recommends && \
+    test -f /tmp/ubuntu-24.04_packages.txt && sed 's/#.*//' /tmp/ubuntu-24.04_packages.txt | xargs -r apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 ### Install Python from the build stage ###
 COPY --from=python-builder /opt/python /opt/python
+
+RUN [ -e /usr/local/bin/python ] || ln -sf /opt/python/3.14.7/bin/python /usr/local/bin/python && \
+    [ -e /usr/local/bin/python3 ] || ln -sf /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
+    [ -e /usr/local/bin/pip ] || ln -sf /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
+    [ -e /usr/local/bin/pip3 ] || ln -sf /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
 
 ### Install R ###
 RUN apt-get update -yqq && \
@@ -34,6 +39,9 @@ RUN apt-get update -yqq && \
         r-4.6.1 && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
+
+RUN [ -e /usr/local/bin/R ] || ln -sf /opt/R/4.6.1/bin/R /usr/local/bin/R && \
+    [ -e /usr/local/bin/Rscript ] || ln -sf /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript
 
 ### Install team R packages ###
 # Bakery's `r.run_install_packages` generates one `install.packages()` call per R
