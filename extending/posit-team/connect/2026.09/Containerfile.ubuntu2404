@@ -21,19 +21,29 @@ ARG DEBIAN_FRONTEND=noninteractive
 # packages need to be installed here.
 COPY connect/2026.09/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_packages.txt
 RUN apt-get update -yqq && \
-    xargs -a /tmp/ubuntu-24.04_packages.txt apt-get install -yqq --no-install-recommends && \
+    test -f /tmp/ubuntu-24.04_packages.txt && sed 's/#.*//' /tmp/ubuntu-24.04_packages.txt | xargs -r apt-get install -yqq --no-install-recommends && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 ### Install Python from the build stage ###
+# link_to_path links python, python3, pip and pip3 from the newest version into /usr/local/bin.
 COPY --from=python-builder /opt/python /opt/python
 
+RUN command -v python >/dev/null || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python && \
+    command -v python3 >/dev/null || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
+    command -v pip >/dev/null || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
+    command -v pip3 >/dev/null || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
+
 ### Install R ###
+# link_to_path links R and Rscript from the newest version into /usr/local/bin.
 RUN apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
         r-4.6.1 && \
     apt-get clean -yqq && \
     rm -rf /var/lib/apt/lists/*
+
+RUN command -v R >/dev/null || ln -s /opt/R/4.6.1/bin/R /usr/local/bin/R && \
+    command -v Rscript >/dev/null || ln -s /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript
 
 ### Install team R packages ###
 # These versions and packages match workbench so apps developed in

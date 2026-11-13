@@ -1,3 +1,4 @@
+{%- import "goss.j2" as goss -%}
 {%- import "python.j2" as python -%}
 {%- import "r.j2" as r -%}
 file:
@@ -33,3 +34,6 @@ command:
     exec: {{ python.get_version_directory(py_version) }}/bin/python -c "import pandas; print(pandas.__version__)"
     exit-status: 0
 {%- endfor %}
+{{ goss.path_link_checks(["R", "Rscript"], r.get_version_directory(Dependencies.R | maxVersion)) }}
+{# python3 is omitted: the -min base ships /usr/bin/python3, so the link guard leaves it alone. #}
+{{ goss.path_link_checks(["python", "pip", "pip3"], python.get_version_directory(Dependencies.python | maxVersion)) }}

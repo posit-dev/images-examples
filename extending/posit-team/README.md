@@ -45,7 +45,7 @@ posit-team/
 
 | Image | Base | Adds |
 |:------|:-----|:-----|
-| `workbench:2026.09.0-174.pro3` | `posit/workbench:2026.09.0-174.pro3-ubuntu-24.04-min` | R 4.6.1, Python 3.14.7, team R + Python packages, spatial system deps |
+| `workbench:2026.09.0-174.pro3` | `posit/workbench:2026.09.0-174.pro3-ubuntu-24.04-min` | R 4.6.1, Python 3.14.7 (both on `PATH`), team R + Python packages, spatial system deps |
 | `connect:2026.09.0` | `posit/connect:2026.09.0-ubuntu-24.04-min` | Same R, Python, and packages as Workbench |
 | `package-manager:2026.09.0` | `posit/package-manager:2026.09.0-ubuntu-24.04-min` | Internal certificate authority (CA) certificate in the system trust store |
 
@@ -120,7 +120,7 @@ If the team adds more images later (e.g., a content runtime), the same constrain
 
 Each image's template carries the customizations specific to that product:
 
-- `workbench`: installs the team system-package delta, R 4.6.1, Python 3.14.7, and team R and Python packages.
+- `workbench`: installs the team system-package delta, R 4.6.1, Python 3.14.7 (both linked onto `PATH`), and team R and Python packages.
 - `connect`: installs the same system packages and language packages as Workbench so apps developed in Workbench deploy cleanly.
 - `package-manager`: adds a single CA certificate to the trust store. It does not install R or Python because Package Manager does not run user code.
 
@@ -140,6 +140,63 @@ Workbench and Connect templates are nearly identical because the team enforces t
 2. The goss tests (one checks for `/usr/lib/rstudio-server/bin/rserver`, the other checks for `/opt/rstudio-connect/bin/connect`)
 
 If a team needs them to diverge (say, larger R libraries on Workbench for interactive work), the template separation makes that easy to do without affecting the other.
+
+### Putting R and Python on `PATH`
+
+Bakery installs R under `/opt/R/<version>` and Python under `/opt/python/<version>`, so neither is on `PATH` by default. The Workbench and Connect templates opt in to linking the newest installed version into `/usr/local/bin` with the `link_to_path` flag:
+
+```jinja2
+{{ python.copy_from_build_stage(Dependencies.python, link_to_path=True) }}
+{{ r.run_install(Dependencies.R, link_to_path=True) }}
+```
+
+This links `R` and `Rscript`, and `python`, `python3`, `pip` and `pip3` (but see the `python3` note below). Each link is created only if that command is not already on `PATH`, and only those names are linked (not helpers such as `idle3` or `*-config`). `/usr/local/bin` comes before `/usr/bin` on the default `PATH`, so the links work for login shells, non-login shells and `docker exec`.
+
+> `python3` is the exception on these bases: the Minimal images ship a system `/usr/bin/python3` (Python 3.12 on Ubuntu 24.04), so the `command -v` guard leaves it alone and `python3` keeps resolving to the system interpreter. Use `python`, or call `/opt/python/<version>/bin/python3` explicitly. The goss checks therefore cover `python`, `pip` and `pip3`, not `python3`.
+>
+> The Python builds come from `uv`, which marks them as externally managed ([PEP 668](https://peps.python.org/pep-0668/)). `pip` on `PATH` refuses to install into the interpreter itself. Create a virtual environment (`python -m venv`) and install into that.
+
+#### From configuration to image
+
+Following the Python version through the project shows how a pin becomes a link, and how the test verifies it:
+
+1. **`bakery.yaml`**: the `python` constraint (`latest: true`) was resolved once into the version's pin, `dependencies: [{dependency: python, version: "3.14.7"}]`.
+2. **`Dependencies.python`**: in the template this renders as the list `["3.14.7"]`. R works the same way through `Dependencies.R`.
+3. **`maxVersion`**: the macro picks the highest version in the list. A team with `count: 2` and two Pythons still gets one link target, the newest. A single entry is used as-is.
+4. **Generated `RUN`**: `bakery update files` writes the result into `connect/2026.09/Containerfile.ubuntu2404`:
+
+   ```dockerfile
+   RUN command -v python >/dev/null || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python && \
+       command -v python3 >/dev/null || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
+       command -v pip >/dev/null || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
+       command -v pip3 >/dev/null || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
+   ```
+
+5. **goss check**: `test/goss.yaml.jinja2` computes the same `Dependencies.python | maxVersion` and calls `goss.path_link_checks`, which renders one check per command in `connect/2026.09/test/goss.yaml`:
+
+   ```yaml
+   python-on-path-is-newest:
+     exec: test "$(readlink -f "$(command -v python)")" = "$(readlink -f /opt/python/3.14.7/bin/python)"
+     exit-status: 0
+   ```
+
+   When you bump a pin in `bakery.yaml` and re-render, the link target and the check move together.
+
+#### Without Bakery
+
+If you write the Containerfile by hand, pick the newest version yourself and link it:
+
+```dockerfile
+# Replace the versions with the ones you installed
+RUN command -v R >/dev/null || ln -s /opt/R/4.6.1/bin/R /usr/local/bin/R && \
+    command -v Rscript >/dev/null || ln -s /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript && \
+    command -v python >/dev/null || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python && \
+    command -v python3 >/dev/null || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
+    command -v pip >/dev/null || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
+    command -v pip3 >/dev/null || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
+```
+
+Link the specific binaries rather than `bin/*`, which would also expose helpers such as `idle3` and `pydoc3`.
 
 ### Package lists are duplicated, not shared
 

@@ -23,3 +23,21 @@ command:
   "Verify pandas is installed for Python 3.14.7":
     exec: /opt/python/3.14.7/bin/python -c "import pandas; print(pandas.__version__)"
     exit-status: 0
+
+  R-on-path-is-newest:
+    exec: test "$(readlink -f "$(command -v R)")" = "$(readlink -f /opt/R/4.6.1/bin/R)"
+    exit-status: 0
+  Rscript-on-path-is-newest:
+    exec: test "$(readlink -f "$(command -v Rscript)")" = "$(readlink -f /opt/R/4.6.1/bin/Rscript)"
+    exit-status: 0
+
+
+  python-on-path-is-newest:
+    exec: test "$(readlink -f "$(command -v python)")" = "$(readlink -f /opt/python/3.14.7/bin/python)"
+    exit-status: 0
+  pip-on-path-is-newest:
+    exec: test "$(readlink -f "$(command -v pip)")" = "$(readlink -f /opt/python/3.14.7/bin/pip)"
+    exit-status: 0
+  pip3-on-path-is-newest:
+    exec: test "$(readlink -f "$(command -v pip3)")" = "$(readlink -f /opt/python/3.14.7/bin/pip3)"
+    exit-status: 0
