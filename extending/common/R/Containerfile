@@ -34,6 +34,12 @@ RUN apt-get update -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 
+### Put the newest R on PATH ###
+# Link only the newest version. Existing files in /usr/local/bin are left alone.
+RUN [ -e /usr/local/bin/R ] || ln -sf /opt/R/4.5.3/bin/R /usr/local/bin/R && \
+    [ -e /usr/local/bin/Rscript ] || ln -sf /opt/R/4.5.3/bin/Rscript /usr/local/bin/Rscript
+
+
 ### Install R packages from Posit Public Package Manager ###
 COPY packages.txt /tmp/packages.txt
 RUN /opt/R/4.5.3/bin/R --vanilla -e \
