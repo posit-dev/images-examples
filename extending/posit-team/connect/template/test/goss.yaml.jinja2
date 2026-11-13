@@ -34,10 +34,11 @@ command:
     exec: {{ python.get_version_directory(py_version) }}/bin/python -c "import pandas; print(pandas.__version__)"
     exit-status: 0
 {%- endfor %}
-{{ goss.path_link_checks(["R", "Rscript"], r.get_version_directory(Dependencies.R | maxVersion)) }}
-{{ goss.path_link_checks(["python", "python3", "pip", "pip3"], python.get_version_directory(Dependencies.python | maxVersion)) }}
-{%- for bin in ["R", "Rscript", "python", "python3", "pip", "pip3"] %}
-  {{ bin }}-link-is-not-dangling:
-    exec: test -e /usr/local/bin/{{ bin }}
-    exit-status: 0
-{%- endfor %}
+{%- set r_bins = ["R", "Rscript"] %}
+{%- set py_bins = ["python", "python3", "pip", "pip3"] %}
+{%- set r_dir = r.get_version_directory(Dependencies.R | maxVersion) %}
+{%- set py_dir = python.get_version_directory(Dependencies.python | maxVersion) %}
+{{- goss.path_link_checks(r_bins, r_dir) }}
+{{- goss.path_link_checks(py_bins, py_dir) }}
+{{- goss.path_link_targets(r_bins, r_dir) }}
+{{- goss.path_link_targets(py_bins, py_dir) }}

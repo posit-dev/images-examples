@@ -150,7 +150,7 @@ Bakery installs R under `/opt/R/<version>` and Python under `/opt/python/<versio
 {{ r.run_install(Dependencies.R, link_to_path=True) }}
 ```
 
-This links `R` and `Rscript`, and `python`, `python3`, `pip` and `pip3`. Each link is created only if no valid file or symlink already exists at `/usr/local/bin/<name>` (a dangling symlink there is removed first), and only those names are linked (not helpers such as `idle3` or `*-config`). `/usr/local/bin` comes before `/usr/bin` on the default `PATH`, so the links work for login shells, non-login shells and `docker exec`.
+This links `R` and `Rscript`, and `python`, `python3`, `pip` and `pip3`. Each link is created only if no valid file or symlink already exists at `/usr/local/bin/<name>` (a dangling symlink there is removed first), and only those names are linked (not helpers such as `idle3` or `*-config`). `/usr/local/bin` comes before `/usr/bin` on the default `PATH`, so the links are found by any process that uses the container's default `PATH`, such as `docker exec` or the container entrypoint. Sessions launched by Workbench or Connect set their own `PATH`, so check what an R or Python session sees there. The goss tests only cover the container's default `PATH`.
 
 > The links shadow system binaries: the Minimal images ship `/usr/bin/python3` (Python 3.12 on Ubuntu 24.04), and `python3` on `PATH` now resolves to the `uv` Python instead. That Python has no distro dist-packages such as `python3-apt`, so tools that call `python3` through `PATH` and import those modules will fail. Scripts with an absolute `/usr/bin/python3` shebang still use the system interpreter and are unaffected.
 >
@@ -163,7 +163,7 @@ Following the Python version through the project shows how a pin becomes a link,
 1. **`bakery.yaml`**: the `python` constraint (`latest: true`) was resolved once into the version's pin, `dependencies: [{dependency: python, version: "3.14.7"}]`.
 2. **`Dependencies.python`**: in the template this renders as the list `["3.14.7"]`. R works the same way through `Dependencies.R`.
 3. **`maxVersion`**: the macro picks the highest version in the list. A team with `count: 2` and two Pythons still gets one link target, the newest. A single entry is used as-is.
-4. **Generated `RUN`**: `bakery update files` writes the result into `connect/2026.09/Containerfile.ubuntu2404`:
+4. **Generated `RUN`**: `bakery update files` writes Python's `RUN` (R gets an equivalent) into `connect/2026.09/Containerfile.ubuntu2404`:
 
    ```dockerfile
    RUN { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm /usr/local/bin/python; fi; [ -e /usr/local/bin/python ] || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python; } && \
@@ -180,20 +180,23 @@ Following the Python version through the project shows how a pin becomes a link,
      exit-status: 0
    ```
 
+   `goss.path_link_targets` adds a second check per binary (`readlink /usr/local/bin/<bin>` must equal the `/opt` target). Both macros take the same binary list, so they cannot drift.
+
    When you bump a pin in `bakery.yaml` and re-render, the link target and the check move together.
 
 #### Without Bakery
 
-If you write the Containerfile by hand, pick the newest version yourself and link it:
+If you write the Containerfile by hand, pick the newest version yourself and link it. Run this after the R install and the Python `COPY`, because the targets must already exist:
 
 ```dockerfile
 # Replace the versions with the ones you installed
-RUN { if [ -L /usr/local/bin/R ] && [ ! -e /usr/local/bin/R ]; then rm /usr/local/bin/R; fi; [ -e /usr/local/bin/R ] || ln -s /opt/R/4.6.1/bin/R /usr/local/bin/R; } && \
-    { if [ -L /usr/local/bin/Rscript ] && [ ! -e /usr/local/bin/Rscript ]; then rm /usr/local/bin/Rscript; fi; [ -e /usr/local/bin/Rscript ] || ln -s /opt/R/4.6.1/bin/Rscript /usr/local/bin/Rscript; } && \
-    { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm /usr/local/bin/python; fi; [ -e /usr/local/bin/python ] || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python; } && \
-    { if [ -L /usr/local/bin/python3 ] && [ ! -e /usr/local/bin/python3 ]; then rm /usr/local/bin/python3; fi; [ -e /usr/local/bin/python3 ] || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3; } && \
-    { if [ -L /usr/local/bin/pip ] && [ ! -e /usr/local/bin/pip ]; then rm /usr/local/bin/pip; fi; [ -e /usr/local/bin/pip ] || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip; } && \
-    { if [ -L /usr/local/bin/pip3 ] && [ ! -e /usr/local/bin/pip3 ]; then rm /usr/local/bin/pip3; fi; [ -e /usr/local/bin/pip3 ] || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3; }
+RUN for link in R:/opt/R/4.6.1/bin/R Rscript:/opt/R/4.6.1/bin/Rscript \
+        python:/opt/python/3.14.7/bin/python python3:/opt/python/3.14.7/bin/python3 \
+        pip:/opt/python/3.14.7/bin/pip pip3:/opt/python/3.14.7/bin/pip3; do \
+        name="${link%%:*}"; target="${link#*:}"; \
+        if [ -L "/usr/local/bin/$name" ] && [ ! -e "/usr/local/bin/$name" ]; then rm "/usr/local/bin/$name"; fi; \
+        [ -e "/usr/local/bin/$name" ] || ln -s "$target" "/usr/local/bin/$name"; \
+    done
 ```
 
 Link the specific binaries rather than `bin/*`, which would also expose helpers such as `idle3` and `pydoc3`.

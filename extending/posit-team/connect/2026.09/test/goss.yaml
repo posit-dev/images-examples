@@ -23,14 +23,12 @@ command:
   "Verify pandas is installed for Python 3.14.7":
     exec: /opt/python/3.14.7/bin/python -c "import pandas; print(pandas.__version__)"
     exit-status: 0
-
   R-on-path-is-newest:
     exec: test "$(readlink -f "$(command -v R)")" = "$(readlink -f /opt/R/4.6.1/bin/R)"
     exit-status: 0
   Rscript-on-path-is-newest:
     exec: test "$(readlink -f "$(command -v Rscript)")" = "$(readlink -f /opt/R/4.6.1/bin/Rscript)"
     exit-status: 0
-
   python-on-path-is-newest:
     exec: test "$(readlink -f "$(command -v python)")" = "$(readlink -f /opt/python/3.14.7/bin/python)"
     exit-status: 0
@@ -43,21 +41,21 @@ command:
   pip3-on-path-is-newest:
     exec: test "$(readlink -f "$(command -v pip3)")" = "$(readlink -f /opt/python/3.14.7/bin/pip3)"
     exit-status: 0
-  R-link-is-not-dangling:
-    exec: test -e /usr/local/bin/R
+  R-link-targets-newest:
+    exec: test "$(readlink /usr/local/bin/R)" = "/opt/R/4.6.1/bin/R"
     exit-status: 0
-  Rscript-link-is-not-dangling:
-    exec: test -e /usr/local/bin/Rscript
+  Rscript-link-targets-newest:
+    exec: test "$(readlink /usr/local/bin/Rscript)" = "/opt/R/4.6.1/bin/Rscript"
     exit-status: 0
-  python-link-is-not-dangling:
-    exec: test -e /usr/local/bin/python
+  python-link-targets-newest:
+    exec: test "$(readlink /usr/local/bin/python)" = "/opt/python/3.14.7/bin/python"
     exit-status: 0
-  python3-link-is-not-dangling:
-    exec: test -e /usr/local/bin/python3
+  python3-link-targets-newest:
+    exec: test "$(readlink /usr/local/bin/python3)" = "/opt/python/3.14.7/bin/python3"
     exit-status: 0
-  pip-link-is-not-dangling:
-    exec: test -e /usr/local/bin/pip
+  pip-link-targets-newest:
+    exec: test "$(readlink /usr/local/bin/pip)" = "/opt/python/3.14.7/bin/pip"
     exit-status: 0
-  pip3-link-is-not-dangling:
-    exec: test -e /usr/local/bin/pip3
+  pip3-link-targets-newest:
+    exec: test "$(readlink /usr/local/bin/pip3)" = "/opt/python/3.14.7/bin/pip3"
     exit-status: 0
