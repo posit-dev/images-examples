@@ -24,11 +24,11 @@ COPY {{ Path.Version }}/deps/ubuntu-24.04_packages.txt /tmp/ubuntu-24.04_package
 {{ apt.run_install(files=["/tmp/ubuntu-24.04_packages.txt"]) }}
 
 ### Install Python from the build stage ###
-{# link_to_path links python, python3, pip and pip3 from the newest version into /usr/local/bin. #}
+{# link_to_path links python, python3, pip and pip3 from the newest version into /usr/local/bin. -#}
 {{ python.copy_from_build_stage(Dependencies.python, link_to_path=True) }}
 
 ### Install R ###
-{# link_to_path links R and Rscript from the newest version into /usr/local/bin. #}
+{# link_to_path links R and Rscript from the newest version into /usr/local/bin. -#}
 {{ r.run_install(Dependencies.R, link_to_path=True) }}
 
 ### Install team R packages ###

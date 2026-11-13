@@ -26,7 +26,6 @@ RUN apt-get update -yqq && \
     rm -rf /var/lib/apt/lists/*
 
 ### Install Python from the build stage ###
-
 COPY --from=python-builder /opt/python /opt/python
 
 RUN { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm /usr/local/bin/python; fi; [ -e /usr/local/bin/python ] || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python; } && \
@@ -35,7 +34,6 @@ RUN { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm
     { if [ -L /usr/local/bin/pip3 ] && [ ! -e /usr/local/bin/pip3 ]; then rm /usr/local/bin/pip3; fi; [ -e /usr/local/bin/pip3 ] || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3; }
 
 ### Install R ###
-
 RUN apt-get update -yqq && \
     apt-get install -yqq --no-install-recommends \
         r-4.6.1 && \
