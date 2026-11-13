@@ -150,7 +150,7 @@ Bakery installs R under `/opt/R/<version>` and Python under `/opt/python/<versio
 {{ r.run_install(Dependencies.R, link_to_path=True) }}
 ```
 
-This links `R` and `Rscript`, and `python`, `python3`, `pip` and `pip3`. Each link is created only if no valid file or symlink already exists at `/usr/local/bin/<name>` (a dangling symlink there is removed first), and only those names are linked (not helpers such as `idle3` or `*-config`). `/usr/local/bin` comes before `/usr/bin` on the default `PATH`, so the links are found by any process that uses the container's default `PATH`, such as `docker exec` or the container entrypoint. Sessions launched by Workbench or Connect set their own `PATH`, so check what an R or Python session sees there. The goss tests only cover the container's default `PATH`.
+This links `R` and `Rscript`, and `python`, `python3`, `pip` and `pip3`. Each link is created only if no valid file or symlink already exists at `/usr/local/bin/<name>` (an absent or dangling symlink is created or replaced), and only those names are linked (not helpers such as `idle3` or `*-config`). `/usr/local/bin` comes before `/usr/bin` on the default `PATH`, so the links are found by any process that uses the container's default `PATH`, such as `docker exec` or the container entrypoint. Sessions launched by Workbench or Connect set their own `PATH`, so check what an R or Python session sees there. The goss tests only cover the container's default `PATH`.
 
 > The links shadow system binaries: the Minimal images ship `/usr/bin/python3` (Python 3.12 on Ubuntu 24.04), and `python3` on `PATH` now resolves to the `uv` Python instead. That Python has no distro dist-packages such as `python3-apt`, so tools that call `python3` through `PATH` and import those modules will fail. Scripts with an absolute `/usr/bin/python3` shebang still use the system interpreter and are unaffected.
 >
@@ -166,10 +166,10 @@ Following the Python version through the project shows how a pin becomes a link,
 4. **Generated `RUN`**: `bakery update files` writes Python's `RUN` (R gets an equivalent) into `connect/2026.09/Containerfile.ubuntu2404`:
 
    ```dockerfile
-   RUN { if [ -L /usr/local/bin/python ] && [ ! -e /usr/local/bin/python ]; then rm /usr/local/bin/python; fi; [ -e /usr/local/bin/python ] || ln -s /opt/python/3.14.7/bin/python /usr/local/bin/python; } && \
-       { if [ -L /usr/local/bin/python3 ] && [ ! -e /usr/local/bin/python3 ]; then rm /usr/local/bin/python3; fi; [ -e /usr/local/bin/python3 ] || ln -s /opt/python/3.14.7/bin/python3 /usr/local/bin/python3; } && \
-       { if [ -L /usr/local/bin/pip ] && [ ! -e /usr/local/bin/pip ]; then rm /usr/local/bin/pip; fi; [ -e /usr/local/bin/pip ] || ln -s /opt/python/3.14.7/bin/pip /usr/local/bin/pip; } && \
-       { if [ -L /usr/local/bin/pip3 ] && [ ! -e /usr/local/bin/pip3 ]; then rm /usr/local/bin/pip3; fi; [ -e /usr/local/bin/pip3 ] || ln -s /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3; }
+   RUN [ -e /usr/local/bin/python ] || ln -sf /opt/python/3.14.7/bin/python /usr/local/bin/python && \
+       [ -e /usr/local/bin/python3 ] || ln -sf /opt/python/3.14.7/bin/python3 /usr/local/bin/python3 && \
+       [ -e /usr/local/bin/pip ] || ln -sf /opt/python/3.14.7/bin/pip /usr/local/bin/pip && \
+       [ -e /usr/local/bin/pip3 ] || ln -sf /opt/python/3.14.7/bin/pip3 /usr/local/bin/pip3
    ```
 
 5. **goss check**: `test/goss.yaml.jinja2` computes the same `Dependencies.python | maxVersion` and calls `goss.path_link_checks`, which renders one check per command in `connect/2026.09/test/goss.yaml`:
@@ -194,8 +194,7 @@ RUN for link in R:/opt/R/4.6.1/bin/R Rscript:/opt/R/4.6.1/bin/Rscript \
         python:/opt/python/3.14.7/bin/python python3:/opt/python/3.14.7/bin/python3 \
         pip:/opt/python/3.14.7/bin/pip pip3:/opt/python/3.14.7/bin/pip3; do \
         name="${link%%:*}"; target="${link#*:}"; \
-        if [ -L "/usr/local/bin/$name" ] && [ ! -e "/usr/local/bin/$name" ]; then rm "/usr/local/bin/$name"; fi; \
-        [ -e "/usr/local/bin/$name" ] || ln -s "$target" "/usr/local/bin/$name"; \
+        [ -e "/usr/local/bin/$name" ] || ln -sf "$target" "/usr/local/bin/$name"; \
     done
 ```
 
